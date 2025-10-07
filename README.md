@@ -4,91 +4,146 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+### Frontend
 
-## Prerequisites
+- **[Astro 5](https://astro.build/)** - Fast, performant website framework with minimal JavaScript
+- **[React 19](https://react.dev/)** - Interactive UI components where needed
+- **[TypeScript 5](https://www.typescriptlang.org/)** - Static typing and enhanced IDE support
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework for rapid styling
+- **[Shadcn/ui](https://ui.shadcn.com/)** - Accessible, customizable React component library
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+### Backend
 
-## Getting Started
+- **[Supabase](https://supabase.com/)**
+  - PostgreSQL database
+  - Backend-as-a-Service with SDKs
+  - Built-in user authentication
+  - Open-source solution with flexible hosting options
 
-1. Clone the repository:
+### AI Integration
 
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+- **[Openrouter.ai](https://openrouter.ai/)**
+  - Access to multiple AI models (OpenAI, Anthropic, Google, and more)
+  - Cost optimization through model selection
+  - Financial limits on API keys
 
-2. Install dependencies:
+### CI/CD & Hosting
 
-```bash
-npm install
-```
+- **GitHub Actions** - Automated CI/CD pipelines
+- **DigitalOcean** - Application hosting via Docker containers
 
-3. Run the development server:
+## Getting Started Locally
 
-```bash
-npm run dev
-```
+### Prerequisites
 
-4. Build for production:
+- **Node.js**: Version `22.14.0` (use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions)
+- **pnpm**: Package manager (install via `npm install -g pnpm`)
+- **Supabase Account**: For database and authentication
+- **Openrouter.ai API Key**: For AI model access
 
-```bash
-npm run build
-```
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/TenseAI.git
+   cd TenseAI
+   ```
+
+2. **Set the correct Node version**
+
+   ```bash
+   nvm use
+   ```
+
+   If you don't have the required version installed:
+
+   ```bash
+   nvm install 22.14.0
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+4. **Set up environment variables**
+
+   Create a `.env` file in the project root with the following variables:
+
+   ```env
+   # Supabase Configuration
+   PUBLIC_SUPABASE_URL=your_supabase_project_url
+   PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+   # Openrouter AI Configuration
+   OPENROUTER_API_KEY=your_openrouter_api_key
+   ```
+
+5. **Run the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+   The application will be available at `http://localhost:4321`
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+| Command            | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `pnpm dev`         | Start the development server                     |
+| `pnpm build`       | Build the production-ready application           |
+| `pnpm preview`     | Preview the production build locally             |
+| `pnpm astro`       | Run Astro CLI commands                           |
+| `pnpm lint`        | Check code for linting errors                    |
+| `pnpm lint:fix`    | Automatically fix linting errors                 |
+| `pnpm format`      | Format code using Prettier                       |
 
-## Project Structure
+## Project Scope
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+### In Scope for MVP
 
-## AI Development Support
+- ✅ User registration, login, and password management
+- ✅ 4 grammar tenses: Present Simple, Past Simple, Present Perfect, Future Simple
+- ✅ Multiple-choice question training mode
+- ✅ Two difficulty levels: Basic (A2/B1) and Advanced (B2)
+- ✅ AI-generated questions and feedback
+- ✅ Manually created theory content in Markdown
+- ✅ History of completed sessions with detailed summaries
+- ✅ Session pause and resume functionality
+- ✅ User-facing mechanism for reporting question errors
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+### Out of Scope for MVP
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+- ❌ Additional training modes (fill-in-the-blanks, sentence construction)
+- ❌ Gamification elements (points, streaks, badges, leaderboards)
+- ❌ Spaced repetition system for reviewing questions
+- ❌ Coverage of all English grammar tenses
+- ❌ More granular difficulty levels
+- ❌ Social features (friend lists, sharing results)
+- ❌ Data export features (save summary as PDF)
+- ❌ Advanced user statistics or progress charts
+- ❌ Monetization features (subscriptions, ads, in-app purchases)
 
-### Cursor IDE
+## Project Status
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+**Current Version**: 0.0.1 (MVP Development Phase)
 
-### GitHub Copilot
+TenseAI is currently in active development. The Minimum Viable Product (MVP) is being built to validate the core concept: AI-driven practice can significantly improve grammar acquisition for English language learners.
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
+### Success Metrics
 
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+- **Primary Goal**: Launch a functional, stable MVP version
+- **Qualitative Goal**: Gather feedback from at least 10 test users with 70% positive reception
+- **Quantitative Metric**: Track total number of completed training sessions across all users
 
 ## License
 
-MIT
+License information to be determined.
+
+---
+
+**Note**: This is a hobby project focused on creating an effective learning tool for English language learners. Contributions and feedback are welcome!
