@@ -15,21 +15,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development
 ```bash
-npm run dev          # Start dev server on port 3000
-npm run build        # Build for production
-npm run preview      # Preview production build
+pnpm dev             # Start dev server on port 3000
+pnpm build           # Build for production
+pnpm preview         # Preview production build
 ```
 
 ### Code Quality
 ```bash
-npm run lint         # Run ESLint
-npm run lint:fix     # Auto-fix ESLint issues
-npm run format       # Format with Prettier
+pnpm lint            # Run ESLint
+pnpm lint:fix        # Auto-fix ESLint issues
+pnpm format          # Format with Prettier
 ```
 
 ### Shadcn/ui Components
 ```bash
-npx shadcn@latest add [component-name]  # Install new component
+pnpm dlx shadcn@latest add [component-name]  # Install new component
 ```
 
 ## Architecture
