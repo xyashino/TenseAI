@@ -65,12 +65,14 @@ create trigger on_auth_user_created
 -- ---------------------------------------------------------------------
 -- Purpose: Automatically updates the updated_at timestamp on record modification
 -- Trigger: Fires before UPDATE on tables with updated_at column
+-- Security: search_path set to empty string to prevent search_path injection attacks
 -- Business Logic: Sets updated_at to current timestamp whenever row is updated
 -- Performance: Lightweight function, minimal overhead on updates
 -- ---------------------------------------------------------------------
 create or replace function public.handle_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   -- Set updated_at to current timestamp
