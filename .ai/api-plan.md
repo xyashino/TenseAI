@@ -152,9 +152,9 @@ Update the current user's profile (used for onboarding and preference changes).
 
 ---
 
-### 5.2. Session Endpoints
+### 5.2. Training Session Endpoints
 
-#### POST /api/sessions
+#### POST /api/training-sessions
 
 Create a new training session. This endpoint also creates the first round and generates 10 AI questions for it.
 
@@ -233,9 +233,9 @@ Create a new training session. This endpoint also creates the first round and ge
 
 ---
 
-#### GET /api/sessions/active
+#### GET /api/training-sessions/active
 
-Get all of the current user's active sessions with progress information.
+Get all of the current user's active training sessions with progress information.
 
 **Authentication**: Required
 
@@ -298,9 +298,9 @@ Get all of the current user's active sessions with progress information.
 
 ---
 
-#### GET /api/sessions
+#### GET /api/training-sessions
 
-Get paginated list of user's sessions (for history).
+Get paginated list of user's training sessions (for history).
 
 **Authentication**: Required
 
@@ -349,9 +349,9 @@ Get paginated list of user's sessions (for history).
 
 ---
 
-#### GET /api/sessions/{sessionId}
+#### GET /api/training-sessions/{sessionId}
 
-Get detailed information about a specific session, including all rounds, questions, and answers.
+Get detailed information about a specific training session, including all rounds, questions, and answers.
 
 **Authentication**: Required
 
@@ -416,9 +416,9 @@ Get detailed information about a specific session, including all rounds, questio
 
 ---
 
-#### DELETE /api/sessions/{sessionId}
+#### DELETE /api/training-sessions/{sessionId}
 
-Delete a session (abandon an active session).
+Delete a training session (abandon an active training session).
 
 **Authentication**: Required
 
@@ -443,9 +443,9 @@ No response body.
 
 ### 5.3. Round Endpoints
 
-#### POST /api/sessions/{sessionId}/rounds
+#### POST /api/training-sessions/{sessionId}/rounds
 
-Create and start the next round in a session.
+Create and start the next round in a training session.
 
 **Authentication**: Required
 
@@ -658,11 +658,11 @@ Submit an answer to a question.
 
 ---
 
-### 5.5. Session Completion Endpoint
+### 5.5. Training Session Completion Endpoint
 
-#### POST /api/sessions/{sessionId}/complete
+#### POST /api/training-sessions/{sessionId}/complete
 
-Complete a session after all 3 rounds are finished. Generates comprehensive AI feedback.
+Complete a training session after all 3 rounds are finished. Generates comprehensive AI feedback.
 
 **Authentication**: Required
 
@@ -884,13 +884,13 @@ All error responses follow a consistent format:
 
 ### 8.1. Session Flow
 
-**Starting a Session**:
+**Starting a Training Session**:
 1. Check rate limit (2 per minute) → return 429 if exceeded
 2. Create training_sessions record with status 'active'
 3. Create round #1
 4. Generate 10 questions via AI
 5. Save questions to database
-6. Return session + round + questions
+6. Return training session + round + questions
 
 **During a Round**:
 1. User submits answers via POST /api/answers
@@ -913,18 +913,18 @@ All error responses follow a consistent format:
 3. Generate 10 new questions via AI
 4. Return round + questions
 
-**Completing a Session**:
+**Completing a Training Session**:
 1. Verify all 3 rounds completed
 2. Collect all incorrect answers across rounds
 3. Generate comprehensive feedback via AI (or congratulations if perfect)
-4. Update session: status='completed', completed_at=NOW(), final_feedback
+4. Update training session: status='completed', completed_at=NOW(), final_feedback
 5. Return complete summary
 
 ### 8.2. AI Integration Points
 
 The API calls OpenRouter.ai at three specific points:
 
-1. **Question Generation** (POST /api/sessions, POST /api/sessions/{id}/rounds):
+1. **Question Generation** (POST /api/training-sessions, POST /api/training-sessions/{id}/rounds):
    - Input: tense, difficulty, round context
    - Output: 10 multiple-choice questions with options and correct answers
    - Tone: Friendly, contextual, vocabulary-appropriate
@@ -934,7 +934,7 @@ The API calls OpenRouter.ai at three specific points:
    - Output: Brief encouraging feedback (2-3 sentences)
    - Tone: Supportive "friendly coach"
 
-3. **Final Session Feedback** (POST /api/sessions/{id}/complete):
+3. **Final Training Session Feedback** (POST /api/training-sessions/{id}/complete):
    - Input: All rounds scores, all incorrect answers with full context
    - Output: Detailed analysis in Markdown (patterns, explanations, tips)
    - Tone: Encouraging but informative
@@ -948,14 +948,14 @@ The API calls OpenRouter.ai at three specific points:
 ### 8.3. Resume Logic
 
 When user returns to app:
-1. Frontend calls GET /api/sessions/active
-2. If session exists:
+1. Frontend calls GET /api/training-sessions/active
+2. If training session exists:
    - Check which round is current (last incomplete round)
    - Load current round's questions
    - Load existing answers for current round
    - Resume from next unanswered question
-3. If no active session:
-   - Show "Start New Session" screen
+3. If no active training session:
+   - Show "Start New Training Session" screen
 
 ---
 
@@ -972,19 +972,19 @@ When user returns to app:
 
 **Recommended Caching**:
 1. **Profile**: Cache on client, invalidate on update
-2. **Active Session**: Short-lived cache (1-2 minutes), frequently refresh
-3. **Session History**: Cache list, invalidate when new session completed
-4. **Session Details**: Cache completed sessions (immutable)
+2. **Active Training Session**: Short-lived cache (1-2 minutes), frequently refresh
+3. **Training Session History**: Cache list, invalidate when new training session completed
+4. **Training Session Details**: Cache completed training sessions (immutable)
 
 ### 9.3. Rate Limiting
 
 Recommended rate limits per authenticated user:
 - **Standard endpoints**: 100 requests/minute
 - **Answer submission**: 20 requests/minute (prevent abuse)
-- **Session creation** (POST /api/sessions): 2 requests/minute (expensive AI calls - generates first round with 10 questions)
+- **Training session creation** (POST /api/training-sessions): 2 requests/minute (expensive AI calls - generates first round with 10 questions)
 - **Report submission**: 10 requests/minute
 
-**Note**: No rate limit on POST /api/sessions/{id}/rounds as it's part of normal session flow (users need to progress through 3 rounds sequentially).
+**Note**: No rate limit on POST /api/training-sessions/{id}/rounds as it's part of normal training session flow (users need to progress through 3 rounds sequentially).
 
 ---
 
@@ -995,21 +995,21 @@ Recommended rate limits per authenticated user:
 ```
 src/pages/api/
 ├── profile/
-│   └── index.ts              # GET, PATCH /api/profile
-├── sessions/
-│   ├── index.ts              # GET, POST /api/sessions
-│   ├── active.ts             # GET /api/sessions/active
-│   ├── [sessionId].ts        # GET, DELETE /api/sessions/{sessionId}
+│   └── index.ts                    # GET, PATCH /api/profile
+├── training-sessions/
+│   ├── index.ts                    # GET, POST /api/training-sessions
+│   ├── active.ts                   # GET /api/training-sessions/active
+│   ├── [sessionId].ts              # GET, DELETE /api/training-sessions/{sessionId}
 │   ├── [sessionId]/
-│   │   ├── rounds.ts         # POST /api/sessions/{sessionId}/rounds
-│   │   └── complete.ts       # POST /api/sessions/{sessionId}/complete
+│   │   ├── rounds.ts               # POST /api/training-sessions/{sessionId}/rounds
+│   │   └── complete.ts             # POST /api/training-sessions/{sessionId}/complete
 ├── rounds/
 │   └── [roundId]/
-│       └── complete.ts       # POST /api/rounds/{roundId}/complete
+│       └── complete.ts             # POST /api/rounds/{roundId}/complete
 ├── answers/
-│   └── index.ts              # POST /api/answers
+│   └── index.ts                    # POST /api/answers
 └── question-reports/
-    └── index.ts              # GET, POST /api/question-reports
+    └── index.ts                    # GET, POST /api/question-reports
 ```
 
 ### 10.2. Supabase Client Usage
@@ -1093,9 +1093,9 @@ For each endpoint, test:
 
 ### 11.2. Integration Testing Scenarios
 
-**Complete Session Flow**:
+**Complete Training Session Flow**:
 1. Create user and profile
-2. Start session → verify round 1 created
+2. Start training session → verify round 1 created
 3. Answer 10 questions
 4. Complete round 1 → verify score calculated
 5. Start round 2 → verify questions generated
@@ -1104,15 +1104,15 @@ For each endpoint, test:
 8. Start round 3
 9. Answer 10 questions
 10. Complete round 3
-11. Complete session → verify final feedback
-12. Fetch history → verify session appears
-13. Fetch session details → verify all data present
+11. Complete training session → verify final feedback
+12. Fetch history → verify training session appears
+13. Fetch training session details → verify all data present
 
-**Resume Session Flow**:
-1. Start session
+**Resume Training Session Flow**:
+1. Start training session
 2. Answer 5 questions in round 1
 3. Close app (simulate by not completing round)
-4. Fetch active session → verify 5 answers present
+4. Fetch active training session → verify 5 answers present
 5. Answer remaining 5 questions
 6. Complete round normally
 
@@ -1139,7 +1139,7 @@ For each endpoint, test:
 - Never return `correct_answer` in question lists (GET questions, POST /api/answers)
 - Never return `is_correct` flag when user submits an answer (POST /api/answers)
 - Only reveal `correct_answer` and `is_correct` after round completion (POST /api/rounds/{id}/complete)
-- Also return correct answers in completed session views (GET /api/sessions/{id} for completed sessions)
+- Also return correct answers in completed training session views (GET /api/training-sessions/{id} for completed training sessions)
 - Filter sensitive fields in API responses
 - Don't expose internal error details in production
 
@@ -1161,15 +1161,15 @@ Log the following events:
 - AI service calls (with response times)
 - AI service failures
 - Question report submissions
-- Session completions
+- Training session completions
 - Error responses (4xx, 5xx)
 
 ### 13.2. Metrics to Track
 
 - API response times (p50, p95, p99)
 - AI service response times
-- Active sessions count
-- Completed sessions per day
+- Active training sessions count
+- Completed training sessions per day
 - Question reports per day
 - Error rates by endpoint
 
@@ -1219,9 +1219,9 @@ Potential endpoints for future features:
 
 - `GET /api/statistics` - User progress statistics
 - `GET /api/achievements` - Gamification achievements
-- `POST /api/sessions/{id}/export` - Export session as PDF
+- `POST /api/training-sessions/{id}/export` - Export training session as PDF
 - `GET /api/leaderboard` - Social leaderboards
-- `POST /api/sessions/{id}/share` - Share results
+- `POST /api/training-sessions/{id}/share` - Share results
 - `GET /api/review-schedule` - Spaced repetition schedule
 - `PATCH /api/admin/question-reports/{id}` - Admin review
 
