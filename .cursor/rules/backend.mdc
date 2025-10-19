@@ -1,6 +1,6 @@
 ---
-description: 
-globs: src/db/*.ts,src/middleware/*.ts,src/lib/*.ts
+description:
+globs: src/db/*.ts,src/middleware/*.ts,src/server/**/*.ts,src/pages/api/**/*.ts
 alwaysApply: false
 ---
 ### Backend and Database
@@ -10,3 +10,16 @@ alwaysApply: false
 - Use Zod schemas to validate data exchanged with the backend.
 - Use supabase from context.locals in Astro routes instead of importing supabaseClient directly
 - Use SupabaseClient type from `src/db/supabase.client.ts`, not from `@supabase/supabase-js`
+- Use `@` imports instead of relative paths
+
+### Backend Code Organization
+
+- **ALL backend-only code MUST be placed in `src/server/`** directory
+- `src/server/` is server-only - code here will NEVER be bundled for the client
+- Structure within `src/server/`:
+  - `services/` - Business logic and data access layer (e.g., `ProfileService`)
+  - `utils/` - Backend utilities (e.g., `auth.ts`, `api-response.ts`, `error-handler.ts`)
+  - `validation/` - Zod schemas for request validation
+  - `errors/` - Custom error classes for API responses
+- `src/lib/` should only contain code that can be safely shared between frontend and backend
+- NEVER import from `src/server/` in client components or frontend code
