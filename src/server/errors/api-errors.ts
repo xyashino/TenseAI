@@ -32,6 +32,24 @@ export class BadRequestError extends ApiError {
   }
 }
 
+export class ConfigurationError extends ApiError {
+  readonly statusCode = 500;
+  readonly errorType = "Configuration Error";
+
+  constructor(message = "Service configuration is invalid") {
+    super(message);
+  }
+}
+
+export class AuthenticationError extends ApiError {
+  readonly statusCode = 401;
+  readonly errorType = "Authentication Failed";
+
+  constructor(message = "Authentication failed") {
+    super(message);
+  }
+}
+
 export class UnauthorizedError extends ApiError {
   readonly statusCode = 401;
   readonly errorType = "Unauthorized";
@@ -87,11 +105,58 @@ export class ValidationError extends ApiError {
   }
 }
 
+export class RateLimitError extends ApiError {
+  readonly statusCode = 429;
+  readonly errorType = "Rate Limit Exceeded";
+  readonly retryAfter: number;
+
+  constructor(message = "Rate limit exceeded", retryAfter = 60) {
+    super(message);
+    this.retryAfter = retryAfter;
+  }
+
+  toJSON() {
+    return {
+      error: this.errorType,
+      message: this.message,
+      retry_after: this.retryAfter,
+    };
+  }
+}
+
 export class InternalServerError extends ApiError {
   readonly statusCode = 500;
   readonly errorType = "Internal Server Error";
 
   constructor(message = "An unexpected error occurred") {
     super(message);
+  }
+}
+
+export class ServiceUnavailableError extends ApiError {
+  readonly statusCode = 503;
+  readonly errorType = "Service Unavailable";
+
+  constructor(message = "Service temporarily unavailable") {
+    super(message);
+  }
+}
+
+export class MalformedResponseError extends ApiError {
+  readonly statusCode = 502;
+  readonly errorType = "Malformed Response";
+  readonly details?: unknown;
+
+  constructor(message = "Malformed response received from upstream service", details?: unknown) {
+    super(message);
+    this.details = details;
+  }
+
+  toJSON() {
+    return {
+      error: this.errorType,
+      message: this.message,
+      details: this.details,
+    };
   }
 }
