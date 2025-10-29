@@ -51,8 +51,13 @@ This is an **SSR (server-side rendered) application** with Astro's Node adapter 
 ├── components/       # Astro & React components
 │   ├── ui/           # Shadcn/ui components
 │   └── hooks/        # Custom React hooks
-├── lib/              # Services and helpers
-│   └── services/     # Business logic extracted from routes
+├── server/           # Backend-only code (NEVER bundled for client)
+│   ├── services/     # Business logic and data access layer
+│   ├── utils/        # Backend utilities (auth, error-handler, etc.)
+│   ├── validation/   # Zod schemas for request validation
+│   └── errors/       # Custom API error classes
+├── lib/              # Shared utilities (safe for client & server)
+│   └── utils.ts      # UI utilities (e.g., cn function)
 ├── middleware/       # Astro middleware (index.ts)
 ├── db/               # Supabase clients and types
 ├── types.ts          # Shared types (Entities, DTOs)
@@ -89,9 +94,18 @@ function processData(data: Data) {
 - Use uppercase HTTP method handlers: `export async function POST(context)`
 - Add `export const prerender = false` for dynamic routes
 - Use Zod for input validation
-- Extract business logic to `src/lib/services`
+- Extract business logic to `src/server/services`
 - Access Supabase via `context.locals.supabase` (not direct import)
 - Use `SupabaseClient` type from `src/db/supabase.client.ts`
+
+### Backend Code Organization
+- **ALL backend-only code MUST be in `src/server/`** - this directory is server-only and never bundled for the client
+- `src/server/services/` - Business logic classes (e.g., `ProfileService`)
+- `src/server/utils/` - Backend utilities (`auth.ts`, `api-response.ts`, `error-handler.ts`)
+- `src/server/validation/` - Zod schemas for API request validation
+- `src/server/errors/` - Custom error classes with `toResponse()` methods
+- `src/lib/` - Only for code that is safe to share between frontend and backend
+- **NEVER import from `src/server/` in client components** - this will cause bundling errors
 
 ### React Components
 - Functional components with hooks only
