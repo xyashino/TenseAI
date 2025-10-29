@@ -14,6 +14,7 @@ function handleZodError(error: ZodError): ValidationError {
 }
 
 function handleServiceError(error: Error): ApiError {
+  // Not Found errors
   if (error.message === "Profile not found") {
     return new NotFoundError("Profile not found");
   }
@@ -25,6 +26,16 @@ function handleServiceError(error: Error): ApiError {
   }
   if (error.message === "Question not found") {
     return new NotFoundError("Question not found");
+  }
+
+  // AI service errors
+  if (
+    error.message.includes("AI service") ||
+    error.message.includes("Failed to generate") ||
+    error.message.includes("No mock questions available") ||
+    error.message.includes("Not enough mock questions")
+  ) {
+    return new InternalServerError("Question generation failed. Please try again later.");
   }
 
   return new InternalServerError();
