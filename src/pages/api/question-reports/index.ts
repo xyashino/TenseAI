@@ -1,14 +1,15 @@
-import type { APIRoute } from "astro";
+import { RateLimitError } from "@/server/errors/api-errors";
+import { QuestionReportRepository } from "@/server/repositories/question-report.repository";
+import { rateLimitService } from "@/server/services/rate-limit.service";
+import { authenticateUser } from "@/server/utils/auth";
+import { handleApiError } from "@/server/utils/error-handler";
+import { buildPaginationMeta } from "@/server/utils/pagination";
 import {
   createQuestionReportSchema,
   getQuestionReportsQuerySchema,
 } from "@/server/validation/question-report.validation";
-import { rateLimitService } from "@/server/services/rate-limit.service";
-import { QuestionReportRepository } from "@/server/repositories/question-report.repository";
-import { authenticateUser } from "@/server/utils/auth";
-import { handleApiError } from "@/server/utils/error-handler";
-import { RateLimitError } from "@/server/errors/api-errors";
-import type { QuestionReportInsert, QuestionReportsListResponseDTO, PaginationMeta } from "@/types";
+import type { PaginationMeta, QuestionReportInsert, QuestionReportsListResponseDTO } from "@/types";
+import type { APIRoute } from "astro";
 
 export const prerender = false;
 
@@ -60,7 +61,6 @@ export const GET: APIRoute = async (context) => {
     const supabase = context.locals.supabase;
     const userId = await authenticateUser(supabase);
 
-    // Parse and validate query parameters
     const url = new URL(context.request.url);
     const queryParams = {
       page: url.searchParams.get("page"),
@@ -69,11 +69,8 @@ export const GET: APIRoute = async (context) => {
     };
 
     const validated = getQuestionReportsQuerySchema.parse(queryParams);
-
-    // Create repository
     const repository = new QuestionReportRepository(supabase);
 
-    // Fetch reports
     const { reports, total } = await repository.getUserReports(
       userId,
       validated.page,
@@ -81,18 +78,12 @@ export const GET: APIRoute = async (context) => {
       validated.status
     );
 
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(total / validated.limit);
-    const pagination: PaginationMeta = {
-      current_page: validated.page,
-      total_pages: totalPages,
-      total_items: total,
-      items_per_page: validated.limit,
-      has_next: validated.page < totalPages,
-      has_previous: validated.page > 1,
-    };
+    const pagination: PaginationMeta = buildPaginationMeta({
+      totalItems: total,
+      page: validated.page,
+      limit: validated.limit,
+    });
 
-    // Build response
     const response: QuestionReportsListResponseDTO = {
       reports,
       pagination,
@@ -147,11 +138,9 @@ export const POST: APIRoute = async (context) => {
     const supabase = context.locals.supabase;
     const userId = await authenticateUser(supabase);
 
-    // Parse and validate request body
     const body = await context.request.json();
     const validated = createQuestionReportSchema.parse(body);
 
-    // Check rate limit (10 per minute)
     const rateLimitCheck = await rateLimitService.checkLimit(userId, "report_create", {
       limit: 10,
       windowSeconds: 60,
@@ -164,13 +153,9 @@ export const POST: APIRoute = async (context) => {
       );
     }
 
-    // Create repository
     const repository = new QuestionReportRepository(supabase);
-
-    // Verify question exists
     await repository.verifyQuestionExists(validated.question_id);
 
-    // Build insert data
     const reportData: QuestionReportInsert = {
       question_id: validated.question_id,
       user_id: userId,
@@ -178,10 +163,8 @@ export const POST: APIRoute = async (context) => {
       status: "pending",
     };
 
-    // Create report
     const report = await repository.createReport(reportData);
 
-    // Return success response
     return new Response(
       JSON.stringify({
         report: {

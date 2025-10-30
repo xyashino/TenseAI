@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@/db/supabase.client";
+import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CreateSessionDTO,
   PaginationMeta,
@@ -118,15 +119,11 @@ export class TrainingSessionService {
   ): Promise<TrainingSessionsListResponseDTO> {
     const { sessions, total } = await this.repository.getSessionsWithRounds(userId, status, page, limit, sortOrder);
 
-    const totalPages = Math.ceil(total / limit);
-    const pagination: PaginationMeta = {
-      current_page: page,
-      total_pages: totalPages,
-      total_items: total,
-      items_per_page: limit,
-      has_next: page < totalPages,
-      has_previous: page > 1,
-    };
+    const pagination: PaginationMeta = buildPaginationMeta({
+      totalItems: total,
+      page,
+      limit,
+    });
 
     return {
       "training-sessions": sessions,
