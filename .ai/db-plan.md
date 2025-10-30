@@ -96,6 +96,8 @@
 **Constraints**:
 - `UNIQUE (question_id)` - Each question can only be answered once
 
+**Note**: Answers are inserted in a single batch when a round is completed via `POST /api/rounds/{roundId}/complete`. In-round answers are not persisted to the database; they are kept client-side until submission.
+
 ---
 
 ### 1.6. `question_reports`
@@ -495,7 +497,7 @@ As per requirements, theory articles will be stored as **static Markdown files**
 The application logic will:
 1. Query for sessions with `status = 'active'` for the current user
 2. If found, determine the last completed round by checking `rounds.completed_at`
-3. Resume from the appropriate point (mid-round or between rounds)
+3. Resume from the appropriate point (mid-round or between rounds). In-round progress is restored from client-side cache; the database does not store partial answers until the round is completed.
 4. Update the session to `status = 'completed'` when all 3 rounds are finished
 
 ### 7.8. AI Integration Points
