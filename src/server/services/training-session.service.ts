@@ -1,11 +1,14 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import type {
   CreateSessionDTO,
+  PaginationMeta,
   QuestionInsert,
   QuestionWithoutAnswer,
   RoundInsert,
+  SessionStatus,
   SessionWithRoundDTO,
   TrainingSessionInsert,
+  TrainingSessionsListResponseDTO,
 } from "@/types";
 import { TrainingSessionRepository } from "../repositories/training-session.repository";
 import { mockAiQuestionGeneratorService } from "./ai-question-generator.service";
@@ -94,5 +97,40 @@ export class TrainingSessionService {
     }
     await this.repository.deleteSession(sessionId);
     return;
+  }
+
+  /**
+   * Get a paginated list of training sessions with their summaries
+   * @param userId - The authenticated user's ID
+   * @param status - Filter by session status ("active" or "completed")
+   * @param page - Page number (1-based)
+   * @param limit - Number of items per page (1-100)
+   * @param sortOrder - Sort order for started_at field
+   * @returns Paginated list of session summaries
+   * @throws Error if database query fails
+   */
+  async getSessionsList(
+    userId: string,
+    status: SessionStatus,
+    page: number,
+    limit: number,
+    sortOrder: "started_at_desc" | "started_at_asc"
+  ): Promise<TrainingSessionsListResponseDTO> {
+    const { sessions, total } = await this.repository.getSessionsWithRounds(userId, status, page, limit, sortOrder);
+
+    const totalPages = Math.ceil(total / limit);
+    const pagination: PaginationMeta = {
+      current_page: page,
+      total_pages: totalPages,
+      total_items: total,
+      items_per_page: limit,
+      has_next: page < totalPages,
+      has_previous: page > 1,
+    };
+
+    return {
+      "training-sessions": sessions,
+      pagination,
+    };
   }
 }

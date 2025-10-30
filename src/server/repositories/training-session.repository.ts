@@ -1,5 +1,14 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import type { TrainingSessionInsert, RoundInsert, QuestionInsert, TrainingSession, Round, Question } from "@/types";
+import type {
+  Question,
+  QuestionInsert,
+  Round,
+  RoundInsert,
+  SessionStatus,
+  TrainingSession,
+  TrainingSessionInsert,
+  TrainingSessionWithRounds,
+} from "@/types";
 
 export class TrainingSessionRepository {
   constructor(private supabase: SupabaseClient) {}
@@ -59,5 +68,62 @@ export class TrainingSessionRepository {
     if (error) {
       console.error("Failed to delete session during rollback:", error);
     }
+  }
+
+  async getSessionsWithRounds(
+    userId: string,
+    status: SessionStatus,
+    page: number,
+    limit: number,
+    sortOrder: "started_at_desc" | "started_at_asc"
+  ): Promise<{ sessions: TrainingSessionWithRounds[]; total: number }> {
+    const offset = (page - 1) * limit;
+    const ascending = sortOrder === "started_at_asc";
+
+    const { data: sessionsData, error: sessionsError } = await this.supabase
+      .from("training_sessions")
+      .select(
+        `
+        id,
+        user_id,
+        tense,
+        difficulty,
+        status,
+        started_at,
+        completed_at,
+        created_at,
+        final_feedback,
+        rounds (
+          id,
+          round_number,
+          score,
+          completed_at
+        )
+      `,
+        { count: "exact" }
+      )
+      .eq("user_id", userId)
+      .eq("status", status)
+      .order("started_at", { ascending })
+      .range(offset, offset + limit - 1);
+
+    if (sessionsError) {
+      throw new Error(`Failed to fetch sessions: ${sessionsError.message}`);
+    }
+
+    const { count, error: countError } = await this.supabase
+      .from("training_sessions")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("status", status);
+
+    if (countError) {
+      throw new Error(`Failed to count sessions: ${countError.message}`);
+    }
+
+    return {
+      sessions: sessionsData,
+      total: count || 0,
+    };
   }
 }

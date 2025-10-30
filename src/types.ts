@@ -136,30 +136,6 @@ export interface ActiveSessionDTO {
   progress: SessionProgress;
 }
 
-export interface ActiveSessionsResponseDTO {
-  active_sessions: ActiveSessionDTO[];
-}
-
-export interface SessionListItemDTO {
-  id: string;
-  tense: TenseName;
-  difficulty: DifficultyLevel;
-  status: SessionStatus;
-  started_at: string;
-  completed_at: string | null;
-  rounds_summary: {
-    round_1_score: number | null;
-    round_2_score: number | null;
-    round_3_score: number | null;
-  };
-  total_score: string;
-}
-
-export interface SessionsListResponseDTO {
-  training_sessions: SessionListItemDTO[];
-  pagination: PaginationMeta;
-}
-
 export interface RoundDetailDTO {
   id: string;
   round_number: number;
@@ -212,22 +188,6 @@ export interface CompleteRoundResponseDTO {
   questions_review: QuestionReview[];
 }
 
-export interface SubmitAnswerDTO {
-  question_id: string;
-  selected_answer: string;
-}
-
-export interface AnswerResponseDTO {
-  answer: {
-    id: string;
-    question_id: string;
-    session_id: string;
-    selected_answer: string;
-    answered_at: string;
-  };
-  message: string;
-}
-
 export interface CreateQuestionReportDTO {
   question_id: string;
   report_comment?: string;
@@ -253,4 +213,27 @@ export interface RateLimitErrorResponse extends ErrorResponse {
 
 export interface ValidationErrorResponse extends ErrorResponse {
   details: Record<string, string>;
+}
+
+export interface TrainingSessionWithRounds {
+  id: string;
+  user_id: string;
+  tense: TenseName;
+  difficulty: DifficultyLevel;
+  status: SessionStatus;
+  started_at: string;
+  completed_at: string | null;
+  created_at: string;
+  final_feedback: string | null;
+  rounds: {
+    id: string;
+    round_number: number;
+    score: number | null;
+    completed_at: string | null;
+  }[];
+}
+
+export interface TrainingSessionsListResponseDTO {
+  "training-sessions": TrainingSessionWithRounds[];
+  pagination: PaginationMeta;
 }

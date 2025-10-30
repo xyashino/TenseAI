@@ -10,3 +10,32 @@ export const createSessionSchema = z.object({
 });
 
 export type CreateSessionValidated = z.infer<typeof createSessionSchema>;
+
+export const getTrainingSessionsQuerySchema = z.object({
+  status: z
+    .string()
+    .nullable()
+    .transform((val) => val || "completed")
+    .pipe(z.enum(["active", "completed"]))
+    .default("completed"),
+  page: z
+    .string()
+    .nullable()
+    .transform((val) => (val ? parseInt(val, 10) : 1))
+    .pipe(z.number().int().positive())
+    .default(1),
+  limit: z
+    .string()
+    .nullable()
+    .transform((val) => (val ? parseInt(val, 10) : 20))
+    .pipe(z.number().int().min(1).max(100))
+    .default(20),
+  sort: z
+    .string()
+    .nullable()
+    .transform((val) => val || "started_at_desc")
+    .pipe(z.enum(["started_at_desc", "started_at_asc"]))
+    .default("started_at_desc"),
+});
+
+export type GetTrainingSessionsQueryValidated = z.infer<typeof getTrainingSessionsQuerySchema>;
