@@ -39,3 +39,11 @@ export const getTrainingSessionsQuerySchema = z.object({
 });
 
 export type GetTrainingSessionsQueryValidated = z.infer<typeof getTrainingSessionsQuerySchema>;
+
+export const getSessionDetailParamsSchema = z.object({
+  sessionId: z.string().uuid({
+    message: "sessionId must be a valid UUID",
+  }),
+});
+
+export type GetSessionDetailParamsValidated = z.infer<typeof getSessionDetailParamsSchema>;

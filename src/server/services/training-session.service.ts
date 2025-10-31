@@ -1,13 +1,18 @@
 import type { SupabaseClient } from "@/db/supabase.client";
+import { NotFoundError } from "@/server/errors/api-errors";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CreateSessionDTO,
+  DifficultyLevel,
   PaginationMeta,
   QuestionInsert,
   QuestionWithoutAnswer,
+  RoundDetailDTO,
   RoundInsert,
+  SessionDetailResponseDTO,
   SessionStatus,
   SessionWithRoundDTO,
+  TenseName,
   TrainingSessionInsert,
   TrainingSessionsListResponseDTO,
 } from "@/types";
@@ -128,6 +133,78 @@ export class TrainingSessionService {
     return {
       "training-sessions": sessions,
       pagination,
+    };
+  }
+
+  /**
+   * Get detailed information about a specific training session
+   * @param userId - The authenticated user's ID
+   * @param sessionId - The session ID to retrieve
+   * @returns Complete session details with rounds, questions, answers, and summary
+   * @throws NotFoundError if session doesn't exist or doesn't belong to user
+   * @throws Error if database query fails
+   */
+  async getSessionDetail(userId: string, sessionId: string): Promise<SessionDetailResponseDTO> {
+    const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
+
+    if (!sessionData) {
+      throw new NotFoundError("Session not found");
+    }
+
+    // Transform data to match response DTO
+    const rounds: RoundDetailDTO[] = sessionData.rounds
+      .sort((a, b) => a.round_number - b.round_number)
+      .map((round) => ({
+        id: round.id,
+        round_number: round.round_number,
+        score: round.score ?? 0,
+        round_feedback: round.round_feedback ?? "",
+        started_at: round.started_at,
+        completed_at: round.completed_at ?? "",
+        questions: round.questions
+          .sort((a, b) => a.question_number - b.question_number)
+          .map((q) => {
+            // User answer is a One-to-One relationship (each question has one answer)
+            const userAnswer = q.user_answer;
+
+            return {
+              id: q.id,
+              question_number: q.question_number,
+              question_text: q.question_text,
+              options: Array.isArray(q.options) ? q.options : JSON.parse(q.options as string),
+              correct_answer: q.correct_answer,
+              user_answer: {
+                selected_answer: userAnswer?.selected_answer ?? "",
+                is_correct: userAnswer?.is_correct ?? false,
+                answered_at: userAnswer?.answered_at ?? "",
+              },
+            };
+          }),
+      }));
+
+    // Calculate summary statistics
+    const total_questions = rounds.length * 10;
+    const correct_answers = rounds.reduce((sum, round) => sum + round.score, 0);
+    const accuracy_percentage = Math.round((correct_answers / total_questions) * 100);
+    const rounds_scores = rounds.map((r) => r.score);
+
+    return {
+      training_session: {
+        id: sessionData.id,
+        tense: sessionData.tense as TenseName,
+        difficulty: sessionData.difficulty as DifficultyLevel,
+        status: sessionData.status as SessionStatus,
+        final_feedback: sessionData.final_feedback,
+        started_at: sessionData.started_at,
+        completed_at: sessionData.completed_at,
+      },
+      rounds,
+      summary: {
+        total_questions,
+        correct_answers,
+        accuracy_percentage,
+        rounds_scores,
+      },
     };
   }
 }

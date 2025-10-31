@@ -10,6 +10,38 @@ import type {
   TrainingSessionWithRounds,
 } from "@/types";
 
+// Type for the nested query result from getSessionWithDetails
+// Note: user_answer is a One-to-One relationship (UNIQUE constraint on question_id)
+interface SessionWithDetailsRaw {
+  id: string;
+  tense: string;
+  difficulty: string;
+  status: string;
+  final_feedback: string | null;
+  started_at: string;
+  completed_at: string | null;
+  rounds: {
+    id: string;
+    round_number: number;
+    score: number | null;
+    round_feedback: string | null;
+    started_at: string;
+    completed_at: string | null;
+    questions: {
+      id: string;
+      question_number: number;
+      question_text: string;
+      options: unknown; // Json type from Supabase
+      correct_answer: string;
+      user_answer: {
+        selected_answer: string;
+        is_correct: boolean;
+        answered_at: string;
+      } | null;
+    }[];
+  }[];
+}
+
 export class TrainingSessionRepository {
   constructor(private supabase: SupabaseClient) {}
 
@@ -125,5 +157,61 @@ export class TrainingSessionRepository {
       sessions: sessionsData,
       total: count || 0,
     };
+  }
+
+  /**
+   * Get a single training session with all its details including rounds, questions, and user answers
+   * @param userId - User ID for authorization check
+   * @param sessionId - Session ID to retrieve
+   * @returns Session with nested rounds, questions, and answers, or null if not found
+   * @throws Error if database query fails
+   */
+  async getSessionWithDetails(userId: string, sessionId: string): Promise<SessionWithDetailsRaw | null> {
+    const { data, error } = await this.supabase
+      .from("training_sessions")
+      .select(
+        `
+        id,
+        tense,
+        difficulty,
+        status,
+        final_feedback,
+        started_at,
+        completed_at,
+        rounds (
+          id,
+          round_number,
+          score,
+          round_feedback,
+          started_at,
+          completed_at,
+          questions (
+            id,
+            question_number,
+            question_text,
+            options,
+            correct_answer,
+            user_answer:user_answers (
+              selected_answer,
+              is_correct,
+              answered_at
+            )
+          )
+        )
+      `
+      )
+      .eq("id", sessionId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error) {
+      // PGRST116 is Supabase's "no rows returned" error code
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw new Error(`Failed to fetch session details: ${error.message}`);
+    }
+
+    return data as SessionWithDetailsRaw;
   }
 }
