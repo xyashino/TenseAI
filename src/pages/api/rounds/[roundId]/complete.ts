@@ -1,10 +1,7 @@
 import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import {
-  completeRoundBodySchema,
-  completeRoundParamsSchema,
-} from "@/server/validation/session.validation";
+import { completeRoundBodySchema, completeRoundParamsSchema } from "@/server/validation/session.validation";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
