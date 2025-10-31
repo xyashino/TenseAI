@@ -217,14 +217,11 @@ export interface ValidationErrorResponse extends ErrorResponse {
 
 export interface TrainingSessionWithRounds {
   id: string;
-  user_id: string;
   tense: TenseName;
   difficulty: DifficultyLevel;
   status: SessionStatus;
   started_at: string;
   completed_at: string | null;
-  created_at: string;
-  final_feedback: string | null;
   rounds: {
     id: string;
     round_number: number;

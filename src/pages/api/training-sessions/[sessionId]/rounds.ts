@@ -1,4 +1,4 @@
-import { BadRequestError, RateLimitError } from "@/server/errors/api-errors";
+import { RateLimitError } from "@/server/errors/api-errors";
 import { rateLimitService } from "@/server/services/rate-limit.service";
 import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
