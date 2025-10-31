@@ -92,15 +92,15 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 
 ## Available Scripts
 
-| Command            | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `pnpm dev`         | Start the development server                     |
-| `pnpm build`       | Build the production-ready application           |
-| `pnpm preview`     | Preview the production build locally             |
-| `pnpm astro`       | Run Astro CLI commands                           |
-| `pnpm lint`        | Check code for linting errors                    |
-| `pnpm lint:fix`    | Automatically fix linting errors                 |
-| `pnpm format`      | Format code using Prettier                       |
+| Command         | Description                            |
+| --------------- | -------------------------------------- |
+| `pnpm dev`      | Start the development server           |
+| `pnpm build`    | Build the production-ready application |
+| `pnpm preview`  | Preview the production build locally   |
+| `pnpm astro`    | Run Astro CLI commands                 |
+| `pnpm lint`     | Check code for linting errors          |
+| `pnpm lint:fix` | Automatically fix linting errors       |
+| `pnpm format`   | Format code using Prettier             |
 
 ## Project Scope
 

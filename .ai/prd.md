@@ -1,5 +1,7 @@
 # Product Requirements Document (PRD) - TenseAI
+
 ## 1. Product Overview
+
 TenseAI is a web application designed to help English language learners master grammatical tenses. It leverages AI to provide a personalized and effective learning experience. The application generates contextual exercises and offers intelligent feedback, moving beyond static, repetitive drills.
 
 The target audience is adult, self-directed learners who need a focused tool to practice and improve their understanding of English tenses. The Minimum Viable Product (MVP) will focus on providing a core, high-quality learning loop for the four most common English tenses.
@@ -7,8 +9,11 @@ The target audience is adult, self-directed learners who need a focused tool to 
 The overarching goal of the MVP is to launch a stable, functional application that validates the core concept: AI-driven practice can significantly improve grammar acquisition.
 
 ---
+
 ## 2. User Problem
+
 English learners, particularly those studying on their own, often struggle with the nuances of grammar tenses. Common challenges include:
+
 - Lack of personalized feedback: Standard exercises provide a simple right/wrong answer without explaining the underlying error.
 - Repetitive and unengaging content: Textbooks and many apps use a limited set of example sentences that quickly become boring and fail to cover real-world usage.
 - Difficulty tracking progress: Learners often don't know if they are genuinely improving or just memorizing answers to specific questions.
@@ -16,8 +21,11 @@ English learners, particularly those studying on their own, often struggle with 
 TenseAI addresses these problems by providing an interactive learning environment where users receive AI-generated, context-rich questions and intelligent feedback that helps them understand their mistakes and see a clear path to improvement.
 
 ---
+
 ## 3. Functional Requirements
+
 ### 3.1. User Account Management
+
 - `REQ-01`: Users must be able to register for an account using an email address and a password.
 - `REQ-02`: Registration requires providing a name for personalization.
 - `REQ-03`: The system must include an account activation process via email.
@@ -25,20 +33,24 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - `REQ-05`: Users must have the ability to reset a forgotten password.
 
 ### 3.2. Onboarding
+
 - `REQ-06`: New users will complete a mandatory, two-step onboarding process after registration.
 - `REQ-07`: Step one collects the user's name.
 - `REQ-08`: Step two allows the user to set a default difficulty level (Basic or Advanced).
 
 ### 3.3. Core Application Interface
+
 - `REQ-09`: The application will use responsive web navigation: a sidebar on desktop and a collapsible top navigation on small screens.
 - `REQ-10`: The navigation will contain four main sections: "Practice", "Active Sessions", "Theory", and "History".
 
 ### 3.4. Theory Module
+
 - `REQ-11`: The "Theory" section will provide access to educational materials for four tenses: Present Simple, Past Simple, Present Perfect, and Future Simple.
 - `REQ-12`: All theoretical content will be created manually in Markdown format.
 - `REQ-13`: Each article will have a consistent structure: usage, sentence construction, and common time expressions.
 
 ### 3.5. Training Module
+
 - `REQ-14`: From the "Practice" screen, users can initiate a training session.
 - `REQ-15`: Before starting, the user must select a grammar tense and a difficulty level (Basic: A2/B1 vocabulary, Advanced: B2 vocabulary). The difficulty level will default to the user's preference set during onboarding but can be changed for any session.
 - `REQ-16`: A training session consists of 3 consecutive rounds.
@@ -49,21 +61,27 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - `REQ-20`: The application must persist the state of **all active sessions** for a user on the server. A user can have an **unlimited number of concurrent, active sessions**. If the user closes the site or browser tab, they will be able to resume **any of their active sessions** from the "Active Sessions" screen upon their next visit. A local cache may be used to improve recovery speed, but the server is the source of truth.
 
 ### 3.6. Session History
+
 - `REQ-21`: The "History" section will display a chronological list of all completed training sessions.
 - `REQ-22`: Each entry in the list will show the date, the grammar tense practiced, and the final score trend (e.g., 6/10 → 7/10 → 8/10).
 - `REQ-23`: Users can click on a history entry to view the detailed final summary screen for that session, including the questions, their answers, and the AI's detailed error analysis.
 
 ### 3.7. AI Integration
+
 - `REQ-24`: A Large Language Model (LLM) will be used to generate questions, round feedback, and the final error analysis.
 - `REQ-25`: The AI's communication tone will be configured to be that of an informal, supportive "friendly coach".
 
 ### 3.8. User Feedback
+
 - `REQ-26`: Each question during a training session will have a mechanism (e.g., a flag icon) for the user to report an error.
 - `REQ-27`: Error reports will be saved to the database (Supabase) for manual review by the development team.
 
 ---
+
 ## 4. Product Boundaries
+
 ### 4.1. In Scope for MVP
+
 - User registration, login, and password management.
 - A choice of 4 grammar tenses: Present Simple, Past Simple, Present Perfect, Future Simple.
 - One training mode: multiple-choice questions.
@@ -75,6 +93,7 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - A user-facing mechanism for reporting question errors.
 
 ### 4.2. Out of Scope for MVP
+
 - Additional training modes (e.g., fill-in-the-blanks, sentence construction).
 - Gamification elements (points, streaks, badges, leaderboards).
 - A spaced repetition system for reviewing questions.
@@ -86,8 +105,11 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Monetization features (subscriptions, ads, in-app purchases).
 
 ---
+
 ## 5. User Stories
+
 ### 5.1. Account Management
+
 - ID: US-001
 - Title: New User Registration
 - Description: As a new user, I want to create an account using my email and a password so that I can save my progress and access my session history.
@@ -127,6 +149,7 @@ TenseAI addresses these problems by providing an interactive learning environmen
   - And clicking the link allows me to set a new password.
 
 ### 5.2. Onboarding & Setup
+
 - ID: US-005
 - Title: First-Time User Onboarding
 - Description: As a new user logging in for the first time, I want to go through a quick setup process to personalize the app.
@@ -138,6 +161,7 @@ TenseAI addresses these problems by providing an interactive learning environmen
   - Then I am taken to the main "Practice" screen.
 
 ### 5.3. Core Functionality
+
 - ID: US-006
 - Title: Navigating the App
 - Description: As a user, I want to easily switch between the main sections of the application using the site's navigation (sidebar on desktop, collapsible top navigation on small screens).
@@ -171,7 +195,7 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Acceptance Criteria:
   - Given I am presented with a question and multiple answer choices,
   - When I select an answer,
-  - **Then the system records my answer *without* showing me if it is correct or incorrect,**
+  - **Then the system records my answer _without_ showing me if it is correct or incorrect,**
   - And I am automatically advanced to the next question until the round of 10 questions is complete.
 
 - ID: US-010
@@ -224,6 +248,7 @@ TenseAI addresses these problems by providing an interactive learning environmen
   - Then I am taken to a view of the final session summary for that session, containing the score trend and detailed error analysis.
 
 ### 5.4. Feedback & Edge Cases
+
 - ID: US-015
 - Title: Reporting an Incorrect Question
 - Description: As a user, if I believe a question or its answer is incorrect, I want to report it so the app can be improved.
@@ -242,7 +267,9 @@ TenseAI addresses these problems by providing an interactive learning environmen
   - Then I see an "empty state" message, such as "You haven't completed any sessions yet. Go to the 'Practice' tab to get started!".
 
 ---
+
 ## 6. Success Metrics
+
 As a non-commercial hobby project, the MVP's success will be measured by qualitative feedback and basic engagement rather than traditional business KPIs. The original, more complex criteria (e.g., completion rates) are formally deferred post-MVP.
 
 - Primary Goal: Launch a functional, stable MVP version of the TenseAI application. This is a binary metric (achieved/not achieved).
