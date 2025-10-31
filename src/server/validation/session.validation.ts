@@ -63,3 +63,39 @@ export const createRoundParamsSchema = z.object({
 });
 
 export type CreateRoundParamsValidated = z.infer<typeof createRoundParamsSchema>;
+
+export const completeRoundParamsSchema = z.object({
+  roundId: z.string().uuid({
+    message: "roundId must be a valid UUID",
+  }),
+});
+
+export type CompleteRoundParamsValidated = z.infer<typeof completeRoundParamsSchema>;
+
+export const completeRoundBodySchema = z.object({
+  answers: z
+    .array(
+      z.object({
+        question_id: z.string().uuid({
+          message: "question_id must be a valid UUID",
+        }),
+        selected_answer: z.string().min(1, {
+          message: "selected_answer cannot be empty",
+        }),
+      })
+    )
+    .length(10, {
+      message: "Must provide exactly 10 answers",
+    })
+    .refine(
+      (answers) => {
+        const questionIds = answers.map((a) => a.question_id);
+        return new Set(questionIds).size === questionIds.length;
+      },
+      {
+        message: "Duplicate question_id values are not allowed",
+      }
+    ),
+});
+
+export type CompleteRoundBodyValidated = z.infer<typeof completeRoundBodySchema>;

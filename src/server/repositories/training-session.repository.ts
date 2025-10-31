@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import type {
+  CompletedRoundDTO,
   Question,
   QuestionInsert,
   Round,
@@ -8,6 +9,7 @@ import type {
   TrainingSession,
   TrainingSessionInsert,
   TrainingSessionWithRounds,
+  UserAnswerInsert,
 } from "@/types";
 
 // Type for the nested query result from getSessionWithDetails
@@ -285,5 +287,134 @@ export class TrainingSessionRepository {
     }
 
     return data as SessionWithDetailsRaw;
+  }
+
+  /**
+   * Get round with its parent session for authorization check
+   * @param roundId - Round ID to fetch
+   * @returns Round with session data or null if not found
+   * @throws Error if database query fails
+   */
+  async getRoundWithSession(roundId: string): Promise<{
+    id: string;
+    session_id: string;
+    round_number: number;
+    score: number | null;
+    completed_at: string | null;
+    started_at: string;
+    session: {
+      user_id: string;
+      tense: string;
+      difficulty: string;
+    };
+  } | null> {
+    const { data, error } = await this.supabase
+      .from("rounds")
+      .select(
+        `
+        id,
+        session_id,
+        round_number,
+        score,
+        completed_at,
+        started_at,
+        training_sessions!inner (
+          user_id,
+          tense,
+          difficulty
+        )
+      `
+      )
+      .eq("id", roundId)
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw new Error(`Failed to fetch round: ${error.message}`);
+    }
+    return {
+      id: data.id,
+      session_id: data.session_id,
+      round_number: data.round_number,
+      score: data.score,
+      completed_at: data.completed_at,
+      started_at: data.started_at,
+      session: {
+        user_id: (data.training_sessions as any).user_id,
+        tense: (data.training_sessions as any).tense,
+        difficulty: (data.training_sessions as any).difficulty,
+      },
+    };
+  }
+
+  /**
+   * Get all questions for a round including correct answers
+   * @param roundId - Round ID to fetch questions for
+   * @returns Array of questions with correct answers
+   * @throws Error if database query fails
+   */
+  async getQuestionsWithAnswers(roundId: string) {
+    const { data, error } = await this.supabase
+      .from("questions")
+      .select("id, question_number, question_text, options, correct_answer")
+      .eq("round_id", roundId)
+      .order("question_number", { ascending: true });
+
+    if (error) {
+      throw new Error(`Failed to fetch questions: ${error.message}`);
+    }
+
+    return (data || []).map((q) => ({
+      id: q.id,
+      question_number: q.question_number,
+      question_text: q.question_text,
+      options: Array.isArray(q.options) ? q.options : JSON.parse(q.options as string),
+      correct_answer: q.correct_answer,
+    }));
+  }
+
+  /**
+   * Insert multiple user answers in a single transaction
+   * @param answers - Array of user answers to insert
+   * @throws Error if database operation fails
+   */
+  async createUserAnswers(answers: UserAnswerInsert[]): Promise<void> {
+    const { error } = await this.supabase.from("user_answers").insert(answers);
+
+    if (error) {
+      throw new Error(`Failed to insert user answers: ${error.message}`);
+    }
+  }
+
+  /**
+   * Update round with score, feedback, and completion timestamp
+   * @param roundId - Round ID to update
+   * @param score - Calculated score (0-10)
+   * @param feedback - AI-generated feedback
+   * @returns Updated round data
+   * @throws Error if database operation fails
+   */
+  async updateRoundCompletion(roundId: string, score: number, feedback: string): Promise<CompletedRoundDTO> {
+    const now = new Date().toISOString();
+
+    const { data, error } = await this.supabase
+      .from("rounds")
+      .update({
+        score,
+        round_feedback: feedback,
+        completed_at: now,
+        updated_at: now,
+      })
+      .eq("id", roundId)
+      .select("id, round_number, score, round_feedback, started_at, completed_at")
+      .single();
+
+    if (error || !data) {
+      throw new Error(`Failed to update round: ${error?.message}`);
+    }
+
+    return data as CompletedRoundDTO;
   }
 }

@@ -1,12 +1,14 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import { NotFoundError } from "@/server/errors/api-errors";
+import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
 import { TrainingSessionRepository } from "@/server/repositories/training-session.repository";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
+  CompleteRoundResponseDTO,
   CreateSessionDTO,
   DifficultyLevel,
   PaginationMeta,
   QuestionInsert,
+  QuestionReview,
   QuestionWithoutAnswer,
   RoundDetailDTO,
   RoundInsert,
@@ -17,6 +19,7 @@ import type {
   TrainingSessionDTO,
   TrainingSessionInsert,
   TrainingSessionsListResponseDTO,
+  UserAnswerInsert,
 } from "@/types";
 import { mockAiGeneratorService } from "./ai-generator.service";
 
@@ -260,5 +263,119 @@ export class TrainingSessionService {
     if (!deleted) {
       throw new NotFoundError("Session not found");
     }
+  }
+
+  /**
+   * Complete a round by validating and saving user answers, calculating score, and generating feedback
+   * @param userId - The authenticated user's ID
+   * @param roundId - The round ID to complete
+   * @param answers - Array of user answers (10 items)
+   * @returns Round completion data with questions review
+   * @throws NotFoundError if round doesn't exist or doesn't belong to user
+   * @throws BadRequestError if validation fails or round already completed
+   * @throws Error if database operations fail
+   */
+  async completeRound(
+    userId: string,
+    roundId: string,
+    answers: { question_id: string; selected_answer: string }[]
+  ): Promise<CompleteRoundResponseDTO> {
+    const roundWithSession = await this.repository.getRoundWithSession(roundId);
+
+    if (!roundWithSession) {
+      throw new NotFoundError("Round not found");
+    }
+
+    if (roundWithSession.session.user_id !== userId) {
+      throw new NotFoundError("Round not found");
+    }
+
+    if (roundWithSession.completed_at !== null) {
+      throw new BadRequestError("Round is already completed");
+    }
+
+    const questions = await this.repository.getQuestionsWithAnswers(roundId);
+
+    if (questions.length !== 10) {
+      throw new Error("Data integrity error: round does not have exactly 10 questions");
+    }
+
+    const answersMap = new Map(answers.map((a) => [a.question_id, a.selected_answer]));
+    const questionsMap = new Map(questions.map((q) => [q.id, q]));
+
+    for (const answer of answers) {
+      const question = questionsMap.get(answer.question_id);
+      if (!question) {
+        throw new BadRequestError(`Invalid answer data: question ${answer.question_id} does not belong to this round`);
+      }
+
+      if (!question.options.includes(answer.selected_answer)) {
+        throw new BadRequestError(
+          `Selected answer '${answer.selected_answer}' is not a valid option for question ${question.question_number}`
+        );
+      }
+    }
+
+    const questionsReview: QuestionReview[] = [];
+    const userAnswersToInsert: UserAnswerInsert[] = [];
+    let correctCount = 0;
+
+    for (const question of questions) {
+      const userAnswer = answersMap.get(question.id);
+      if (!userAnswer) {
+        throw new Error(`Missing answer for question ${question.id}`);
+      }
+
+      const isCorrect = userAnswer === question.correct_answer;
+
+      if (isCorrect) {
+        correctCount++;
+      }
+
+      questionsReview.push({
+        question_number: question.question_number,
+        question_text: question.question_text,
+        options: question.options,
+        user_answer: userAnswer,
+        correct_answer: question.correct_answer,
+        is_correct: isCorrect,
+      });
+
+      userAnswersToInsert.push({
+        question_id: question.id,
+        session_id: roundWithSession.session_id,
+        selected_answer: userAnswer,
+        is_correct: isCorrect,
+        answered_at: new Date().toISOString(),
+      });
+    }
+    await this.repository.createUserAnswers(userAnswersToInsert);
+
+    let feedback = "";
+    try {
+      const incorrectAnswers = questionsReview
+        .filter((q) => !q.is_correct)
+        .map((q) => ({
+          question_text: q.question_text,
+          user_answer: q.user_answer,
+          correct_answer: q.correct_answer,
+        }));
+
+      feedback = await mockAiGeneratorService.generateRoundFeedback(
+        incorrectAnswers,
+        roundWithSession.session.tense as TenseName,
+        roundWithSession.session.difficulty as DifficultyLevel,
+        correctCount
+      );
+    } catch (error) {
+      console.error("Failed to generate round feedback:", error);
+      feedback = `You scored ${correctCount}/10. Review your answers and try the next round!`;
+    }
+    const completedRound = await this.repository.updateRoundCompletion(roundId, correctCount, feedback);
+
+    return {
+      round: completedRound,
+      questions_review: questionsReview,
+    };
   }
 }
