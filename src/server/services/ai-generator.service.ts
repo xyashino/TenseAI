@@ -7,13 +7,13 @@ interface GeneratedQuestion {
 }
 
 /**
- * Mock AI Question Generator Service
+ * Mock AI Generator Service
  *
- * Generates predefined grammar questions based on tense and difficulty.
+ * Generates predefined grammar questions and feedback based on tense and difficulty.
  * This is a temporary mock implementation that will be replaced with
  * real OpenRouter API integration in the future.
  */
-export class MockAIQuestionGeneratorService {
+export class MockAIGeneratorService {
   /**
    * Generate questions for a specific tense and difficulty level
    * @param tense - The grammar tense to generate questions for
@@ -476,7 +476,62 @@ export class MockAIQuestionGeneratorService {
       ],
     },
   };
+
+  /**
+   * Generate brief feedback for a completed round based on incorrect answers
+   * @param incorrectAnswers - Array of incorrect answers with correct answers shown
+   * @param tense - Grammar tense being practiced
+   * @param difficulty - Difficulty level
+   * @param score - User's score (0-10)
+   * @returns Markdown-formatted feedback string
+   */
+  async generateRoundFeedback(
+    incorrectAnswers: {
+      question_text: string;
+      user_answer: string;
+      correct_answer: string;
+    }[],
+    tense: TenseName,
+    difficulty: DifficultyLevel,
+    score: number
+  ): Promise<string> {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    if (score === 10) {
+      return `**Perfect score!**\n\nExcellent work! You demonstrated complete mastery of ${tense} at the ${difficulty} level. Keep up the great work!`;
+    }
+
+    let feedback = "";
+
+    if (score >= 8) {
+      feedback = `**Great job!**\n\nYou scored ${score}/10 on ${tense} (${difficulty} level). You have a strong grasp of this tense.`;
+    } else if (score >= 6) {
+      feedback = `**Good effort!**\n\nYou scored ${score}/10 on ${tense} (${difficulty} level). You're making progress, but there's room for improvement.`;
+    } else if (score >= 4) {
+      feedback = `**Keep practicing!**\n\nYou scored ${score}/10 on ${tense} (${difficulty} level). This tense requires more practice to master.`;
+    } else {
+      feedback = `**Don't give up!**\n\nYou scored ${score}/10 on ${tense} (${difficulty} level). This tense is challenging, but with focused practice, you'll improve.`;
+    }
+
+    feedback += `\n\n**Tips for ${tense}:**\n`;
+    switch (tense) {
+      case "Present Simple":
+        feedback += `- Remember to add 's' or 'es' for third-person singular (he/she/it)\n- Use base form for I/you/we/they`;
+        break;
+      case "Past Simple":
+        feedback += `- Regular verbs: add -ed\n- Irregular verbs: memorize common forms (go→went, see→saw)`;
+        break;
+      case "Present Perfect":
+        feedback += `- Use 'has' for he/she/it, 'have' for I/you/we/they\n- Past participle form for main verb`;
+        break;
+      case "Future Simple":
+        feedback += `- Use 'will' + base form of verb\n- Same form for all subjects`;
+        break;
+    }
+
+    return feedback;
+  }
 }
 
 // Singleton instance
-export const mockAiQuestionGeneratorService = new MockAIQuestionGeneratorService();
+export const mockAiGeneratorService = new MockAIGeneratorService();

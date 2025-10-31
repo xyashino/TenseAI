@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import { NotFoundError } from "@/server/errors/api-errors";
+import { TrainingSessionRepository } from "@/server/repositories/training-session.repository";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CreateSessionDTO,
@@ -17,8 +18,7 @@ import type {
   TrainingSessionInsert,
   TrainingSessionsListResponseDTO,
 } from "@/types";
-import { TrainingSessionRepository } from "../repositories/training-session.repository";
-import { mockAiQuestionGeneratorService } from "./ai-question-generator.service";
+import { mockAiGeneratorService } from "./ai-generator.service";
 
 export class TrainingSessionService {
   private repository: TrainingSessionRepository;
@@ -105,7 +105,7 @@ export class TrainingSessionService {
       const round = await this.repository.createRound(roundData);
       roundId = round.id;
 
-      const generatedQuestions = await mockAiQuestionGeneratorService.generateQuestions(
+      const generatedQuestions = await mockAiGeneratorService.generateQuestions(
         sessionData.tense,
         sessionData.difficulty,
         10
