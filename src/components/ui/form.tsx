@@ -1,9 +1,17 @@
-import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
+import * as React from "react";
+import {
+  Controller,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
 
-import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface FormItemContextValue {
   id: string;
@@ -89,17 +97,39 @@ function FormMessage({ className, children, ...props }: React.ComponentProps<"p"
   );
 }
 
-interface FormFieldProps extends React.ComponentProps<"div"> {
-  name: string;
-  error?: string;
-}
+const Form = FormProvider;
 
-function FormField({ name, error, children, ...props }: FormFieldProps) {
+type FormFieldProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = {
+  name: TName;
+} & Omit<ControllerProps<TFieldValues, TName>, "name">;
+
+function FormField<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({ ...props }: FormFieldProps<TFieldValues, TName>) {
   return (
-    <FormFieldContext.Provider value={{ name, error }}>
-      <FormItem {...props}>{children}</FormItem>
-    </FormFieldContext.Provider>
+    <Controller
+      {...props}
+      render={({ field, fieldState, formState }) => (
+        <FormFieldContext.Provider value={{ name: props.name, error: fieldState.error?.message }}>
+          <FormItem>{props.render({ field, fieldState, formState })}</FormItem>
+        </FormFieldContext.Provider>
+      )}
+    />
   );
 }
 
-export { useFormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormContext,
+  useFormField,
+};
