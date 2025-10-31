@@ -207,4 +207,19 @@ export class TrainingSessionService {
       },
     };
   }
+
+  /**
+   * Delete a training session
+   * @param userId - The authenticated user's ID
+   * @param sessionId - The session ID to delete
+   * @throws NotFoundError if session doesn't exist or doesn't belong to user
+   * @throws Error if database query fails
+   */
+  async deleteSession(userId: string, sessionId: string): Promise<void> {
+    const deleted = await this.repository.deleteSessionWithAuth(userId, sessionId);
+
+    if (!deleted) {
+      throw new NotFoundError("Session not found");
+    }
+  }
 }

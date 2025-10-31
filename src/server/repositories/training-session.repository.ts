@@ -102,6 +102,33 @@ export class TrainingSessionRepository {
     }
   }
 
+  /**
+   * Delete a training session with authorization check
+   * @param userId - User ID for authorization check
+   * @param sessionId - Session ID to delete
+   * @returns True if session was deleted, false if not found or doesn't belong to user
+   * @throws Error if database query fails
+   */
+  async deleteSessionWithAuth(userId: string, sessionId: string): Promise<boolean> {
+    const { data, error } = await this.supabase
+      .from("training_sessions")
+      .delete()
+      .eq("id", sessionId)
+      .eq("user_id", userId)
+      .select("id")
+      .single();
+
+    if (error) {
+      // PGRST116 is Supabase's "no rows returned" error code
+      if (error.code === "PGRST116") {
+        return false;
+      }
+      throw new Error(`Failed to delete session: ${error.message}`);
+    }
+
+    return !!data;
+  }
+
   async getSessionsWithRounds(
     userId: string,
     status: SessionStatus,

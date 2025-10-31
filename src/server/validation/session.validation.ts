@@ -47,3 +47,11 @@ export const getSessionDetailParamsSchema = z.object({
 });
 
 export type GetSessionDetailParamsValidated = z.infer<typeof getSessionDetailParamsSchema>;
+
+export const deleteSessionParamsSchema = z.object({
+  sessionId: z.string().uuid({
+    message: "sessionId must be a valid UUID",
+  }),
+});
+
+export type DeleteSessionParamsValidated = z.infer<typeof deleteSessionParamsSchema>;
