@@ -45,6 +45,54 @@ interface SessionWithDetailsRaw {
 export class TrainingSessionRepository {
   constructor(private supabase: SupabaseClient) {}
 
+  /**
+   * Get a single session by ID with authorization check
+   * @param userId - User ID for authorization check
+   * @param sessionId - Session ID to retrieve
+   * @returns Session data or null if not found
+   * @throws Error if database query fails
+   */
+  async getSessionById(userId: string, sessionId: string): Promise<TrainingSession | null> {
+    const { data, error } = await this.supabase
+      .from("training_sessions")
+      .select("*")
+      .eq("id", sessionId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error) {
+      // PGRST116 is Supabase's "no rows returned" error code
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw new Error(`Failed to fetch session: ${error.message}`);
+    }
+
+    return data as TrainingSession;
+  }
+
+  /**
+   * Get all rounds for a session
+   * @param sessionId - Session ID to get rounds for
+   * @returns Array of rounds sorted by round_number
+   * @throws Error if database query fails
+   */
+  async getRoundsBySessionId(
+    sessionId: string
+  ): Promise<{ id: string; round_number: number; completed_at: string | null }[]> {
+    const { data, error } = await this.supabase
+      .from("rounds")
+      .select("id, round_number, completed_at")
+      .eq("session_id", sessionId)
+      .order("round_number", { ascending: true });
+
+    if (error) {
+      throw new Error(`Failed to fetch rounds: ${error.message}`);
+    }
+
+    return data || [];
+  }
+
   async createSession(data: TrainingSessionInsert): Promise<TrainingSession> {
     const { data: session, error } = await this.supabase
       .from("training_sessions")
@@ -144,14 +192,11 @@ export class TrainingSessionRepository {
       .select(
         `
         id,
-        user_id,
         tense,
         difficulty,
         status,
         started_at,
         completed_at,
-        created_at,
-        final_feedback,
         rounds (
           id,
           round_number,

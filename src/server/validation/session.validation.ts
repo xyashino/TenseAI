@@ -55,3 +55,11 @@ export const deleteSessionParamsSchema = z.object({
 });
 
 export type DeleteSessionParamsValidated = z.infer<typeof deleteSessionParamsSchema>;
+
+export const createRoundParamsSchema = z.object({
+  sessionId: z.string().uuid({
+    message: "sessionId must be a valid UUID",
+  }),
+});
+
+export type CreateRoundParamsValidated = z.infer<typeof createRoundParamsSchema>;

@@ -11,7 +11,7 @@ export const prerender = false;
 /**
  * POST /api/training-sessions
  *
- * Creates a new training session with the first round and 10 AI-generated questions.
+ * Creates a new training session record only. Does NOT create the first round or generate questions.
  *
  * Request Body:
  * {
@@ -19,15 +19,11 @@ export const prerender = false;
  *   "difficulty": "Basic" | "Advanced"
  * }
  *
- * Rate Limit: 2 requests per minute per user
+ * Rate Limit: 10 requests per minute per user
  *
  * Success Response (201):
  * {
- *   "training_session": { id, user_id, tense, difficulty, status, started_at, created_at },
- *   "current_round": {
- *     id, session_id, round_number, started_at,
- *     questions: [{ id, question_number, question_text, options }]
- *   }
+ *   "training_session": { id, user_id, tense, difficulty, status, started_at, created_at }
  * }
  *
  * Error Responses:
@@ -45,19 +41,19 @@ export const POST: APIRoute = async (context) => {
     const validated = createSessionSchema.parse(body);
 
     const rateLimitCheck = await rateLimitService.checkLimit(userId, "session_create", {
-      limit: 2,
+      limit: 10,
       windowSeconds: 60,
     });
 
     if (!rateLimitCheck.allowed) {
       throw new RateLimitError(
-        "You can create up to 2 sessions per minute. Please try again later.",
+        "You can create up to 10 sessions per minute. Please try again later.",
         rateLimitCheck.retryAfter
       );
     }
 
     const sessionService = new TrainingSessionService(supabase);
-    const result = await sessionService.createSession(userId, validated);
+    const result = await sessionService.createSessionOnly(userId, validated);
 
     return new Response(JSON.stringify(result), {
       status: 201,
@@ -96,12 +92,11 @@ export const POST: APIRoute = async (context) => {
  *       "rounds_summary": [
  *         {
  *           "id": "string",
- *           "round_number": number;
- *           "score": number | null;
- *           "completed_at": string | null;
+ *           "round_number": number,
+ *           "score": number | null,
+ *           "completed_at": string | null
  *         }
- *       ],
- *       "progress": null
+ *       ]
  *     }
  *   ],
  *   "pagination": {

@@ -9,10 +9,11 @@ import type {
   QuestionWithoutAnswer,
   RoundDetailDTO,
   RoundInsert,
+  RoundWithQuestionsDTO,
   SessionDetailResponseDTO,
   SessionStatus,
-  SessionWithRoundDTO,
   TenseName,
+  TrainingSessionDTO,
   TrainingSessionInsert,
   TrainingSessionsListResponseDTO,
 } from "@/types";
@@ -27,13 +28,13 @@ export class TrainingSessionService {
   }
 
   /**
-   * Create a new training session with the first round and 10 questions
+   * Create a new training session record only (without rounds or questions)
    * @param userId - The authenticated user's ID
    * @param dto - Session creation data (tense and difficulty)
-   * @returns Session with first round and questions (without correct answers)
-   * @throws Error if any step fails (session, round, or question creation)
+   * @returns Session object only
+   * @throws Error if session creation fails
    */
-  async createSession(userId: string, dto: CreateSessionDTO): Promise<SessionWithRoundDTO> {
+  async createSessionOnly(userId: string, dto: CreateSessionDTO): Promise<{ training_session: TrainingSessionDTO }> {
     const sessionData: TrainingSessionInsert = {
       user_id: userId,
       tense: dto.tense,
@@ -44,19 +45,71 @@ export class TrainingSessionService {
 
     const session = await this.repository.createSession(sessionData);
 
+    return {
+      training_session: {
+        id: session.id,
+        user_id: session.user_id,
+        tense: session.tense,
+        difficulty: session.difficulty,
+        status: session.status,
+        started_at: session.started_at,
+        created_at: session.created_at,
+      },
+    };
+  }
+
+  /**
+   * Create a new round with 10 AI-generated questions for an existing session
+   * @param userId - The authenticated user's ID
+   * @param sessionId - The session ID to create a round for
+   * @returns Round with questions (without correct answers)
+   * @throws Error if any step fails (round or question creation)
+   */
+  async createRound(userId: string, sessionId: string): Promise<RoundWithQuestionsDTO> {
+    // Verify session belongs to user and is active
+    const sessionData = await this.repository.getSessionById(userId, sessionId);
+
+    if (!sessionData) {
+      throw new NotFoundError("Session not found");
+    }
+
+    if (sessionData.status !== "active") {
+      throw new Error("Cannot create round for a completed session");
+    }
+
+    // Get existing rounds to determine next round number
+    const existingRounds = await this.repository.getRoundsBySessionId(sessionId);
+    const nextRoundNumber = existingRounds.length + 1;
+
+    if (nextRoundNumber > 3) {
+      throw new Error("Cannot create more than 3 rounds per session");
+    }
+
+    // Check if previous round is completed (if not round 1)
+    if (nextRoundNumber > 1) {
+      const previousRound = existingRounds.find((r) => r.round_number === nextRoundNumber - 1);
+      if (!previousRound?.completed_at) {
+        throw new Error(`Cannot create round ${nextRoundNumber}. Previous round is not completed.`);
+      }
+    }
+
     let roundId: string | null = null;
 
     try {
       const roundData: RoundInsert = {
-        session_id: session.id,
-        round_number: 1,
+        session_id: sessionId,
+        round_number: nextRoundNumber,
         started_at: new Date().toISOString(),
       };
 
       const round = await this.repository.createRound(roundData);
       roundId = round.id;
 
-      const generatedQuestions = await mockAiQuestionGeneratorService.generateQuestions(dto.tense, dto.difficulty, 10);
+      const generatedQuestions = await mockAiQuestionGeneratorService.generateQuestions(
+        sessionData.tense,
+        sessionData.difficulty,
+        10
+      );
       const questionsToInsert: QuestionInsert[] = generatedQuestions.map((q, index) => ({
         round_id: round.id,
         question_number: index + 1,
@@ -74,35 +127,21 @@ export class TrainingSessionService {
       }));
 
       return {
-        training_session: {
-          id: session.id,
-          user_id: session.user_id,
-          tense: session.tense,
-          difficulty: session.difficulty,
-          status: session.status,
-          started_at: session.started_at,
-          created_at: session.created_at,
-        },
-        current_round: {
+        round: {
           id: round.id,
           session_id: round.session_id,
           round_number: round.round_number,
           started_at: round.started_at,
-          questions: questionsWithoutAnswer,
         },
+        questions: questionsWithoutAnswer,
       };
     } catch (error) {
-      await this.rollbackDatabaseOperations(session.id, roundId);
+      // Rollback round creation if question generation fails
+      if (roundId) {
+        await this.repository.deleteRound(roundId);
+      }
       throw error;
     }
-  }
-
-  private async rollbackDatabaseOperations(sessionId: string, roundId: string | null): Promise<void> {
-    if (roundId) {
-      await this.repository.deleteRound(roundId);
-    }
-    await this.repository.deleteSession(sessionId);
-    return;
   }
 
   /**
