@@ -1,0 +1,39 @@
+---
+import AuthLayout from "@/layouts/AuthLayout.astro";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+---
+
+<AuthLayout title="Check Your Email - TenseAI">
+  <div class="flex flex-col gap-6">
+    <Card>
+      <CardHeader class="text-center">
+        <CardTitle class="text-xl">Check Your Email</CardTitle>
+        <CardDescription>We've sent you a confirmation link</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div class="space-y-4">
+          <div class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md p-4">
+            <p class="text-sm">
+              A confirmation email has been sent to your email address. Please check your inbox and click the
+              confirmation link to activate your account.
+            </p>
+          </div>
+          <div class="text-sm text-muted-foreground space-y-2">
+            <p class="font-medium">Didn't receive the email?</p>
+            <ul class="list-disc list-inside space-y-1 ml-2">
+              <li>Check your spam or junk folder</li>
+              <li>Make sure you entered the correct email address</li>
+              <li>Wait a few minutes and try again</li>
+            </ul>
+          </div>
+          <div class="pt-2">
+            <a href="/login" class="w-full">
+              <Button variant="outline" className="w-full">Return to Log In</Button>
+            </a>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+</AuthLayout>
