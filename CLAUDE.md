@@ -56,13 +56,17 @@ This is an **SSR (server-side rendered) application** with Astro's Node adapter 
 │   └── api/          # API endpoints (server-side)
 ├── components/       # Astro & React components
 │   ├── ui/           # Shadcn/ui components
-│   └── hooks/        # Custom React hooks
+│   └── auth/         # Authentication-related components
 ├── server/           # Backend-only code (NEVER bundled for client)
 │   ├── services/     # Business logic and data access layer
+│   ├── repositories/ # Data access layer (database queries)
 │   ├── utils/        # Backend utilities (auth, error-handler, etc.)
 │   ├── validation/   # Zod schemas for request validation
 │   └── errors/       # Custom API error classes
-├── lib/              # Shared utilities (safe for client & server)
+├── lib/              # Client-side utilities (safe for client use)
+│   ├── hooks/        # Custom React hooks
+│   ├── api-client.ts # API request utilities
+│   ├── query-client.ts # React Query configuration
 │   └── utils.ts      # UI utilities (e.g., cn function)
 ├── middleware/       # Astro middleware (index.ts)
 ├── db/               # Supabase clients and types
@@ -111,17 +115,18 @@ function processData(data: Data) {
 ### Backend Code Organization
 
 - **ALL backend-only code MUST be in `src/server/`** - this directory is server-only and never bundled for the client
-- `src/server/services/` - Business logic classes (e.g., `ProfileService`)
-- `src/server/utils/` - Backend utilities (`auth.ts`, `api-response.ts`, `error-handler.ts`)
+- `src/server/services/` - Business logic classes (e.g., `ProfileService`, `AIGeneratorService`)
+- `src/server/repositories/` - Data access layer for database operations
+- `src/server/utils/` - Backend utilities (`auth.ts`, `api-response.ts`, `error-handler.ts`, `pagination.ts`)
 - `src/server/validation/` - Zod schemas for API request validation
 - `src/server/errors/` - Custom error classes with `toResponse()` methods
-- `src/lib/` - Only for code that is safe to share between frontend and backend
+- `src/lib/` - Client-side utilities and hooks (React Query, API client, custom hooks)
 - **NEVER import from `src/server/` in client components** - this will cause bundling errors
 
 ### React Components
 
 - Functional components with hooks only
-- Extract reusable logic into custom hooks in `src/components/hooks`
+- Extract reusable logic into custom hooks in `src/lib/hooks/`
 - Use `React.memo()` for expensive components with stable props
 - Use `useCallback` for event handlers passed to children
 - Use `useMemo` for expensive calculations
