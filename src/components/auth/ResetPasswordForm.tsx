@@ -4,10 +4,8 @@ import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ApiClientError } from "@/lib/api-client";
 import { useResetPassword } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,8 +33,7 @@ interface ResetPasswordFormProps {
 }
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
-  const [error, setError] = useState("");
-  const resetPasswordMutation = useResetPassword();
+  const { mutateAsync: resetPassword, isPending, isError, error } = useResetPassword();
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: standardSchemaResolver(resetPasswordSchema),
@@ -47,23 +44,10 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   });
 
   const onSubmit = async (data: ResetPasswordFormValues) => {
-    setError("");
-
-    try {
-      await resetPasswordMutation.mutateAsync({
-        token,
-        password: data.password,
-      });
-      window.location.href = "/login?reset=success";
-    } catch (err) {
-      if (err instanceof ApiClientError) {
-        setError(err.data.message || err.message || "Failed to reset password");
-      } else if (err instanceof Error) {
-        setError(err.message || "Failed to reset password");
-      } else {
-        setError("An error occurred. Please try again.");
-      }
-    }
+    await resetPassword({
+      token,
+      password: data.password,
+    });
   };
 
   return (
@@ -72,7 +56,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              {error && <Alert variant="error">{error}</Alert>}
+              {isError && <Alert variant="error">{error?.message}</Alert>}
               <FormField
                 control={form.control}
                 name="password"
@@ -85,7 +69,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                         type="password"
                         placeholder="Create a strong password"
                         autoComplete="new-password"
-                        disabled={resetPasswordMutation.isPending}
+                        disabled={isPending}
                         {...field}
                       />
                     </FormControl>
@@ -105,7 +89,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                         type="password"
                         placeholder="Confirm your password"
                         autoComplete="new-password"
-                        disabled={resetPasswordMutation.isPending}
+                        disabled={isPending}
                         {...field}
                       />
                     </FormControl>
@@ -114,8 +98,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 )}
               />
               <div>
-                <Button type="submit" className="w-full" disabled={resetPasswordMutation.isPending}>
-                  {resetPasswordMutation.isPending ? "Resetting password..." : "Reset Password"}
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Resetting password..." : "Reset Password"}
                 </Button>
                 <AuthFooterLink text="Remember your password?" linkText="Log in" href="/login" />
               </div>
