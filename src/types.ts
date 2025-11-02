@@ -234,3 +234,23 @@ export interface TrainingSessionsListResponseDTO {
   "training-sessions": TrainingSessionWithRounds[];
   pagination: PaginationMeta;
 }
+
+/**
+ * Navigation item configuration for rendering nav links
+ */
+export interface NavigationItemConfig {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isConditional?: boolean;
+  badge?: number;
+}
+
+/**
+ * Minimal user data for layout rendering
+ */
+export interface LayoutUser {
+  id: string;
+  email: string;
+  name: string | null;
+}
