@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import type { QuestionReport, QuestionReportInsert, QuestionReportWithPreview } from "@/types";
 import { NotFoundError } from "@/server/errors/api-errors";
+import type { QuestionReport, QuestionReportInsert, QuestionReportWithPreview } from "@/types";
 
 export class QuestionReportRepository {
   constructor(private supabase: SupabaseClient) {}
