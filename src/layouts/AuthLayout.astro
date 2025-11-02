@@ -1,6 +1,6 @@
 ---
-import "../styles/global.css";
-
+import { AppLogo } from "@/components/AppLogo";
+import "@/styles/global.css";
 interface Props {
   title?: string;
 }
@@ -18,13 +18,8 @@ const { title = "TenseAI" } = Astro.props;
     <title>{title}</title>
   </head>
   <body class="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-    <div class="flex w-full max-w-sm flex-col gap-6">
-      <a href="/" class="flex items-center gap-2 self-center font-medium text-foreground">
-        <div class="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-          <span class="text-lg font-bold">T</span>
-        </div>
-        TenseAI
-      </a>
+    <div class="flex w-full max-w-sm flex-col gap-6 items-center">
+      <AppLogo />
       <slot />
     </div>
   </body>
