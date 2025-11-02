@@ -1,14 +1,9 @@
 import { createSupabaseServerClient } from "@/db/supabase.client";
-import { BadRequestError } from "@/server/errors/api-errors";
+import { AuthenticationError } from "@/server/errors/api-errors";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
+import { loginSchema } from "@/server/validation/auth.validation";
 import type { APIRoute } from "astro";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.email(),
-  password: z.string(),
-});
 
 export const POST: APIRoute = async (context) => {
   try {
@@ -27,7 +22,7 @@ export const POST: APIRoute = async (context) => {
     });
 
     if (error) {
-      throw new BadRequestError("Invalid credentials");
+      throw new AuthenticationError("Invalid credentials");
     }
 
     return successResponse(data.user);
