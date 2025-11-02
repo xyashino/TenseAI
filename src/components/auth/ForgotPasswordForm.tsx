@@ -2,21 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useForgotPassword } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
+  email: z.email({ message: "Please enter a valid email address" }),
 });
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync: forgotPassword, isPending, isError, error, isSuccess } = useForgotPassword();
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: standardSchemaResolver(forgotPasswordSchema),
@@ -26,33 +24,7 @@ export function ForgotPasswordForm() {
   });
 
   const onSubmit = async (data: ForgotPasswordFormValues) => {
-    setError("");
-    setSuccess(false);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        setError(responseData.message || "Failed to send reset link");
-        setIsLoading(false);
-        return;
-      }
-
-      setSuccess(true);
-      setIsLoading(false);
-    } catch {
-      setError("An error occurred. Please try again.");
-      setIsLoading(false);
-    }
+    await forgotPassword(data);
   };
 
   return (
@@ -68,16 +40,16 @@ export function ForgotPasswordForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="space-y-4">
-                {error && (
+                {isError && (
                   <div
                     className="bg-destructive/10 text-destructive rounded-md p-3 text-sm"
                     role="alert"
                     aria-live="polite"
                   >
-                    {error}
+                    {error.message}
                   </div>
                 )}
-                {success && (
+                {isSuccess && (
                   <div
                     className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-md p-3 text-sm"
                     role="alert"
@@ -98,7 +70,7 @@ export function ForgotPasswordForm() {
                           type="email"
                           placeholder="you@example.com"
                           autoComplete="email"
-                          disabled={isLoading || success}
+                          disabled={isPending}
                           {...field}
                         />
                       </FormControl>
@@ -107,11 +79,11 @@ export function ForgotPasswordForm() {
                   )}
                 />
                 <div>
-                  <Button type="submit" className="w-full" disabled={isLoading || success}>
-                    {isLoading ? "Sending..." : "Send Reset Link"}
+                  <Button type="submit" className="w-full" disabled={isPending}>
+                    {isPending ? "Sending..." : "Send Reset Link"}
                   </Button>
                   <p className="text-center text-sm text-muted-foreground mt-4">
-                    Remember your password?{" "}
+                    Remember your password?&nbsp;
                     <a href="/login" className="underline-offset-4 hover:underline">
                       Log in
                     </a>

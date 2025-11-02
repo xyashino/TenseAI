@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useRegister } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -28,8 +28,7 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync: register, isPending, isError, error } = useRegister();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: standardSchemaResolver(registerSchema),
@@ -41,34 +40,10 @@ export function RegisterForm() {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        setError(responseData.message || "Registration failed");
-        setIsLoading(false);
-        return;
-      }
-
-      window.location.href = "/auth/confirm";
-    } catch {
-      setError("An error occurred. Please try again.");
-      setIsLoading(false);
-    }
+    await register({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
@@ -82,13 +57,13 @@ export function RegisterForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="space-y-4">
-                {error && (
+                {isError && (
                   <div
                     className="bg-destructive/10 text-destructive rounded-md p-3 text-sm"
                     role="alert"
                     aria-live="polite"
                   >
-                    {error}
+                    {error?.message}
                   </div>
                 )}
                 <FormField
@@ -103,7 +78,7 @@ export function RegisterForm() {
                           type="email"
                           placeholder="you@example.com"
                           autoComplete="email"
-                          disabled={isLoading}
+                          disabled={isPending}
                           {...field}
                         />
                       </FormControl>
@@ -123,7 +98,7 @@ export function RegisterForm() {
                           type="password"
                           placeholder="Create a strong password"
                           autoComplete="new-password"
-                          disabled={isLoading}
+                          disabled={isPending}
                           {...field}
                         />
                       </FormControl>
@@ -143,7 +118,7 @@ export function RegisterForm() {
                           type="password"
                           placeholder="Confirm your password"
                           autoComplete="new-password"
-                          disabled={isLoading}
+                          disabled={isPending}
                           {...field}
                         />
                       </FormControl>
@@ -152,11 +127,11 @@ export function RegisterForm() {
                   )}
                 />
                 <div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Creating account..." : "Create Account"}
+                  <Button type="submit" className="w-full" disabled={isPending}>
+                    {isPending ? "Creating account..." : "Create Account"}
                   </Button>
                   <p className="text-center text-sm text-muted-foreground mt-4">
-                    Already have an account?{" "}
+                    Already have an account?&nbsp;
                     <a href="/login" className="underline-offset-4 hover:underline">
                       Log in
                     </a>

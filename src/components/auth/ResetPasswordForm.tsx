@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ApiClientError } from "@/lib/api-client";
+import { useResetPassword } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -32,7 +34,7 @@ interface ResetPasswordFormProps {
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const resetPasswordMutation = useResetPassword();
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: standardSchemaResolver(resetPasswordSchema),
@@ -44,32 +46,21 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
 
   const onSubmit = async (data: ResetPasswordFormValues) => {
     setError("");
-    setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/reset-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          password: data.password,
-        }),
+      await resetPasswordMutation.mutateAsync({
+        token,
+        password: data.password,
       });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        setError(responseData.message || "Failed to reset password");
-        setIsLoading(false);
-        return;
-      }
-
       window.location.href = "/login?reset=success";
-    } catch {
-      setError("An error occurred. Please try again.");
-      setIsLoading(false);
+    } catch (err) {
+      if (err instanceof ApiClientError) {
+        setError(err.data.message || err.message || "Failed to reset password");
+      } else if (err instanceof Error) {
+        setError(err.message || "Failed to reset password");
+      } else {
+        setError("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -105,7 +96,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                           type="password"
                           placeholder="Create a strong password"
                           autoComplete="new-password"
-                          disabled={isLoading}
+                          disabled={resetPasswordMutation.isPending}
                           {...field}
                         />
                       </FormControl>
@@ -125,7 +116,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                           type="password"
                           placeholder="Confirm your password"
                           autoComplete="new-password"
-                          disabled={isLoading}
+                          disabled={resetPasswordMutation.isPending}
                           {...field}
                         />
                       </FormControl>
@@ -134,8 +125,8 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                   )}
                 />
                 <div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Resetting password..." : "Reset Password"}
+                  <Button type="submit" className="w-full" disabled={resetPasswordMutation.isPending}>
+                    {resetPasswordMutation.isPending ? "Resetting password..." : "Reset Password"}
                   </Button>
                   <p className="text-center text-sm text-muted-foreground mt-4">
                     Remember your password?{" "}
