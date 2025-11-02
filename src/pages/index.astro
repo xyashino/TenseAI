@@ -1,5 +1,220 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
 ---
 
-<Layout />
+<Layout title="TenseAI - Master English Tenses with AI">
+  <main class="min-h-screen bg-gradient-to-b from-background via-background to-muted/20">
+    <!-- Hero Section -->
+    <section aria-label="Hero" class="relative overflow-hidden px-4 py-20 sm:px-6 sm:py-32 md:py-40 lg:px-8">
+      <!-- Background decoration -->
+      <div class="absolute inset-0 -z-10">
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 blur-3xl opacity-20">
+          <div
+            class="aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-primary to-purple-600 dark:from-primary/50 dark:to-purple-600/50"
+          >
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-4xl text-center">
+        <!-- Badge -->
+        <div
+          class="mb-8 inline-flex items-center rounded-full border bg-background/60 backdrop-blur-sm px-4 py-1.5 text-sm font-medium shadow-sm"
+        >
+          <span class="mr-2 text-2xl">🚀</span>
+          <span>AI-Powered English Learning</span>
+        </div>
+
+        <h1 class="text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          Master English Tenses
+          <span class="block mt-2 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            10x Faster
+          </span>
+        </h1>
+
+        <p class="mt-6 text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium">
+          Stop memorizing rules. Start understanding naturally.
+        </p>
+
+        <p class="mx-auto mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground leading-relaxed">
+          Get instant AI feedback that explains <em>why</em> you made mistakes. Practice with real-world scenarios. Watch
+          your confidence soar as you finally master English tenses.
+        </p>
+
+        <!-- CTA Button Group -->
+        <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center sm:gap-4">
+          <a href="/register" class="w-full sm:w-auto group">
+            <Button
+              size="lg"
+              class="w-full sm:w-auto text-base px-8 py-6 h-auto shadow-lg hover:shadow-xl transition-all"
+            >
+              <span>Start Learning Free</span>
+              <span class="ml-2 transition-transform group-hover:translate-x-1">→</span>
+            </Button>
+          </a>
+          <a href="/login" class="w-full sm:w-auto">
+            <Button variant="outline" size="lg" class="w-full sm:w-auto text-base px-8 py-6 h-auto border-2">
+              Sign In
+            </Button>
+          </a>
+        </div>
+
+        <!-- Social Proof -->
+        <div class="mt-12 flex flex-col items-center gap-4">
+          <div class="flex -space-x-2">
+            <div class="size-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 ring-2 ring-background"></div>
+            <div class="size-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 ring-2 ring-background">
+            </div>
+            <div class="size-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 ring-2 ring-background">
+            </div>
+            <div class="size-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 ring-2 ring-background">
+            </div>
+            <div class="size-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 ring-2 ring-background"></div>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            <strong class="font-semibold text-foreground">500+ learners</strong> improving their English every day
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section aria-label="Features" class="px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Why Students Choose TenseAI</h2>
+          <p class="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+            Traditional methods teach rules. We teach understanding.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div
+            class="group relative rounded-xl border bg-card p-8 shadow-sm transition-all hover:shadow-lg hover:border-primary/50"
+          >
+            <div class="mb-4 inline-flex size-12 items-center justify-center rounded-lg bg-primary/10 text-3xl">🎯</div>
+            <h3 class="text-xl font-bold mb-3">AI That Actually Explains</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              No more "incorrect, try again." Get intelligent explanations that show you <strong>exactly why</strong> your
+              answer was wrong and <strong>how to fix it</strong>.
+            </p>
+          </div>
+
+          <!-- Feature 2: Engaging Exercises -->
+          <div
+            class="group relative rounded-xl border bg-card p-8 shadow-sm transition-all hover:shadow-lg hover:border-primary/50"
+          >
+            <div class="mb-4 inline-flex size-12 items-center justify-center rounded-lg bg-primary/10 text-3xl">💪</div>
+            <h3 class="text-xl font-bold mb-3">Real Practice, Real Progress</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              Practice with sentences you'll actually use. Our AI generates exercises based on <strong
+                >real-world scenarios</strong
+              >, not boring textbook examples.
+            </p>
+          </div>
+
+          <!-- Feature 3: Track Progress -->
+          <div
+            class="group relative rounded-xl border bg-card p-8 shadow-sm transition-all hover:shadow-lg hover:border-primary/50"
+          >
+            <div class="mb-4 inline-flex size-12 items-center justify-center rounded-lg bg-primary/10 text-3xl">📈</div>
+            <h3 class="text-xl font-bold mb-3">Watch Yourself Improve</h3>
+            <p class="text-muted-foreground leading-relaxed">
+              See your progress in real-time. Track which tenses you've mastered and where you need more practice. <strong
+                >Celebrate every win</strong
+              >.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section aria-label="How it works" class="px-4 py-16 sm:px-6 md:py-24 lg:px-8 bg-muted/30">
+      <div class="mx-auto max-w-5xl">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Three Steps to Tense Mastery</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-3">
+          <!-- Step 1 -->
+          <div class="text-center">
+            <div
+              class="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground shadow-lg"
+            >
+              1
+            </div>
+            <h3 class="text-lg font-bold mb-3">Sign Up & Start</h3>
+            <p class="text-muted-foreground">Create your free account in 30 seconds. No credit card required.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="text-center">
+            <div
+              class="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground shadow-lg"
+            >
+              2
+            </div>
+            <h3 class="text-lg font-bold mb-3">Practice Daily</h3>
+            <p class="text-muted-foreground">
+              Spend just 10 minutes a day with AI-powered exercises tailored to your level.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="text-center">
+            <div
+              class="mx-auto mb-6 flex size-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground shadow-lg"
+            >
+              3
+            </div>
+            <h3 class="text-lg font-bold mb-3">Master Tenses</h3>
+            <p class="text-muted-foreground">Watch your skills improve. Speak and write with confidence.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section aria-label="Call to action" class="px-4 py-20 sm:px-6 md:py-32 lg:px-8">
+      <div class="mx-auto max-w-4xl text-center">
+        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          Ready to Finally Master English Tenses?
+        </h2>
+        <p class="mt-6 text-lg sm:text-xl text-muted-foreground">
+          Join hundreds of learners who are already improving their English with AI-powered feedback.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
+          <a href="/register" class="w-full sm:w-auto group">
+            <Button
+              size="lg"
+              class="w-full sm:w-auto text-base px-8 py-6 h-auto shadow-lg hover:shadow-xl transition-all"
+            >
+              <span>Get Started for Free</span>
+              <span class="ml-2 transition-transform group-hover:translate-x-1">→</span>
+            </Button>
+          </a>
+        </div>
+
+        <p class="mt-6 text-sm text-muted-foreground">No credit card required • Start learning in 30 seconds</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t bg-muted/20 px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div class="text-center sm:text-left">
+            <p class="text-lg font-bold">TenseAI</p>
+            <p class="mt-1 text-sm text-muted-foreground">Master English tenses with AI</p>
+          </div>
+          <p class="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} TenseAI. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </main>
+</Layout>
