@@ -1,5 +1,8 @@
+import { Alert } from "@/components/auth/common/Alert";
+import { AuthCard } from "@/components/auth/common/AuthCard";
+import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
+import { LegalFooter } from "@/components/auth/common/LegalFooter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/lib/hooks/use-auth-mutations";
@@ -31,96 +34,67 @@ export function LoginForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Login to continue learning English grammar</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4">
-                {isError && (
-                  <div
-                    className="bg-destructive/10 text-destructive rounded-md p-3 text-sm"
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {error.message}
-                  </div>
+      <AuthCard title="Welcome back" description="Login to continue learning English grammar">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              {isError && <Alert variant="error">{error.message}</Alert>}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <>
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </>
                 )}
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <>
-                      <FormLabel htmlFor="email">Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="you@example.com"
-                          autoComplete="email"
-                          disabled={isPending}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <>
-                      <div className="flex items-center">
-                        <FormLabel htmlFor="password">Password</FormLabel>
-                        <a href="/forgot-password" className="ml-auto text-sm underline-offset-4 hover:underline">
-                          Forgot your password?
-                        </a>
-                      </div>
-                      <FormControl>
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="Enter your password"
-                          autoComplete="current-password"
-                          disabled={isPending}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </>
-                  )}
-                />
-                <div>
-                  <Button type="submit" className="w-full" disabled={isPending}>
-                    {isPending ? "Logging in..." : "Login"}
-                  </Button>
-                  <p className="text-center text-sm text-muted-foreground mt-4">
-                    Don&apos;t have an account?&nbsp;
-                    <a href="/register" className="underline-offset-4 hover:underline">
-                      Sign up
-                    </a>
-                  </p>
-                </div>
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <>
+                    <div className="flex items-center">
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <a href="/forgot-password" className="ml-auto text-sm underline-offset-4 hover:underline">
+                        Forgot your password?
+                      </a>
+                    </div>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        autoComplete="current-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </>
+                )}
+              />
+              <div>
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Logging in..." : "Login"}
+                </Button>
+                <AuthFooterLink text="Don't have an account?" linkText="Sign up" href="/register" />
               </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      <p className="px-6 text-center text-sm text-muted-foreground">
-        By clicking continue, you agree to our&nbsp;
-        <a href="/terms" className="underline-offset-4 hover:underline">
-          Terms of Service
-        </a>
-        &nbsp; and&nbsp;
-        <a href="/privacy" className="underline-offset-4 hover:underline">
-          Privacy Policy
-        </a>
-        .
-      </p>
+            </div>
+          </form>
+        </Form>
+      </AuthCard>
+      <LegalFooter />
     </div>
   );
 }

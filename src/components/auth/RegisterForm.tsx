@@ -1,5 +1,8 @@
+import { Alert } from "@/components/auth/common/Alert";
+import { AuthCard } from "@/components/auth/common/AuthCard";
+import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
+import { LegalFooter } from "@/components/auth/common/LegalFooter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRegister } from "@/lib/hooks/use-auth-mutations";
@@ -48,111 +51,82 @@ export function RegisterForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create an account</CardTitle>
-          <CardDescription>Start mastering English grammar with AI</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4">
-                {isError && (
-                  <div
-                    className="bg-destructive/10 text-destructive rounded-md p-3 text-sm"
-                    role="alert"
-                    aria-live="polite"
-                  >
-                    {error?.message}
-                  </div>
+      <AuthCard title="Create an account" description="Start mastering English grammar with AI">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="space-y-4">
+              {isError && <Alert variant="error">{error?.message}</Alert>}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <>
+                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        autoComplete="email"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </>
                 )}
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <>
-                      <FormLabel htmlFor="email">Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="you@example.com"
-                          autoComplete="email"
-                          disabled={isPending}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <>
-                      <FormLabel htmlFor="password">Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="password"
-                          type="password"
-                          placeholder="Create a strong password"
-                          autoComplete="new-password"
-                          disabled={isPending}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <>
-                      <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          id="confirmPassword"
-                          type="password"
-                          placeholder="Confirm your password"
-                          autoComplete="new-password"
-                          disabled={isPending}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </>
-                  )}
-                />
-                <div>
-                  <Button type="submit" className="w-full" disabled={isPending}>
-                    {isPending ? "Creating account..." : "Create Account"}
-                  </Button>
-                  <p className="text-center text-sm text-muted-foreground mt-4">
-                    Already have an account?&nbsp;
-                    <a href="/login" className="underline-offset-4 hover:underline">
-                      Log in
-                    </a>
-                  </p>
-                </div>
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="Create a strong password"
+                        autoComplete="new-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <>
+                    <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="Confirm your password"
+                        autoComplete="new-password"
+                        disabled={isPending}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </>
+                )}
+              />
+              <div>
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? "Creating account..." : "Create Account"}
+                </Button>
+                <AuthFooterLink text="Already have an account?" linkText="Log in" href="/login" />
               </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-      <p className="px-6 text-center text-sm text-muted-foreground">
-        By clicking continue, you agree to our{" "}
-        <a href="/terms" className="underline-offset-4 hover:underline">
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a href="/privacy" className="underline-offset-4 hover:underline">
-          Privacy Policy
-        </a>
-        .
-      </p>
+            </div>
+          </form>
+        </Form>
+      </AuthCard>
+      <LegalFooter />
     </div>
   );
 }
