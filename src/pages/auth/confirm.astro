@@ -1,14 +1,14 @@
 ---
-import AuthLayout from "@/layouts/AuthLayout.astro";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import AuthLayout from "@/layouts/AuthLayout.astro";
 ---
 
 <AuthLayout title="Check Your Email - TenseAI">
   <div class="flex flex-col gap-6">
     <Card>
-      <CardHeader class="text-center">
-        <CardTitle class="text-xl">Check Your Email</CardTitle>
+      <CardHeader className="text-center">
+        <CardTitle className="text-xl">Check Your Email</CardTitle>
         <CardDescription>We've sent you a confirmation link</CardDescription>
       </CardHeader>
       <CardContent>

@@ -342,9 +342,9 @@ export class TrainingSessionRepository {
       completed_at: data.completed_at,
       started_at: data.started_at,
       session: {
-        user_id: (data.training_sessions as any).user_id,
-        tense: (data.training_sessions as any).tense,
-        difficulty: (data.training_sessions as any).difficulty,
+        user_id: data.training_sessions.user_id,
+        tense: data.training_sessions.tense,
+        difficulty: data.training_sessions.difficulty,
       },
     };
   }
