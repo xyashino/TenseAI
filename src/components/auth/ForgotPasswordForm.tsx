@@ -4,6 +4,7 @@ import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useForgotPassword } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
@@ -66,7 +67,7 @@ export function ForgotPasswordForm() {
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? "Sending..." : "Send Reset Link"}
                 </Button>
-                <AuthFooterLink text="Remember your password?" linkText="Log in" href="/login" />
+                <AuthFooterLink text="Remember your password?" linkText="Log in" href={NavigationRoutes.LOGIN} />
               </div>
             </div>
           </form>

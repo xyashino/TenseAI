@@ -5,6 +5,7 @@ import { LegalFooter } from "@/components/auth/common/LegalFooter";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useRegister } from "@/lib/hooks/use-auth-mutations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
@@ -120,7 +121,7 @@ export function RegisterForm() {
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? "Creating account..." : "Create Account"}
                 </Button>
-                <AuthFooterLink text="Already have an account?" linkText="Log in" href="/login" />
+                <AuthFooterLink text="Already have an account?" linkText="Log in" href={NavigationRoutes.LOGIN} />
               </div>
             </div>
           </form>

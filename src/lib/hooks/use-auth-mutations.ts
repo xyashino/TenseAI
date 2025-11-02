@@ -2,6 +2,7 @@ import { apiPost } from "@/lib/api-client";
 import { queryClient } from "@/lib/query-client";
 import { useMutation } from "@tanstack/react-query";
 import { navigate } from "astro:transitions/client";
+import { NavigationRoutes } from "../enums/navigation";
 
 interface LoginRequest {
   email: string;
@@ -33,7 +34,7 @@ export function useLogin() {
         return apiPost<AuthResponse>("/api/auth/login", data);
       },
       onSuccess: () => {
-        navigate("/app");
+        navigate(NavigationRoutes.PRACTICE);
       },
     },
     queryClient
@@ -47,7 +48,7 @@ export function useRegister() {
         return apiPost<AuthResponse>("/api/auth/register", data);
       },
       onSuccess: () => {
-        navigate("/auth/confirm");
+        navigate(NavigationRoutes.AUTH_CONFIRM);
       },
     },
     queryClient

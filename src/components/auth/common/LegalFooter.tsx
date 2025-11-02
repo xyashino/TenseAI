@@ -1,3 +1,5 @@
+import { NavigationRoutes } from "@/lib/enums/navigation";
+
 export function LegalFooter() {
   return (
     <p className="px-6 text-center text-sm text-muted-foreground">
@@ -6,7 +8,7 @@ export function LegalFooter() {
         Terms of Service
       </a>
       &nbsp;and&nbsp;
-      <a href="/privacy" className="underline-offset-4 hover:underline">
+      <a href={NavigationRoutes.TERMS} className="underline-offset-4 hover:underline">
         Privacy Policy
       </a>
       .
