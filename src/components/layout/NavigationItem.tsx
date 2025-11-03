@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface NavigationItemProps {
   href: string;
@@ -16,19 +16,21 @@ export function NavigationItem({ href, label, icon: Icon, isActive, badge, onCli
       href={href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-        "hover:bg-accent hover:text-accent-foreground",
-        isActive && "bg-accent text-accent-foreground font-medium"
+        "relative flex flex-col items-center gap-1.5 rounded-md px-3 py-3 text-sm transition-colors",
+        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        isActive && "bg-sidebar-accent text-sidebar-foreground font-medium"
       )}
       aria-current={isActive ? "page" : undefined}
     >
-      <Icon className="h-5 w-5" />
-      <span className="flex-1">{label}</span>
-      {badge !== undefined && badge > 0 && (
-        <Badge variant="secondary" className="h-5 min-w-5 px-1">
-          {badge}
-        </Badge>
-      )}
+      <div className="relative">
+        <Icon className={cn("h-6 w-6", isActive && "text-sidebar-foreground")} />
+        {badge !== undefined && badge > 0 && (
+          <Badge variant="secondary" className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px]">
+            {badge}
+          </Badge>
+        )}
+      </div>
+      <span className="text-xs">{label}</span>
     </a>
   );
 }

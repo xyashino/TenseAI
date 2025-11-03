@@ -12,9 +12,9 @@ export function NavigationList({ currentPath, onNavigate }: NavigationListProps)
   const { visibleItems, isActive } = useNavigation(currentPath, activeSessionsCount);
 
   return (
-    <ul className="space-y-1">
+    <ul className="flex flex-row items-center gap-1 lg:flex-col lg:gap-2">
       {visibleItems.map((item) => (
-        <li key={item.href}>
+        <li key={item.href} className="relative">
           <NavigationItem
             href={item.href}
             label={item.label}

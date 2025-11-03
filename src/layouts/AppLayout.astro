@@ -1,11 +1,11 @@
 ---
-import "../styles/global.css";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/query-client";
-import { ProfileRepository } from "@/server/repositories/profile.repository";
 import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
 import { MobileLayout } from "@/components/layout/MobileLayout";
+import { queryClient } from "@/lib/query-client";
+import { ProfileRepository } from "@/server/repositories/profile.repository";
 import type { LayoutUser } from "@/types";
+import { QueryClientProvider } from "@tanstack/react-query";
+import "../styles/global.css";
 
 interface Props {
   title?: string;
@@ -58,19 +58,14 @@ const currentPath = Astro.url.pathname;
   <body class="min-h-screen bg-background">
     <QueryClientProvider client={queryClient}>
       <div class="flex h-screen overflow-hidden">
-        <!-- Desktop Sidebar -->
         <aside class="hidden lg:flex">
           <DesktopSidebar user={user} currentPath={currentPath} client:load />
         </aside>
 
-        <!-- Main Content Area -->
         <div class="flex flex-1 flex-col overflow-hidden">
-          <!-- Mobile Header -->
           <div class="lg:hidden">
             <MobileLayout user={user} currentPath={currentPath} client:load />
           </div>
-
-          <!-- Page Content -->
           <main class="flex-1 overflow-y-auto p-6 lg:p-8">
             <slot />
           </main>

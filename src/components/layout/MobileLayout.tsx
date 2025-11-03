@@ -1,74 +1,34 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useLogout } from "@/lib/hooks/use-logout";
 import type { LayoutUser } from "@/types";
-import { MenuIcon } from "lucide-react";
-import { useState } from "react";
-import { AppLogo } from "../AppLogo";
+import { LogOutIcon } from "lucide-react";
 import { NavigationList } from "./NavigationList";
-import { UserProfileMenu } from "./UserProfileMenu";
 
 interface MobileLayoutProps {
   user: LayoutUser;
   currentPath: string;
 }
 
-function getInitials(name: string | null, email: string): string {
-  if (name) {
-    const parts = name.split(" ");
-    if (parts.length >= 2) {
-      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  }
-  return email.substring(0, 2).toUpperCase();
-}
-
 export function MobileLayout({ user, currentPath }: MobileLayoutProps) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const logoutMutation = useLogout();
 
   return (
-    <>
-      {/* Mobile Header */}
-      <header className="flex items-center justify-between border-b bg-card px-4 py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex h-20 flex-col border-t border-sidebar-border bg-sidebar lg:hidden">
+      <Separator className="bg-sidebar-border" />
+      <div className="flex flex-1 items-center justify-around px-2">
+        <NavigationList currentPath={currentPath} />
+        <Separator orientation="vertical" className="h-12 bg-sidebar-border" />
         <Button
           variant="ghost"
-          size="icon"
-          onClick={() => setIsDrawerOpen(true)}
-          aria-label="Open menu"
-          aria-expanded={isDrawerOpen}
+          className="flex flex-col items-center gap-1.5 px-3 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          onClick={() => logoutMutation.mutate()}
+          disabled={logoutMutation.isPending}
         >
-          <MenuIcon className="h-6 w-6" />
+          <LogOutIcon className="h-6 w-6" />
+          <span className="text-xs">{logoutMutation.isPending ? "Logging out..." : "Log out"}</span>
         </Button>
-
-        <AppLogo />
-
-        <Avatar className="h-8 w-8">
-          <AvatarFallback>{getInitials(user.name, user.email)}</AvatarFallback>
-        </Avatar>
-      </header>
-
-      {/* Mobile Drawer */}
-      <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <SheetContent side="left" className="w-64 p-0">
-          <div className="flex h-full flex-col">
-            <div className="p-6">
-              <AppLogo />
-            </div>
-
-            <nav className="flex-1 px-3">
-              <NavigationList currentPath={currentPath} onNavigate={() => setIsDrawerOpen(false)} />
-            </nav>
-
-            <Separator />
-
-            <div className="p-3">
-              <UserProfileMenu user={user} />
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+      </div>
+    </div>
   );
 }
