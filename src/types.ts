@@ -254,3 +254,17 @@ export interface LayoutUser {
   email: string;
   name: string | null;
 }
+
+export interface TenseCardData {
+  name: TenseName;
+  slug: string;
+  description: string;
+  icon?: string;
+}
+
+export interface TheoryFrontmatter {
+  title: string;
+  tense: TenseName;
+  description: string;
+  order: number;
+}

@@ -1,0 +1,55 @@
+---
+import AppLayout from "@/layouts/AppLayout.astro";
+import TheoryContent from "@/components/theory/TheoryContent.astro";
+import { getCollection } from "astro:content";
+
+// Get the tense slug from params
+const { tenseSlug } = Astro.params;
+
+// Load all theory entries
+const theoryEntries = await getCollection("theory");
+
+// Find the entry matching the slug
+const entry = theoryEntries.find((e) => e.slug === tenseSlug);
+
+// Return 404 if entry not found
+if (!entry) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await entry.render();
+const { title, description } = entry.data;
+---
+
+<AppLayout title={`${title} - Theory - TenseAI`}>
+  <div class="max-w-4xl mx-auto">
+    <!-- Breadcrumb Navigation -->
+    <nav class="mb-6" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm text-muted-foreground">
+        <li>
+          <a href="/app/theory" class="hover:text-foreground transition-colors"> Theory </a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li class="text-foreground font-medium">{title}</li>
+      </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold tracking-tight mb-3">{title}</h1>
+      <p class="text-lg text-muted-foreground">{description}</p>
+    </header>
+
+    <!-- Theory Content -->
+    <TheoryContent>
+      <Content />
+    </TheoryContent>
+
+    <!-- Back Navigation -->
+    <footer class="mt-12 pt-6 border-t">
+      <a href="/app/theory" class="inline-flex items-center text-sm font-medium text-primary hover:underline">
+        ← Back to Theory
+      </a>
+    </footer>
+  </div>
+</AppLayout>
