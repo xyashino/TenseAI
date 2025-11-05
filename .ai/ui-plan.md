@@ -2,191 +2,195 @@
 
 ## 1. UI Structure Overview
 
-The TenseAI user interface is designed as a responsive Single-Page Application (SPA) built with Astro and React. The architecture prioritizes a dynamic and engaging user experience, centered around a unique chat-based interface for training sessions.
+The TenseAI UI is a responsive web application built with **Astro 5** and **React 19**. It uses Astro for static content (like theory pages) and server-side rendered (SSR) shells, while leveraging React "islands" for dynamic, interactive components (like the training session).
 
-- **Technology**: Astro is used for the overall structure and static content (like theory pages), while React is used for interactive "islands" of functionality, such as the main training session view, forms, and data display components.
-- **Layout**: The application uses a **hybrid layout model**.
-  - A persistent **Main Layout** ("Hub") provides consistent navigation across most authenticated sections (Practice, History, Theory). This layout features a sidebar on desktop and a collapsible top navigation bar on mobile.
-  - The core **Training Session view** uses a separate, minimalist **Session Layout** ("Focus Mode"). This layout **removes the main navigation** to maximize focus and provide an immersive, app-like experience.
-- **State Management**: Client-side state, particularly for the active training round, is managed within React components. Global server state, caching, and data fetching are handled by TanStack Query (React Query) to ensure a robust and efficient connection with the backend API.
-- **Component Library**: The UI is built using the Shadcn/ui component library, ensuring a consistent, accessible, and modern design system, styled with Tailwind CSS.
+The architecture is centered around three main layouts:
+
+1.  **Public Layout:** A minimal layout for unauthenticated users (Login, Register, Forgot Password).
+2.  **Main App Layout:** The primary layout for authenticated users, featuring responsive navigation: a desktop **sidebar** and a mobile **bottom-bar**.
+3.  **Focus Mode Layout:** A distraction-free layout used exclusively for the `/training/[sessionId]` view, which hides the main navigation.
+
+State management is handled by **React Query** for all server state (API interactions) and **React Hook Form** / **useState** for client-side form and UI state. All UI components are based on the **Shadcn/ui** library.
+
+---
 
 ## 2. View List
 
-### Public Views (Unauthenticated)
+### Public & Auth Views
 
-- **View name**: Landing Page (Business Card)
-- **View path**: `/`
-- **Main purpose**: To serve as the public-facing homepage and "business card" for TenseAI. It introduces the application to new users and provides clear calls-to-action (CTAs) to either register or log in.
-- **Key information to display**:
-  - Hero section with the app name (TenseAI) and a clear tagline (e.g., "Master English tenses with AI-powered practice.").
-  - A brief description of the product, explaining how it solves user problems with personalized feedback and engaging exercises (derived from PRD).
-  - Primary CTA buttons: "Get Started" (links to `/register`) and "Login" (links to `/login`).
-- **Key view components**: This will be a static Astro page, not a React island, to ensure fast load times. It will use simple layout blocks and `Button` components.
-- **UX, accessibility, and security considerations**: This page is the first impression. It must be lightweight, fully responsive, and accessible, with high-contrast text and clear focus states for the CTAs.
+- **View:** Login
 
-- **View name**: Login
-- **View path**: `/login`
-- **Main purpose**: To allow registered users to authenticate and access the application.
-- **Key information to display**: Email and password input fields, a submit button.
-- **Key view components**: `Card`, `Form`, `Input`, `Button`, `Link` (to Register and Forgot Password).
-- **UX, accessibility, and security considerations**: The form will provide clear validation messages. All fields will be properly labeled for screen readers.
+  - **Path:** `/login`
+  - **Main Purpose:** Authenticate an existing user (`US-003`).
+  - **Key Information:** Email and password fields.
+  - **Key View Components:** `Card`, `Form` (React Hook Form), `Input`, `Button` ("Login"), `Alert` (for errors), Link to `/register` and `/forgot-password`.
+  - **UX/Security:** On success, Supabase SDK sets an auth cookie. The main layout loader will then fetch `/api/profile` to determine the next step (Onboarding or Practice).
 
-- **View name**: Register
-- **View path**: `/register`
-- **Main purpose**: To allow new users to create an account.
-- **Key information to display**: Name, email, and password input fields.
-- **Key view components**: `Card`, `Form`, `Input`, `Button`, `Link` (to Login).
-- **UX, accessibility, and security considerations**: Password strength requirements will be clearly indicated. Form includes client-side validation before submission.
+- **View:** Register
 
-- **View name**: Forgot Password
-- **View path**: `/forgot-password`
-- **Main purpose**: To initiate the password reset process.
-- **Key information to display**: Email input field.
-- **Key view components**: `Card`, `Form`, `Input`, `Button`.
-- **UX, accessibility, and security considerations**: A success message will confirm that a reset link has been sent if the email exists, without revealing whether the account is registered.
+  - **Path:** `/register`
+  - **Main Purpose:** Register a new user (`US-001`).
+  - **Key Information:** Name, email, and password fields.
+  - **Key View Components:** `Card`, `Form`, `Input`, `Button` ("Register"), `Alert`, Link to `/login`.
+  - **UX/Security:** On success (`US-001`), redirects to `/check-email`.
 
-### Private Views (Authenticated)
+- **View:** Check Email
 
-- **View name**: Practice (Dashboard)
-- **View path**: `/app/practice`
-- **Main purpose**: To serve as the main entry point for starting a new training session.
-- **Key information to display**: Welcome message with user's name, selectors for tense and difficulty.
-- **Key view components**: `Select` or `RadioGroup` for tense, `ToggleGroup` for difficulty, `Button` to start the session.
-- **UX, accessibility, and security considerations**: The user's default difficulty from onboarding will be pre-selected. All controls will be keyboard accessible.
+  - **Path:** `/check-email`
+  - **Main Purpose:** Instruct user to activate their account via email (`REQ-03`).
+  - **Key Information:** Static "Check your email" message.
+  - **Key View Components:** `Card`, Text.
 
-- **View name**: Training Session
-- **View path**: `/app/training-session/:sessionId`
-- **Main purpose**: The core interactive learning experience, presented as a chat with an AI coach.
-- **Key information to display**: A continuous chat log of AI questions, user answers, round separators, and feedback.
-- **Key view components**: `ChatContainer`, `AIMessageBubble`, `UserMessageBubble`, `QuestionBubble` (with option `Button`s), `RoundSeparator`, `RoundSummaryMessage`, `FinalSummaryCard`, `ReportQuestionButton`, `SessionExitButton`.
-- **UX, accessibility, and security considerations**:
+- **View:** Update Password
+  - **Path:** `/update-password`
+  - **Main Purpose:** Allow a user to set a new password from a reset link (`US-004`).
+  - **Key Information:** New password and confirm password fields.
+  - **Key View Components:** `Card`, `Form`, `Input` (password type), `Button` ("Set New Password").
+  - **UX/Security:** This page uses the Supabase SDK to handle the password update logic from the URL token.
 
-  - **Layout**: This view uses the **"Focus Mode" layout**. The main application sidebar/navigation is **hidden** to create an immersive, distraction-free environment. Navigation out of the session (e.g., "Zakończ i wróć do pulpitu") is handled by controls _within_ this view.
-  - The chat interface will be fully responsive.
-  - During the "review" step, answer bubbles become interactive and fully accessible.
-  - An "AI is typing..." indicator will manage user expectations during loading.
-  - API errors will be displayed as chat messages.
+### Onboarding
 
-- **View name**: Active Sessions
-- **View path**: `/app/training-sessions/active`
-- **Main purpose**: To allow users to view, resume, or abandon in-progress training sessions.
-- **Key information to display**: A list of active sessions showing tense, difficulty, and current progress.
-- **Key view components**: `CardList`, `Button` (Resume), `AlertDialog` (for Abandon confirmation).
-- **UX, accessibility, and security considerations**: This view will feature an "empty state" message if no sessions are active. The link to this page in the main navigation is only visible when there's at least one active session.
+- **View:** Onboarding
+  - **Path:** `/onboarding`
+  - **Main Purpose:** Mandatory 2-step setup for new users (`REQ-06`, `US-005`).
+  - **Key Information:** User's name, default difficulty choice.
+  - **Key View Components:** Full-screen layout (no nav), `Card` (for steps), `Input` (for name, `REQ-07`), large clickable `Card`s or `RadioGroup` (for difficulty, `REQ-08`), `Button` ("Continue" / "Finish").
+  - **UX/Security:** This view is shown via a redirect from the main layout if `GET /api/profile` returns `onboarding_completed: false`. On submit, it calls `PATCH /api/profile` and redirects to `/practice`.
 
-- **View name**: Theory List
-- **View path**: `/app/theory`
-- **Main purpose**: To provide a directory of grammar theory articles.
-- **Key information to display**: A grid of cards, each representing a grammar tense article. Each card will show the tense name and a brief description.
-- **Key view components**: `CardList` (a grid container), `Card`.
-- **UX, accessibility, and security considerations**: Cards will have sufficient padding and clear focus states to be easily interactive on all devices.
+### Main Application Views
 
-- **View name**: Theory Article
-- **View path**: `/app/theory/:tenseSlug`
-- **Main purpose**: To display educational content about a specific grammar tense.
-- **Key information to display**: The article content, formatted from Markdown.
-- **Key view components**: A custom component for rendering Markdown to styled HTML.
-- **UX, accessibility, and security considerations**: Content will be well-structured with headings for readability and screen reader navigation.
+- **View:** Practice (Dashboard)
 
-- **View name**: History
-- **View path**: `/app/history`
-- **Main purpose**: To provide a chronological overview of all completed training sessions.
-- **Key information to display**: A paginated list of sessions with date, tense, and final score trend.
-- **Key view components**: `DataTable` or `CardList`, `PaginationControls`.
-- **UX, accessibility, and security considerations**: An "empty state" for new users. Each history item links to the detailed summary view.
+  - **Path:** `/` or `/practice`
+  - **Main Purpose:** Main app dashboard. Displays active sessions (`US-011`) and allows starting new ones (`US-008`). _This view replaces the separate "Active Sessions" page._
+  - **Key Information:** List of active sessions from `GET /api/training-sessions?status=active`.
+  - **Key View Components:**
+    - `Button` ("Start New Session"): Opens the "Start Session" `Dialog`.
+    - `Dialog` (Modal): Contains a `Form` with `RadioGroup` for Tense and `RadioGroup` for Difficulty.
+    - `Card` (List): A responsive list of active session cards.
+    - **Active Session Card:** Displays Tense, Progress (e.g., "Round 2/3"), "Resume" `Button`, and "Delete" `Button` (with trash icon).
+    - `AlertDialog`: Confirms session deletion (abandoning).
+    - **Empty State Component:** Shown if no active sessions exist.
 
-- **View name**: History Session Detail
-- **View path**: `/app/history/:sessionId`
-- **Main purpose**: To allow users to review the detailed results of a past session.
-- **Key information to display**: The full, final session summary, including score trends and the AI's detailed error analysis.
-- **Key view components**: `FinalSummaryCard` (reused from the Training Session view).
-- **UX, accessibility, and security considerations**: This view is read-only.
+- **View:** Training Session
 
-### Modals
+  - **Path:** `/training/[sessionId]`
+  - **Main Purpose:** The core, interactive training loop (`US-009`, `US-010`, `US-012`).
+  - **Key Information:** Current question, options, round summaries, and final feedback.
+  - **Key View Components:**
+    - **Focus Mode Layout:** Hides main nav.
+    - **Sticky Header:** Contains Tense name, "Back" `Button`, and "Abandon Session" `Dropdown` (with `AlertDialog` confirmation).
+    - **"Chat Log" Area:** A vertically scrolling container.
+    - **Chat Components:** React components rendered from a `useState` array: `QuestionComponent`, `RoundSummaryComponent`, `FinalFeedbackComponent`, `LoadingComponent`.
+    - **Question Component:** A `Form` (React Hook Form) with a `RadioGroup` for vertical MCQ options (`REQ-17a`). Includes a "Report Error" flag `Button`.
+    - **Report Error Modal:** A `Dialog` that shows the question text and a `TextArea` for comments, calling `POST /api/question-reports`.
+    - `react-markdown`: Used to render AI-generated feedback.
 
-- **Modal name**: Onboarding
-- **Trigger**: First login for a new user.
-- **Main purpose**: To personalize the user experience.
-- **Key information to display**: A two-step flow: 1. Input for user's name. 2. Selection for default difficulty.
-- **Key view components**: `Dialog`, `Form`, `Input`, `ToggleGroup`, `Button`.
+- **View:** Theory (List)
+
+  - **Path:** `/theory`
+  - **Main Purpose:** List available grammar tenses for study (`US-007`).
+  - **Key Information:** The four tenses (Present Simple, Past Simple, etc.).
+  - **Key View Components:** A grid of 4 large, clickable `Card` components.
+
+- **View:** Theory (Detail)
+
+  - **Path:** `/theory/[tenseSlug]`
+  - **Main Purpose:** Display educational content for a specific tense (`REQ-12`, `US-007`).
+  - **Key Information:** Rendered Markdown content.
+  - **Key View Components:** A static Astro page that renders Markdown content, styled using `@tailwindcss/typography`.
+
+- **View:** History (List)
+
+  - **Path:** `/history`
+  - **Main Purpose:** Display all _completed_ training sessions (`REQ-21`, `US-013`).
+  - **Key Information:** List of completed sessions from `GET /api/training-sessions?status=completed`.
+  - **Key View Components:**
+    - `Card` (List): A paginated, responsive list of completed session cards.
+    - **History Card:** Displays Tense, Date, and Score Trend (e.g., "6/10 → 7/10 → 8/10") (`REQ-22`).
+    - **Empty State Component:** Shown if no sessions are completed (`US-016`).
+
+- **View:** History (Detail)
+
+  - **Path:** `/history/[sessionId]`
+  - **Main Purpose:** Allow a user to review a past, completed session (`REQ-23`, `US-014`).
+  - **Key Information:** All questions, answers, scores, and feedback for the session.
+  - **Key View Components:**
+    - **Read-Only "Chat Log" Area:** Renders the _entire_ session (fetched via `GET /api/training-sessions/{sessionId}`) in the same "chat-like" UI as the training view, but with no interactive elements.
+    - `react-markdown`: Renders all feedback.
+
+- **View:** Profile
+  - **Path:** `/profile`
+  - **Main Purpose:** Allow user to update their name and default difficulty.
+  - **Key Information:** User's name and default difficulty.
+  - **Key View Components:** `Form` (React Hook Form), `Input` (Name), `RadioGroup` (Difficulty), `Button` ("Save Changes").
+  - **UX/Security:** Populated by `GET /api/profile` and submits via `PATCH /api/profile`.
+
+---
 
 ## 3. User Journey Map
 
-The user journey is designed to be intuitive, guiding the user from setup to practice and review seamlessly.
+This map outlines the "golden path" for a new user, from registration to completing their first session.
 
-1.  **Registration & Onboarding**:
+1.  **Start:** User lands on `/register`.
+2.  **Register:** Submits form -> Redirected to `/check-email`.
+3.  **Activate:** User clicks email link -> Redirected to `/login`.
+4.  **First Login:** Submits `/login` form -> App fetches `GET /api/profile`.
+5.  **Onboarding:** `onboarding_completed: false` -> Redirect to `/onboarding`.
+6.  **Setup:** User submits name and difficulty -> `PATCH /api/profile`.
+7.  **Dashboard:** Redirected to `/practice` (main dashboard).
+8.  **Start Session:** Clicks "Start New Session" -> Opens `Dialog` modal.
+9.  **Configure:** Selects Tense & Difficulty -> Clicks "Start".
+10. **Navigate & Load:** `POST /api/training-sessions` (fast) -> Navigate to `/training/[sessionId]`.
+11. **Fetch Questions:** `/training/[sessionId]` page shows loader -> `POST /api/training-sessions/{sessionId}/rounds` (slow) to get Round 1 questions.
+12. **Round 1:** Loader replaced by Question 1/10. User submits 10 answers (no feedback).
+13. **Submit Round 1:** Clicks "Submit" -> `POST /api/rounds/{roundId}/complete`.
+14. **Round 1 Summary:** Loader replaced by Round 1 Summary component (`REQ-18`).
+15. **Rounds 2 & 3:** User clicks "Start Round 2" -> Repeats steps 11-14.
+16. **Final Summary:** After Round 3 Summary, user clicks "Finish Session" -> `POST /api/training-sessions/{sessionId}/complete`.
+17. **Session Complete:** Loader replaced by Final Session Summary (`REQ-19`).
+18. **Review:** User navigates to `/history` -> Clicks new entry -> Navigates to `/history/[sessionId]` to see the read-only summary (`US-014`).
 
-    - A new user navigates from the `Register View` to the `Login View` after activating their account via email.
-    - Upon first login, the `Onboarding Modal` is displayed. After completion, they are directed to the `Practice View`.
+---
 
-2.  **Core Training Loop**:
+## 4. Layout and Navigation Structure
 
-    - From the `Practice View` (which includes the main sidebar), the user selects a tense and difficulty, which navigates them to the `Training Session View`.
-    - **The UI transitions to "Focus Mode", hiding the main navigation** and presenting the chat interface in full-screen.
-    - The user interacts with the AI in a chat format, answering 10 questions per round for 3 rounds.
-    - After each round, the user can review and change their answers before submitting them in bulk to the API.
-    - The round summary is displayed in the chat, and questions from the completed round become locked.
-    - After 3 rounds, a final, detailed summary is displayed as a large card in the chat.
+- **Layouts:** As defined in Section 1 (Public, Main App, Focus Mode).
+- **Navigation:** Based on the "Main App Layout."
+  - **Desktop (md: and up):** A fixed vertical **Sidebar**.
+    - Logo (TenseAI)
+    - "Practice" (Home)
+    - "Theory"
+    - "History"
+    - "Profile" (at the bottom)
+  - **Mobile (sm:):** A fixed **Bottom Bar**.
+    - Icon: "Practice"
+    - Icon: "Theory"
+    - Icon: "History"
+    - Icon: "Profile"
+- **Transitions:** Astro View Transitions will be enabled to provide smooth, app-like cross-fade animations between page navigations.
 
-3.  **Session Persistence & Resumption**:
-
-    - If a user leaves a session midway, their progress is saved.
-    - Upon their next visit, the "Active Sessions" link in the navigation will be visible.
-    - They can navigate to the `Active Sessions View`, select the session, and click "Resume" to return to the `Training Session View` and continue where they left off.
-
-4.  **Review and Reinforcement**:
-    - After completing a session, the user can navigate to the `History View`.
-    - From here, they can see a list of all past sessions.
-    - Clicking on any session takes them to the `History Session Detail View` to review their performance and the AI's feedback.
-    - Users can also visit the `Theory` views at any time to reinforce their understanding of grammar rules.
-
-## 4. Layout Strategy: Hub & Focus Mode
-
-### 4.1. Main Layout (The "Hub")
-
-- **Description**: A primary layout component wraps all authenticated "hub" views (e.g., `/app/practice`, `/app/history`, `/app/theory`). It contains the navigation elements and the main content area.
-- **Desktop Navigation**: A static sidebar on the left provides primary navigation between:
-  - `Practice` (`/app/practice`)
-  - `Active Sessions` (`/app/training-sessions/active`) - _Conditionally rendered_
-  - `Theory` (`/app/theory`)
-  - `History` (`/app/history`)
-  - A user profile menu at the bottom provides access to account settings and logout functionality.
-- **Mobile Navigation**: On smaller screens, the sidebar is replaced by a responsive top app bar containing the application logo and a hamburger menu icon. The menu opens a drawer with the same navigation links as the desktop sidebar.
-
-### 4.2. Session Layout ("Focus Mode")
-
-- **Description**: To create an immersive, app-like experience, the **`Training Session View` (`/app/training-session/:sessionId`) uses a separate, minimalist layout.**
-- **Behavior**:
-  - In this layout, the main `SidebarNav` and `MobileNav` are **hidden entirely**.
-  - The user is fully focused on the chat interface.
-  - Navigation (e.g., "Zakończ sesję" or "Wróć do pulpitu") is handled by specific UI controls _within_ the session view itself, not by a persistent global navigation bar.
-
-### 4.3. Routing
-
-- **Description**: The application uses file-based routing provided by Astro.
-- **Public Routes**:
-  - The root path `/` displays the public **Landing Page**.
-  - Unauthenticated users can also access `/login`, `/register`, and `/forgot-password`.
-- **Private Routes**:
-  - All authenticated application views are nested under the `/app` prefix (e.g., `/app/practice`).
-  - If an _unauthenticated_ user attempts to access any `/app/*` route, they are redirected to the `/login` page.
-- **Redirects**:
-  - If an _authenticated_ user visits the public routes (`/`, `/login`, `/register`), they are redirected to their main dashboard at `/app/practice`.
+---
 
 ## 5. Key Components
 
-- **Chat Components**:
-  - `ChatContainer`: The main scrollable area for the conversation.
-  - `AIMessageBubble` / `UserMessageBubble`: Visually distinct components for displaying messages from the AI and the user.
-  - `QuestionBubble`: A specialized AI bubble that includes interactive buttons for multiple-choice options.
-- **Summary Cards**:
-  - `RoundSummaryMessage`: A message bubble that displays the score and brief feedback for a completed round.
-  - `FinalSummaryCard`: A large, detailed `Card` component used at the end of a session and in the `History Session Detail View` to display comprehensive results and AI analysis.
-- **Navigation**:
-  - `SidebarNav`: The main desktop navigation component, **used in the Main Layout ("Hub")**.
-  - `MobileNav`: The responsive top bar and drawer for mobile devices, **also used in the Main Layout**.
-- **Forms & Controls**: Standardized components from Shadcn/ui (`Form`, `Input`, `Button`, `Select`, `Dialog`) will be used for all user input to ensure consistency and accessibility.
-- **Data Display**:
-  - `DataTable` / `CardList`: Used in the `History` and `Active Sessions` views to present lists of sessions in a clear, organized manner.
-  - `PaginationControls`: Component for navigating paginated results from the API (e.g., in the `History` view).
+This list highlights reusable React components built with Shadcn/ui.
+
+- **`AuthForm` (React):** A client-side component used for Login, Register, and Update Password, powered by React Hook Form.
+- **`OnboardingWizard` (React):** A multi-step form component for the `/onboarding` view.
+- **`SessionStarter` (React):** The "Start New Session" `Button` and its associated `Dialog` modal. Manages the `POST /api/training-sessions` mutation and subsequent navigation.
+- **`ActiveSessionList` (React):** Fetches (`GET ...?status=active`) and displays the list of `Card`s on the `/practice` page. Handles "Resume" and "Delete" actions.
+- **`HistoryList` (React):** Fetches (`GET ...?status=completed`) and displays the paginated list of completed sessions on the `/history` page.
+- **`TrainingChat` (React):** The main component for `/training/[sessionId]`.
+  - Manages the `messages: [object]` `useState` array.
+  - Manages the "chat log" UI, mapping `messages` to components.
+  - Handles all `React Query` mutations for `POST .../rounds`, `POST .../complete`.
+  - Manages the child `QuestionForm`.
+- **`QuestionForm` (React):** The form fixed to the bottom of the training view.
+  - Powered by `React Hook Form` to collect 10 answers.
+  - Displays one question at a time.
+  - Handles the "Report Error" `Dialog`.
+- **`ReadOnlyChat` (React):** The component for `/history/[sessionId]`. Fetches the full session (`GET /api/training-sessions/{sessionId}`) and renders the entire chat log statically.
+- **`MarkdownRenderer` (React):** A simple wrapper for `react-markdown` and `@tailwindcss/typography` used in theory pages and feedback bubbles.
+- **`EmptyState` (React):** A shared component displayed on `/practice` and `/history` when lists are empty (`US-016`).
+- **`GlobalErrorHandler` (React):** An `<ErrorBoundary>` component that wraps the main app to catch client-side React errors and display a "friendly coach" message.
