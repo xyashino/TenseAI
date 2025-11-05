@@ -123,7 +123,7 @@ State management is handled by **React Query** for all server state (API interac
   - **Path:** `/profile`
   - **Main Purpose:** Allow user to update their name and default difficulty.
   - **Key Information:** User's name and default difficulty.
-  - **Key View Components:** `Form` (React Hook Form), `Input` (Name), `RadioGroup` (Difficulty), `Button` ("Save Changes").
+  - **Key View Components:** `Form` (React Hook Form), `Input` (Name), `Select` (Difficulty), `Button` ("Save Changes"), Logut button on Mobile.
   - **UX/Security:** Populated by `GET /api/profile` and submits via `PATCH /api/profile`.
 
 ---
