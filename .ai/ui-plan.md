@@ -61,7 +61,7 @@ State management is handled by **React Query** for all server state (API interac
 
 - **View:** Practice (Dashboard)
 
-  - **Path:** `/` or `/practice`
+  - **Path:** `/app` or `/app/practice`
   - **Main Purpose:** Main app dashboard. Displays active sessions (`US-011`) and allows starting new ones (`US-008`). _This view replaces the separate "Active Sessions" page._
   - **Key Information:** List of active sessions from `GET /api/training-sessions?status=active`.
   - **Key View Components:**
@@ -74,7 +74,7 @@ State management is handled by **React Query** for all server state (API interac
 
 - **View:** Training Session
 
-  - **Path:** `/training/[sessionId]`
+  - **Path:** `/app/training/[sessionId]`
   - **Main Purpose:** The core, interactive training loop (`US-009`, `US-010`, `US-012`).
   - **Key Information:** Current question, options, round summaries, and final feedback.
   - **Key View Components:**
@@ -88,21 +88,21 @@ State management is handled by **React Query** for all server state (API interac
 
 - **View:** Theory (List)
 
-  - **Path:** `/theory`
+  - **Path:** `/app/theory`
   - **Main Purpose:** List available grammar tenses for study (`US-007`).
   - **Key Information:** The four tenses (Present Simple, Past Simple, etc.).
   - **Key View Components:** A grid of 4 large, clickable `Card` components.
 
 - **View:** Theory (Detail)
 
-  - **Path:** `/theory/[tenseSlug]`
+  - **Path:** `/app/theory/[tenseSlug]`
   - **Main Purpose:** Display educational content for a specific tense (`REQ-12`, `US-007`).
   - **Key Information:** Rendered Markdown content.
   - **Key View Components:** A static Astro page that renders Markdown content, styled using `@tailwindcss/typography`.
 
 - **View:** History (List)
 
-  - **Path:** `/history`
+  - **Path:** `/app/history`
   - **Main Purpose:** Display all _completed_ training sessions (`REQ-21`, `US-013`).
   - **Key Information:** List of completed sessions from `GET /api/training-sessions?status=completed`.
   - **Key View Components:**
@@ -112,15 +112,15 @@ State management is handled by **React Query** for all server state (API interac
 
 - **View:** History (Detail)
 
-  - **Path:** `/history/[sessionId]`
+  - **Path:** `/app/history/[sessionId]`
   - **Main Purpose:** Allow a user to review a past, completed session (`REQ-23`, `US-014`).
   - **Key Information:** All questions, answers, scores, and feedback for the session.
   - **Key View Components:**
     - **Read-Only "Chat Log" Area:** Renders the _entire_ session (fetched via `GET /api/training-sessions/{sessionId}`) in the same "chat-like" UI as the training view, but with no interactive elements.
     - `react-markdown`: Renders all feedback.
 
-- **View:** Profile
-  - **Path:** `/profile`
+- **View:** Account
+  - **Path:** `/app/account`
   - **Main Purpose:** Allow user to update their name and default difficulty.
   - **Key Information:** User's name and default difficulty.
   - **Key View Components:** `Form` (React Hook Form), `Input` (Name), `Select` (Difficulty), `Button` ("Save Changes"), Logut button on Mobile.
