@@ -10,5 +10,5 @@ export const NavigationRoutes = {
   THEORY: "/app/theory",
   HISTORY: "/app/history",
   ACTIVE_SESSIONS: "/app/training-sessions/active",
-  SETTINGS: "/app/settings",
+  ACCOUNT: "/app/account",
 } as const;

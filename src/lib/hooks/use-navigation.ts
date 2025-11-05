@@ -1,5 +1,5 @@
 import type { NavigationItemConfig } from "@/types";
-import { ActivityIcon, BookOpenIcon, ClockIcon, PlayIcon } from "lucide-react";
+import { ActivityIcon, BookOpenIcon, ClockIcon, PlayIcon, SettingsIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { NavigationRoutes } from "../enums/navigation";
 
@@ -27,6 +27,11 @@ export function useNavigation(currentPath: string, activeSessionsCount: number) 
         href: NavigationRoutes.HISTORY,
         label: "History",
         icon: ClockIcon,
+      },
+      {
+        href: NavigationRoutes.ACCOUNT,
+        label: "Account",
+        icon: SettingsIcon,
       },
     ],
     [activeSessionsCount]

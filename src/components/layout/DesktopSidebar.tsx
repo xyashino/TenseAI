@@ -1,17 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useLogout } from "@/lib/hooks/use-logout";
-import type { LayoutUser } from "@/types";
 import { LogOutIcon } from "lucide-react";
 import { AppLogo } from "../AppLogo";
 import { NavigationList } from "./NavigationList";
 
 interface SidebarProps {
-  user: LayoutUser;
   currentPath: string;
 }
 
-export function DesktopSidebar({ user, currentPath }: SidebarProps) {
+export function DesktopSidebar({ currentPath }: SidebarProps) {
   const logoutMutation = useLogout();
 
   return (
