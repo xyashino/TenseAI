@@ -268,3 +268,29 @@ export interface TheoryFrontmatter {
   description: string;
   order: number;
 }
+
+/**
+ * ViewModel for displaying session progress in the Practice dashboard
+ */
+export interface SessionProgressViewModel {
+  currentRound: number; // The round number currently in progress (1-3)
+  totalRounds: number; // Always 3
+  completedRounds: number; // Number of completed rounds (0-3)
+  progressText: string; // Human-readable text, e.g., "Round 2/3"
+  progressPercentage: number; // Percentage completion (0-100)
+}
+
+/**
+ * Form data for starting a new training session
+ */
+export interface StartSessionFormData {
+  tense: TenseName;
+  difficulty: DifficultyLevel;
+}
+
+/**
+ * Response from POST /api/training-sessions
+ */
+export interface CreateSessionResponse {
+  training_session: TrainingSessionDTO;
+}

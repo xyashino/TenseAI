@@ -1,18 +1,21 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { apiGet, apiPatch } from "@/lib/api-client";
 import { queryClient } from "@/lib/query-client";
 import type { ProfileDTO, UpdateProfileDTO } from "@/types";
 
 /**
  * Custom hook for fetching the current user's profile.
+ * Uses Suspense, so it must be wrapped in a Suspense boundary.
  *
- * @returns Query result with profile data, loading, and error states
+ * @returns Query result with profile data (always defined when component renders)
  *
  * @example
- * const { data: profile, isLoading } = useProfile();
+ * <Suspense fallback={<Loading />}>
+ *   <ComponentUsingProfile />
+ * </Suspense>
  */
 export function useProfile() {
-  return useQuery(
+  return useSuspenseQuery(
     {
       queryKey: ["profile"],
       queryFn: async () => {

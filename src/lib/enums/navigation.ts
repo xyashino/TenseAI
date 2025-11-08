@@ -6,9 +6,8 @@ export const NavigationRoutes = {
   RESET_PASSWORD: "/reset-password",
   AUTH_CONFIRM: "/auth/confirm",
   TERMS: "/terms",
-  PRACTICE: "/app/practice",
+  TRAINING: "/app/training",
   THEORY: "/app/theory",
   HISTORY: "/app/history",
-  ACTIVE_SESSIONS: "/app/training-sessions/active",
   ACCOUNT: "/app/account",
 } as const;

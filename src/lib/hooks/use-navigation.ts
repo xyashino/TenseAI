@@ -1,5 +1,5 @@
 import type { NavigationItemConfig } from "@/types";
-import { ActivityIcon, BookOpenIcon, ClockIcon, PlayIcon, SettingsIcon } from "lucide-react";
+import { BookOpenIcon, ClockIcon, PlayIcon, SettingsIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { NavigationRoutes } from "../enums/navigation";
 
@@ -7,16 +7,9 @@ export function useNavigation(currentPath: string, activeSessionsCount: number) 
   const navigationItems: NavigationItemConfig[] = useMemo(
     () => [
       {
-        href: NavigationRoutes.PRACTICE,
-        label: "Practice",
+        href: NavigationRoutes.TRAINING,
+        label: "Training",
         icon: PlayIcon,
-      },
-      {
-        href: NavigationRoutes.ACTIVE_SESSIONS,
-        label: "Active Sessions",
-        icon: ActivityIcon,
-        isConditional: true,
-        badge: activeSessionsCount,
       },
       {
         href: NavigationRoutes.THEORY,
