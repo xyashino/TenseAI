@@ -1,6 +1,4 @@
-import { RateLimitError } from "@/server/errors/api-errors";
-import { rateLimitService } from "@/server/services/rate-limit.service";
-import { TrainingSessionService } from "@/server/services/training-session.service";
+ import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { createRoundParamsSchema } from "@/server/validation/session.validation";
@@ -75,18 +73,6 @@ export const POST: APIRoute = async (context) => {
     const { sessionId } = createRoundParamsSchema.parse({
       sessionId: context.params.sessionId,
     });
-
-    const rateLimitCheck = await rateLimitService.checkLimit(userId, "ai_question_generation", {
-      limit: 2,
-      windowSeconds: 60,
-    });
-
-    if (!rateLimitCheck.allowed) {
-      throw new RateLimitError(
-        "You can generate questions up to 2 times per minute. Please try again later.",
-        rateLimitCheck.retryAfter
-      );
-    }
 
     const sessionService = new TrainingSessionService(supabase);
     const result = await sessionService.createRound(userId, sessionId);
