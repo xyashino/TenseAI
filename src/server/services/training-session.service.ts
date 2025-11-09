@@ -4,6 +4,7 @@ import { TrainingSessionRepository } from "@/server/repositories/training-sessio
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CompleteRoundResponseDTO,
+  CompleteSessionResponseDTO,
   CreateSessionDTO,
   DifficultyLevel,
   PaginationMeta,
@@ -376,6 +377,124 @@ export class TrainingSessionService {
     return {
       round: completedRound,
       questions_review: questionsReview,
+    };
+  }
+
+  /**
+   * Complete a training session after all 3 rounds are finished
+   * Generates comprehensive AI feedback and updates session status
+   * @param userId - The authenticated user's ID
+   * @param sessionId - The session ID to complete
+   * @returns Session completion data with summary and feedback
+   * @throws NotFoundError if session doesn't exist or doesn't belong to user
+   * @throws BadRequestError if session is already completed or not all rounds are completed
+   * @throws Error if AI service or database operations fail
+   */
+  async completeSession(userId: string, sessionId: string): Promise<CompleteSessionResponseDTO> {
+    const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
+
+    if (!sessionData) {
+      throw new NotFoundError("Training session not found");
+    }
+
+    if (sessionData.status !== "active") {
+      throw new BadRequestError("This session has already been completed", {
+        completed_at: sessionData.completed_at,
+      });
+    }
+
+    const rounds = sessionData.rounds;
+    if (rounds.length !== 3) {
+      throw new BadRequestError("All 3 rounds must be completed first", {
+        completed_rounds: rounds.length,
+        required_rounds: 3,
+      });
+    }
+
+    const completedRounds = rounds.filter((r) => r.completed_at !== null);
+    if (completedRounds.length !== 3) {
+      throw new BadRequestError("All 3 rounds must be completed first", {
+        completed_rounds: completedRounds.length,
+        required_rounds: 3,
+      });
+    }
+
+    const roundsScores = rounds.sort((a, b) => a.round_number - b.round_number).map((r) => r.score ?? 0);
+
+    const totalScore = roundsScores.reduce((sum, score) => sum + score, 0);
+    const totalQuestions = 30;
+    const incorrectCount = totalQuestions - totalScore;
+    const accuracyPercentage = Math.round((totalScore / totalQuestions) * 100);
+    const perfectScore = totalScore === totalQuestions;
+
+    const incorrectAnswers: {
+      question_text: string;
+      user_answer: string;
+      correct_answer: string;
+      round_number: number;
+      question_number: number;
+    }[] = [];
+
+    for (const round of rounds) {
+      for (const question of round.questions) {
+        const userAnswer = question.user_answer;
+        if (userAnswer && !userAnswer.is_correct) {
+          incorrectAnswers.push({
+            question_text: question.question_text,
+            user_answer: userAnswer.selected_answer,
+            correct_answer: question.correct_answer,
+            round_number: round.round_number,
+            question_number: question.question_number,
+          });
+        }
+      }
+    }
+
+    let finalFeedback = "";
+    try {
+      finalFeedback = await mockAiGeneratorService.generateFinalFeedback(
+        incorrectAnswers,
+        sessionData.tense as TenseName,
+        sessionData.difficulty as DifficultyLevel
+      );
+    } catch (error) {
+      console.error("Failed to generate final feedback:", error);
+      if (perfectScore) {
+        finalFeedback = `# 🎉 Perfect Score!\n\nCongratulations! You've achieved a flawless 30/30 on ${sessionData.tense} at the ${sessionData.difficulty} level!`;
+      } else {
+        finalFeedback = `# Training Session Complete\n\nYou scored ${totalScore}/30 (${accuracyPercentage}%) on ${sessionData.tense} at the ${sessionData.difficulty} level. Great effort! Keep practicing to improve your skills.`;
+      }
+    }
+
+    let updatedSession;
+    try {
+      updatedSession = await this.repository.updateSessionCompletion(sessionId, finalFeedback);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("already completed")) {
+        throw new BadRequestError("This session has already been completed", {
+          completed_at: sessionData.completed_at,
+        });
+      }
+      throw error;
+    }
+
+    return {
+      training_session: {
+        id: updatedSession.id,
+        tense: updatedSession.tense as TenseName,
+        difficulty: updatedSession.difficulty as DifficultyLevel,
+        status: updatedSession.status,
+        final_feedback: updatedSession.final_feedback,
+        started_at: updatedSession.started_at,
+        completed_at: updatedSession.completed_at,
+      },
+      summary: {
+        rounds_scores: roundsScores,
+        total_score: `${totalScore}/30`,
+        accuracy_percentage: accuracyPercentage,
+        incorrect_count: incorrectCount,
+        perfect_score: perfectScore,
+      },
     };
   }
 }

@@ -417,4 +417,41 @@ export class TrainingSessionRepository {
 
     return data as CompletedRoundDTO;
   }
+
+  /**
+   * Update session with completion data
+   * @param sessionId - Session ID to update
+   * @param finalFeedback - AI-generated final feedback
+   * @returns Updated session data
+   * @throws Error if database operation fails or session is already completed
+   */
+  async updateSessionCompletion(sessionId: string, finalFeedback: string): Promise<TrainingSession> {
+    const now = new Date().toISOString();
+
+    const { data, error } = await this.supabase
+      .from("training_sessions")
+      .update({
+        status: "completed",
+        final_feedback: finalFeedback,
+        completed_at: now,
+        updated_at: now,
+      })
+      .eq("id", sessionId)
+      .eq("status", "active") // Only update if still active (prevents race conditions)
+      .select("*")
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        throw new Error("Session was already completed or not found");
+      }
+      throw new Error(`Failed to update session: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error("Session was already completed or not found");
+    }
+
+    return data as TrainingSession;
+  }
 }

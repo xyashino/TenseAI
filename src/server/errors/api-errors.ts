@@ -26,9 +26,22 @@ export abstract class ApiError extends Error {
 export class BadRequestError extends ApiError {
   readonly statusCode = 400;
   readonly errorType = "Bad Request";
+  readonly details?: Record<string, unknown>;
 
-  constructor(message = "Bad request") {
+  constructor(message = "Bad request", details?: Record<string, unknown>) {
     super(message);
+    this.details = details;
+  }
+
+  toJSON() {
+    if (this.details) {
+      return {
+        error: this.errorType,
+        message: this.message,
+        details: this.details,
+      };
+    }
+    return super.toJSON();
   }
 }
 

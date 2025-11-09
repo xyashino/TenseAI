@@ -1,4 +1,4 @@
- import { TrainingSessionService } from "@/server/services/training-session.service";
+import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { createRoundParamsSchema } from "@/server/validation/session.validation";

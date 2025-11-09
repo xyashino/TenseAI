@@ -531,6 +531,307 @@ export class MockAIGeneratorService {
 
     return feedback;
   }
+
+  /**
+   * Generate comprehensive final feedback for a completed training session
+   * @param incorrectAnswers - Array of all incorrect answers across all rounds
+   * @param tense - Grammar tense being practiced
+   * @param difficulty - Difficulty level
+   * @returns Markdown-formatted final feedback string
+   */
+  async generateFinalFeedback(
+    incorrectAnswers: {
+      question_text: string;
+      user_answer: string;
+      correct_answer: string;
+      round_number: number;
+      question_number: number;
+    }[],
+    tense: TenseName,
+    difficulty: DifficultyLevel
+  ): Promise<string> {
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    // Perfect score - no incorrect answers
+    if (incorrectAnswers.length === 0) {
+      return this.generateCongratulationsMessage(tense, difficulty);
+    }
+
+    // Generate comprehensive feedback for errors
+    const totalQuestions = 30;
+    const correctAnswers = totalQuestions - incorrectAnswers.length;
+    const accuracyPercentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+    let feedback = `# Training Session Complete\n\n`;
+    feedback += `## Overall Performance\n\n`;
+    feedback += `You scored **${correctAnswers}/${totalQuestions}** (${accuracyPercentage}%) on **${tense}** at the **${difficulty}** level.\n\n`;
+
+    if (accuracyPercentage >= 90) {
+      feedback += `Excellent work! You have a strong command of this tense.\n\n`;
+    } else if (accuracyPercentage >= 70) {
+      feedback += `Good job! You're making solid progress with this tense.\n\n`;
+    } else if (accuracyPercentage >= 50) {
+      feedback += `You're on the right track, but there's room for improvement.\n\n`;
+    } else {
+      feedback += `This tense is challenging. Don't be discouraged - consistent practice will help you improve.\n\n`;
+    }
+
+    // Add areas for improvement section
+    feedback += `## Areas for Improvement\n\n`;
+    feedback += `You made **${incorrectAnswers.length}** error${incorrectAnswers.length > 1 ? "s" : ""} across all three rounds. `;
+    feedback += `Let's review the key areas where you can improve:\n\n`;
+
+    // Add specific grammar tips based on tense
+    feedback += this.getTenseSpecificGuidance(tense, difficulty);
+
+    // Add common patterns in errors if there are multiple mistakes
+    if (incorrectAnswers.length >= 3) {
+      feedback += `\n### Common Patterns in Your Errors\n\n`;
+      feedback += this.analyzeErrorPatterns(incorrectAnswers, tense);
+    }
+
+    // Add practice recommendations
+    feedback += `\n## Practice Recommendations\n\n`;
+    if (accuracyPercentage >= 80) {
+      if (difficulty === "Basic") {
+        feedback += `- Consider trying the **Advanced** level to challenge yourself further\n`;
+        feedback += `- Focus on the few areas where you made mistakes\n`;
+        feedback += `- Try practicing with different tenses to broaden your skills\n`;
+      } else {
+        feedback += `- You're doing great! Keep practicing to maintain your proficiency\n`;
+        feedback += `- Try creating your own sentences using ${tense}\n`;
+        feedback += `- Consider teaching others - it's a great way to reinforce your knowledge\n`;
+      }
+    } else if (accuracyPercentage >= 60) {
+      feedback += `- Review the grammar rules for ${tense}\n`;
+      feedback += `- Practice with more examples at the ${difficulty} level\n`;
+      feedback += `- Focus on the specific error patterns identified above\n`;
+      feedback += `- Try the session again after reviewing the rules\n`;
+    } else {
+      feedback += `- Start by reviewing the fundamental rules of ${tense}\n`;
+      if (difficulty === "Advanced") {
+        feedback += `- Consider practicing at the **Basic** level first to build your foundation\n`;
+      }
+      feedback += `- Practice regularly - even 10 minutes a day can make a big difference\n`;
+      feedback += `- Don't rush - take your time to understand each question\n`;
+      feedback += `- Review your incorrect answers carefully to understand the patterns\n`;
+    }
+
+    feedback += `\n## Keep Going!\n\n`;
+    feedback += `Remember, learning a language takes time and practice. `;
+    feedback += `Each session helps you improve. Keep up the good work! 🎯\n`;
+
+    return feedback;
+  }
+
+  /**
+   * Generate congratulations message for perfect score
+   */
+  private generateCongratulationsMessage(tense: TenseName, difficulty: DifficultyLevel): string {
+    return (
+      `# 🎉 Perfect Score!\n\n` +
+      `## Congratulations!\n\n` +
+      `You've achieved a **flawless 30/30** on **${tense}** at the **${difficulty}** level! ` +
+      `This is an outstanding accomplishment that demonstrates complete mastery of this tense.\n\n` +
+      `## What This Means\n\n` +
+      `- ✅ You have **mastered** the grammar rules for ${tense}\n` +
+      `- ✅ You can **confidently** identify correct usage in various contexts\n` +
+      `- ✅ You're ready to apply this knowledge in real-world communication\n\n` +
+      `## Next Steps\n\n` +
+      (difficulty === "Basic"
+        ? `- Challenge yourself with the **Advanced** level for ${tense}\n` +
+          `- Explore other tenses to expand your grammar skills\n` +
+          `- Practice using ${tense} in writing and speaking\n`
+        : `- Excellent work at the Advanced level! You've truly mastered ${tense}\n` +
+          `- Consider exploring other tenses to broaden your grammar expertise\n` +
+          `- Apply your knowledge by writing or speaking in English\n`) +
+      `\n**Keep up the exceptional work!** 🌟\n`
+    );
+  }
+
+  /**
+   * Get tense-specific guidance and tips
+   */
+  private getTenseSpecificGuidance(tense: TenseName, difficulty: DifficultyLevel): string {
+    let guidance = "";
+
+    switch (tense) {
+      case "Present Simple":
+        guidance += `### Key Rules for Present Simple\n\n`;
+        guidance += `1. **Subject-Verb Agreement**\n`;
+        guidance += `   - For third-person singular (he/she/it): add **-s** or **-es** to the verb\n`;
+        guidance += `   - For I/you/we/they: use the **base form** of the verb\n\n`;
+        if (difficulty === "Advanced") {
+          guidance += `2. **Special Cases**\n`;
+          guidance += `   - Collective nouns (committee, team) often take singular verbs\n`;
+          guidance += `   - Uncountable nouns always take singular verbs\n`;
+          guidance += `   - Some verbs ending in -o add -es (go→goes)\n\n`;
+        }
+        guidance += `3. **Common Uses**\n`;
+        guidance += `   - Habits and routines\n`;
+        guidance += `   - Universal truths and facts\n`;
+        guidance += `   - Scheduled events\n`;
+        break;
+
+      case "Past Simple":
+        guidance += `### Key Rules for Past Simple\n\n`;
+        guidance += `1. **Regular Verbs**\n`;
+        guidance += `   - Add **-ed** to the base form (walk→walked, play→played)\n`;
+        guidance += `   - Verbs ending in -e: just add -d (love→loved)\n`;
+        guidance += `   - Verbs ending in consonant+y: change y to i and add -ed (study→studied)\n\n`;
+        guidance += `2. **Irregular Verbs**\n`;
+        guidance += `   - Must be memorized (go→went, see→saw, eat→ate)\n`;
+        guidance += `   - No consistent pattern\n\n`;
+        if (difficulty === "Advanced") {
+          guidance += `3. **Common Irregular Patterns**\n`;
+          guidance += `   - Vowel changes: sing→sang, drink→drank\n`;
+          guidance += `   - No change: cut→cut, put→put\n`;
+          guidance += `   - Completely different: be→was/were, have→had\n\n`;
+        }
+        break;
+
+      case "Present Perfect":
+        guidance += `### Key Rules for Present Perfect\n\n`;
+        guidance += `1. **Structure**\n`;
+        guidance += `   - **have/has** + **past participle**\n`;
+        guidance += `   - Use 'has' with he/she/it\n`;
+        guidance += `   - Use 'have' with I/you/we/they\n\n`;
+        guidance += `2. **Past Participles**\n`;
+        guidance += `   - Regular: same as past simple (walked, played)\n`;
+        guidance += `   - Irregular: must be memorized (gone, seen, eaten)\n\n`;
+        if (difficulty === "Advanced") {
+          guidance += `3. **Usage Contexts**\n`;
+          guidance += `   - Unfinished time periods (this week, this year)\n`;
+          guidance += `   - Life experiences (ever, never)\n`;
+          guidance += `   - Recent actions with present relevance (just, already, yet)\n\n`;
+        }
+        break;
+
+      case "Future Simple":
+        guidance += `### Key Rules for Future Simple\n\n`;
+        guidance += `1. **Structure**\n`;
+        guidance += `   - **will** + **base form** of the verb\n`;
+        guidance += `   - Same form for all subjects (I/you/he/she/it/we/they will)\n\n`;
+        guidance += `2. **Common Uses**\n`;
+        guidance += `   - Predictions about the future\n`;
+        guidance += `   - Spontaneous decisions\n`;
+        guidance += `   - Promises and offers\n\n`;
+        if (difficulty === "Advanced") {
+          guidance += `3. **Formal vs. Informal**\n`;
+          guidance += `   - Formal: shall (with I/we)\n`;
+          guidance += `   - Informal: gonna (going to)\n`;
+          guidance += `   - Negative: will not / won't\n\n`;
+        }
+        break;
+    }
+
+    return guidance;
+  }
+
+  /**
+   * Analyze error patterns to provide targeted feedback
+   */
+  private analyzeErrorPatterns(
+    incorrectAnswers: {
+      question_text: string;
+      user_answer: string;
+      correct_answer: string;
+      round_number: number;
+      question_number: number;
+    }[],
+    tense: TenseName
+  ): string {
+    let analysis = "";
+
+    // Group errors by round to see if there's improvement or decline
+    const errorsByRound = incorrectAnswers.reduce(
+      (acc, answer) => {
+        acc[answer.round_number] = (acc[answer.round_number] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
+
+    const roundNumbers = Object.keys(errorsByRound).map(Number).sort();
+    const errorCounts = roundNumbers.map((r) => errorsByRound[r]);
+
+    if (roundNumbers.length >= 2) {
+      if (errorCounts[errorCounts.length - 1] < errorCounts[0]) {
+        analysis += `- **Positive trend**: You made fewer errors in later rounds, showing improvement during the session! 📈\n`;
+      } else if (errorCounts[errorCounts.length - 1] > errorCounts[0]) {
+        analysis += `- You made more errors in later rounds. Consider taking breaks to maintain focus. 🧘\n`;
+      } else {
+        analysis += `- Your error rate was consistent across rounds. More practice will help you improve. 📚\n`;
+      }
+    }
+
+    // Analyze answer patterns
+    const answerPatterns = this.detectAnswerPatterns(incorrectAnswers, tense);
+    if (answerPatterns.length > 0) {
+      analysis += answerPatterns.join("\n");
+    }
+
+    return analysis;
+  }
+
+  /**
+   * Detect specific patterns in user's incorrect answers
+   */
+  private detectAnswerPatterns(
+    incorrectAnswers: {
+      user_answer: string;
+      correct_answer: string;
+    }[],
+    tense: TenseName
+  ): string[] {
+    const patterns: string[] = [];
+
+    switch (tense) {
+      case "Present Simple": {
+        const missingS = incorrectAnswers.filter(
+          (a) => a.correct_answer.endsWith("s") && a.user_answer === a.correct_answer.slice(0, -1)
+        );
+        if (missingS.length >= 2) {
+          patterns.push(`- **Subject-verb agreement**: You frequently forgot to add '-s' for third-person singular`);
+        }
+        break;
+      }
+
+      case "Past Simple": {
+        const irregularErrors = incorrectAnswers.filter(
+          (a) => a.user_answer.endsWith("ed") && !a.correct_answer.endsWith("ed")
+        );
+        if (irregularErrors.length >= 2) {
+          patterns.push(`- **Irregular verbs**: You often used the regular -ed ending for irregular verbs`);
+        }
+        break;
+      }
+
+      case "Present Perfect": {
+        const hasHaveErrors = incorrectAnswers.filter(
+          (a) =>
+            (a.correct_answer.startsWith("has") && a.user_answer.startsWith("have")) ||
+            (a.correct_answer.startsWith("have") && a.user_answer.startsWith("has"))
+        );
+        if (hasHaveErrors.length >= 2) {
+          patterns.push(`- **Has/Have confusion**: Review which subjects take 'has' vs 'have'`);
+        }
+        break;
+      }
+
+      case "Future Simple": {
+        const missingWill = incorrectAnswers.filter(
+          (a) => a.correct_answer.startsWith("will") && !a.user_answer.includes("will")
+        );
+        if (missingWill.length >= 2) {
+          patterns.push(`- **Future marker**: Don't forget to use 'will' before the base verb`);
+        }
+        break;
+      }
+    }
+
+    return patterns;
+  }
 }
 
 // Singleton instance

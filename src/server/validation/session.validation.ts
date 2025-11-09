@@ -99,3 +99,11 @@ export const completeRoundBodySchema = z.object({
 });
 
 export type CompleteRoundBodyValidated = z.infer<typeof completeRoundBodySchema>;
+
+export const completeSessionParamsSchema = z.object({
+  sessionId: z.string().uuid({
+    message: "sessionId must be a valid UUID",
+  }),
+});
+
+export type CompleteSessionParamsValidated = z.infer<typeof completeSessionParamsSchema>;
