@@ -98,13 +98,20 @@ export interface RoundWithQuestionsDTO {
 
 export interface SessionWithRoundDTO {
   training_session: TrainingSessionDTO;
-  current_round: {
+  current_round?: {
     id: string;
     session_id: string;
     round_number: number;
     started_at: string;
     questions: QuestionWithoutAnswer[];
   };
+  completed_rounds?: {
+    id: string;
+    round_number: number;
+    score: number;
+    round_feedback: string;
+    questions_review: QuestionReview[];
+  }[];
 }
 
 export interface SessionProgress {
@@ -293,4 +300,88 @@ export interface StartSessionFormData {
  */
 export interface CreateSessionResponse {
   training_session: TrainingSessionDTO;
+}
+
+/**
+ * Represents a chat component in the training session interface
+ */
+export type ChatComponent =
+  | SelectQuestionListChatComponent
+  | RoundSummaryChatComponent
+  | FinalFeedbackChatComponent
+  | LoadingChatComponent;
+
+export interface SelectQuestionListChatComponent {
+  type: "selectQuestionList";
+  id: string; // Unique identifier for React key
+  data: {
+    questions: QuestionWithoutAnswer[];
+    roundNumber: number;
+    totalQuestions: number;
+    isReadOnly?: boolean; // For historical rounds
+    questionsReview?: QuestionReview[]; // For read-only view with correct/incorrect indicators
+  };
+}
+
+export interface RoundSummaryChatComponent {
+  type: "roundSummary";
+  id: string;
+  data: {
+    roundNumber: number;
+    score: number;
+    totalQuestions: number;
+    feedback: string; // Markdown
+    questionsReview: QuestionReview[];
+  };
+}
+
+export interface FinalFeedbackChatComponent {
+  type: "finalFeedback";
+  id: string;
+  data: {
+    roundsScores: number[];
+    totalScore: string;
+    accuracyPercentage: number;
+    perfectScore: boolean;
+    finalFeedback: string; // Markdown
+  };
+}
+
+export interface LoadingChatComponent {
+  type: "loading";
+  id: string;
+  data: {
+    message: string;
+  };
+}
+
+/**
+ * Training session state for the view
+ */
+export interface TrainingSessionState {
+  sessionId: string;
+  tense: TenseName;
+  difficulty: DifficultyLevel;
+  status: SessionStatus;
+  currentRoundNumber: number; // 1, 2, or 3
+  chatComponents: ChatComponent[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+/**
+ * Answer submission for round completion
+ */
+export interface AnswerSubmission {
+  question_id: string;
+  selected_answer: string;
+}
+
+/**
+ * Base props shared by question card components (form and read-only variants)
+ */
+export interface QuestionCardBaseProps {
+  questionNumber: number;
+  roundNumber: number;
+  totalQuestions: number;
 }
