@@ -1,12 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { memo } from "react";
-import type { FinalFeedbackElementProps } from "../types";
 import { DetailedAnalysis } from "./detailed-analysis";
 import { FinalFeedbackActions } from "./final-feedback-actions";
 import { FinalFeedbackHeader } from "./final-feedback-header";
 import { RoundsScoresDisplay } from "./rounds-scores-display";
 import { StatsGrid } from "./stats-grid";
+
+interface FinalFeedbackElementProps {
+  roundsScores: number[];
+  totalScore: string;
+  accuracyPercentage: number;
+  perfectScore: boolean;
+  finalFeedback: string;
+}
 
 export const FinalFeedbackElement = memo(function FinalFeedbackElement({
   roundsScores,
@@ -14,8 +21,6 @@ export const FinalFeedbackElement = memo(function FinalFeedbackElement({
   accuracyPercentage,
   perfectScore,
   finalFeedback,
-  onViewHistory,
-  onStartNewSession,
 }: FinalFeedbackElementProps) {
   return (
     <Card className="border-2 border-primary">
@@ -32,7 +37,7 @@ export const FinalFeedbackElement = memo(function FinalFeedbackElement({
 
         {finalFeedback && <DetailedAnalysis finalFeedback={finalFeedback} />}
 
-        <FinalFeedbackActions onViewHistory={onViewHistory} onStartNewSession={onStartNewSession} />
+        <FinalFeedbackActions />
       </CardContent>
     </Card>
   );

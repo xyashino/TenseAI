@@ -1,24 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { History } from "lucide-react";
+import { NavigationRoutes } from "@/lib/enums/navigation";
+import { History, PlayIcon } from "lucide-react";
 import { memo } from "react";
 
-interface FinalFeedbackActionsProps {
-  onViewHistory: () => void;
-  onStartNewSession: () => void;
-}
-
-export const FinalFeedbackActions = memo(function FinalFeedbackActions({
-  onViewHistory,
-  onStartNewSession,
-}: FinalFeedbackActionsProps) {
+export const FinalFeedbackActions = memo(function FinalFeedbackActions() {
   return (
     <div className="flex flex-col sm:flex-row gap-3 pt-4">
-      <Button onClick={onViewHistory} variant="default" className="flex-1" size="lg">
-        <History className="h-4 w-4 mr-2" />
-        View History
+      <Button variant="default" className="flex-1" size="lg" asChild>
+        <a href={NavigationRoutes.HISTORY}>
+          <History className="h-4 w-4 mr-2" />
+          View History
+        </a>
       </Button>
-      <Button onClick={onStartNewSession} variant="outline" className="flex-1" size="lg">
-        Start New Session
+      <Button variant="outline" className="flex-1" size="lg" asChild>
+        <a href={NavigationRoutes.TRAINING}>
+          <PlayIcon className="h-4 w-4 mr-2" />
+          Start New Session
+        </a>
       </Button>
     </div>
   );

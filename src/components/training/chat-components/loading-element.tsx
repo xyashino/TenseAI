@@ -1,6 +1,9 @@
 import { Loader2 } from "lucide-react";
 import { memo } from "react";
-import type { LoadingElementProps } from "./types";
+
+interface LoadingElementProps {
+  message: string;
+}
 
 export const LoadingElement = memo(function LoadingElement({ message }: LoadingElementProps) {
   return (
