@@ -19,8 +19,12 @@ interface ForgotPasswordRequest {
 }
 
 interface ResetPasswordRequest {
-  token: string;
+  token?: string;
   password: string;
+}
+
+interface ResetEmailRequest {
+  email: string;
 }
 
 interface AuthResponse {
@@ -70,7 +74,18 @@ export function useResetPassword() {
   return useMutation(
     {
       mutationFn: async (data: ResetPasswordRequest) => {
-        return apiPost<AuthResponse>("/api/auth/reset-password", data);
+        return apiPost<AuthResponse>("/api/auth/reset-password", { password: data.password });
+      },
+    },
+    queryClient
+  );
+}
+
+export function useResetEmail() {
+  return useMutation(
+    {
+      mutationFn: async (data: ResetEmailRequest) => {
+        return apiPost<AuthResponse>("/api/auth/reset-email", data);
       },
     },
     queryClient

@@ -1,4 +1,3 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -45,11 +44,6 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {updateProfile.isError && (
-            <Alert variant="error">{updateProfile.error?.message || "Failed to update profile."}</Alert>
-          )}
-
-          {/* Name field */}
           <FormField
             control={form.control}
             name="name"
@@ -63,8 +57,6 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
               </FormItem>
             )}
           />
-
-          {/* Difficulty field */}
           <FormField
             control={form.control}
             name="default_difficulty"
@@ -73,7 +65,7 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
                 <FormLabel htmlFor="difficulty">Default Difficulty</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value} disabled={updateProfile.isPending}>
                   <FormControl>
-                    <SelectTrigger id="difficulty">
+                    <SelectTrigger id="difficulty" className="w-full">
                       <SelectValue placeholder="Select difficulty" />
                     </SelectTrigger>
                   </FormControl>
@@ -87,8 +79,12 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
             )}
           />
 
-          <Button type="submit" disabled={!form.formState.isDirty || updateProfile.isPending}>
-            {updateProfile.isPending ? "Saving..." : "Save Changes"}
+          <Button
+            type="submit"
+            disabled={!form.formState.isDirty || updateProfile.isPending}
+            className="w-full sm:w-auto ml-auto"
+          >
+            Save Changes
           </Button>
         </form>
       </Form>
