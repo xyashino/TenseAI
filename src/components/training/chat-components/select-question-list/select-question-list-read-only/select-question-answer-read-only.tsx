@@ -1,6 +1,6 @@
 import type { QuestionCardBaseProps, QuestionWithoutAnswer } from "@/types";
 import { memo } from "react";
-import { QuestionCard } from "./question-card";
+import { QuestionCard } from "../common";
 
 interface SelectQuestionAnswerReadOnlyProps extends QuestionCardBaseProps {
   question: QuestionWithoutAnswer;

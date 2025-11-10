@@ -1,5 +1,5 @@
 import type { QuestionReview, QuestionWithoutAnswer } from "@/types";
-import { SelectQuestionWrapper } from "../select-question-wrapper";
+import { SelectQuestionWrapper } from "../common/select-question-wrapper";
 import { SelectQuestionAnswerReadOnly } from "./select-question-answer-read-only";
 
 interface SelectQuestionListReadOnlyProps {

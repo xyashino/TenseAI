@@ -8,7 +8,7 @@ interface SelectQuestionWrapperProps extends PropsWithChildren {
 export function SelectQuestionWrapper({ children, roundNumber, roundId }: SelectQuestionWrapperProps) {
   return (
     <div className="space-y-4">
-      <div className="p-4 px-6 border rounded-lg bg-card">
+      <div className="p-4 px-6 border-2 rounded-lg bg-card">
         <h4 id={roundId} className="text-2xl font-semibold">
           Round - {roundNumber}
         </h4>

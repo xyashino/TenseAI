@@ -1,21 +1,31 @@
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
+import { ChatLogWrapper } from "../../../chat-log-wrapper";
 
 interface QuestionSubmitProps {
   roundNumber: number;
+  answeredCount: number;
+  totalQuestions: number;
+  hasError: boolean;
 }
 
-export function QuestionSubmit({ roundNumber }: QuestionSubmitProps) {
-  return (
-    <div className="flex items-center justify-between p-4 border rounded-lg">
-      <div className="text-center space-y-2">
-        <h3 className="text-lg font-semibold">Round {roundNumber}</h3>
-      </div>
+export function QuestionSubmit({ roundNumber, answeredCount, totalQuestions, hasError }: QuestionSubmitProps) {
+  const remaining = totalQuestions - answeredCount;
 
-      <Button size="lg" className="w-auto" type="submit">
-        <CheckCircle className="mr-2 h-5 w-5" />
-        Check Answers
-      </Button>
-    </div>
+  return (
+    <ChatLogWrapper>
+      <div className={cn("flex flex-col gap-3 p-4 border-2 rounded-lg", hasError && "border-destructive")}>
+        <div className="flex items-center space-x-2">
+          <h3 className="text-lg sm:text-xl font-semibold">Round {roundNumber}</h3>
+          {remaining > 0 && <p className="text-sm sm:text-base text-destructive">- {remaining} remaining to answer</p>}
+        </div>
+
+        <Button size="lg" className="w-full" type="submit">
+          <CheckCircle className="mr-2 h-5 w-5" />
+          Check Answers
+        </Button>
+      </div>
+    </ChatLogWrapper>
   );
 }

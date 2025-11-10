@@ -7,6 +7,8 @@ import { memo } from "react";
 interface QuestionOptionsProps {
   questionId: string;
   options: string[];
+  value?: string;
+  onValueChange?: (value: string) => void;
   selectedAnswer?: string;
   correctAnswer?: string;
   isCorrect?: boolean;
@@ -15,16 +17,20 @@ interface QuestionOptionsProps {
 export const QuestionOptions = memo(function QuestionOptions({
   questionId,
   options,
+  value,
+  onValueChange,
   selectedAnswer,
   correctAnswer,
   isCorrect,
 }: QuestionOptionsProps) {
-  const hasReview = correctAnswer !== undefined && isCorrect !== undefined;
+  const isFormMode = onValueChange !== undefined;
+  const hasReview = !isFormMode && correctAnswer !== undefined && isCorrect !== undefined;
+  const currentValue = isFormMode ? value || "" : selectedAnswer || "";
 
   return (
-    <RadioGroup value={selectedAnswer || ""} disabled>
+    <RadioGroup value={currentValue} onValueChange={onValueChange} disabled={!isFormMode}>
       {options.map((option, index) => {
-        const isSelected = option === selectedAnswer;
+        const isSelected = option === (isFormMode ? value : selectedAnswer);
         const isCorrectOption = option === correctAnswer;
         const showAsCorrect = hasReview && isCorrectOption;
         const showAsIncorrect = hasReview && isSelected && !isCorrect;
@@ -37,14 +43,16 @@ export const QuestionOptions = memo(function QuestionOptions({
               "flex items-center space-x-3 p-2 rounded-md transition-colors",
               showAsCorrect && "bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800",
               showAsIncorrect && "bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800",
-              !hasReview && "hover:bg-accent"
+              isFormMode && !showAsCorrect && !showAsIncorrect && "hover:bg-accent"
             )}
           >
             <RadioGroupItem value={option} id={optionId} />
             <Label
               htmlFor={optionId}
               className={cn(
-                "flex-1 cursor-default text-sm font-normal flex items-center gap-2",
+                "flex-1 text-sm font-normal flex items-center gap-2",
+                isFormMode && "cursor-pointer",
+                !isFormMode && "cursor-default",
                 showAsCorrect && "text-green-700 dark:text-green-400",
                 showAsIncorrect && "text-red-700 dark:text-red-400"
               )}

@@ -1,12 +1,11 @@
 import type { QuestionCardBaseProps, QuestionWithoutAnswer } from "@/types";
 import { memo } from "react";
-import { QuestionCard } from "./question-card";
+import { QuestionCard } from "../common";
 
 interface SelectQuestionAnswerProps extends QuestionCardBaseProps {
   question: QuestionWithoutAnswer;
   value: string;
   onChange: (value: string) => void;
-  focusId?: string;
   hasError?: boolean;
 }
 
@@ -16,7 +15,6 @@ export const SelectQuestionAnswer = memo(function SelectQuestionAnswer({
   value,
   onChange,
   roundNumber,
-  focusId,
   totalQuestions,
   hasError,
 }: SelectQuestionAnswerProps) {
@@ -27,7 +25,6 @@ export const SelectQuestionAnswer = memo(function SelectQuestionAnswer({
       value={value}
       onChange={onChange}
       roundNumber={roundNumber}
-      focusId={focusId}
       totalQuestions={totalQuestions}
       hasError={hasError}
     />

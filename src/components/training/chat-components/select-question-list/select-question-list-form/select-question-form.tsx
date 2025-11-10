@@ -1,13 +1,12 @@
 import { Form, FormField } from "@/components/ui/form";
 import { useTrainingSessionActions } from "@/lib/hooks/use-training-session-actions";
-import { scrollToElement } from "@/lib/utils";
 import type { QuestionWithoutAnswer } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { SelectQuestionWrapper } from "../select-question-wrapper";
+import { SelectQuestionWrapper } from "../common/select-question-wrapper";
 import { SelectQuestionAnswer } from "./select-question-answer";
 import { QuestionSubmit } from "./select-question-submit";
 import { getFormSchema } from "./utils";
@@ -38,20 +37,6 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
     }, {} as FormValues),
   });
 
-  useEffect(() => {
-    if (!form.formState.isSubmitted) return;
-    const errors = form.formState.errors;
-    if (Object.keys(errors).length === 0) return;
-
-    const firstErrorQuestion = questions.find((q) => errors[q.id as keyof typeof errors]);
-    if (!firstErrorQuestion) return;
-
-    const firstErrorQuestionIndex = questions.findIndex((q) => q.id === firstErrorQuestion.id);
-    const firstErrorElementId = `round-${roundNumber}-question-${firstErrorQuestionIndex + 1}`;
-
-    scrollToElement(firstErrorElementId);
-  }, [form.formState.errors, form.formState.isSubmitted, questions, roundNumber]);
-
   const onSubmit = async (data: FormValues) => {
     try {
       const answersMap = new Map<string, string>(
@@ -65,13 +50,15 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
 
   const handleSubmit = form.handleSubmit(onSubmit);
 
+  const formValues = form.watch();
+  const answeredCount = Object.values(formValues).filter((value) => value !== "").length;
+  const hasError = Object.keys(form.formState.errors).length > 0;
+
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit} className="space-y-2">
         <SelectQuestionWrapper roundNumber={roundNumber} roundId={`round-${roundNumber}`}>
           {questions.map((question, index) => {
-            const isLastQuestion = index + 1 === totalQuestions;
-            const focusId = isLastQuestion ? undefined : `round-${roundNumber}-question-${index + 2}`;
             return (
               <FormField
                 key={question.id}
@@ -84,7 +71,6 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
                     question={question}
                     questionNumber={index + 1}
                     roundNumber={roundNumber}
-                    focusId={focusId}
                     totalQuestions={totalQuestions}
                     hasError={!!fieldState.error}
                   />
@@ -94,7 +80,12 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
           })}
         </SelectQuestionWrapper>
 
-        <QuestionSubmit roundNumber={roundNumber} />
+        <QuestionSubmit
+          roundNumber={roundNumber}
+          answeredCount={answeredCount}
+          totalQuestions={totalQuestions}
+          hasError={hasError}
+        />
       </form>
     </Form>
   );
