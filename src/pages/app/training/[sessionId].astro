@@ -1,0 +1,57 @@
+---
+import { TrainingSessionWrapper } from "@/components/training/training-session-wrapper";
+import FocusLayout from "@/layouts/FocusLayout.astro";
+import { NavigationRoutes } from "@/lib/enums/navigation";
+import { ProfileRepository } from "@/server/repositories/profile.repository";
+import { TrainingSessionService } from "@/server/services/training-session.service";
+import { authenticateUser } from "@/server/utils/auth";
+
+export const prerender = false;
+
+const { sessionId } = Astro.params;
+if (!sessionId) {
+  return Astro.redirect("/app/training");
+}
+
+const supabase = Astro.locals.supabase;
+const userId = await authenticateUser(supabase);
+
+const service = new TrainingSessionService(supabase);
+let sessionData;
+let roundsData;
+let sessionSummary;
+try {
+  const { training_session, rounds, summary } = await service.getSessionDetail(userId, sessionId);
+  if (training_session.status === "completed") {
+    return Astro.redirect(NavigationRoutes.TRAINING);
+  }
+  sessionData = {
+    sessionId: training_session.id,
+    tense: training_session.tense,
+    difficulty: training_session.difficulty,
+    status: training_session.status,
+    finalFeedback: training_session.final_feedback,
+  };
+  roundsData = rounds ?? [];
+  sessionSummary = summary;
+} catch {
+  return Astro.redirect("/app/training");
+}
+
+const profile = await new ProfileRepository(supabase).getProfileById(userId);
+const userName = profile?.name ?? null;
+---
+
+<FocusLayout title={`Training: ${sessionData.tense} - TenseAI`}>
+  <TrainingSessionWrapper
+    client:load
+    sessionId={sessionId}
+    tense={sessionData.tense}
+    difficulty={sessionData.difficulty}
+    status={sessionData.status}
+    userName={userName}
+    rounds={roundsData}
+    summary={sessionSummary}
+    finalFeedback={sessionData.finalFeedback}
+  />
+</FocusLayout>
