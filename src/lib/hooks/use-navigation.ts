@@ -7,14 +7,14 @@ export function useNavigation(currentPath: string, activeSessionsCount: number) 
   const navigationItems: NavigationItemConfig[] = useMemo(
     () => [
       {
-        href: NavigationRoutes.TRAINING,
-        label: "Training",
-        icon: PlayIcon,
-      },
-      {
         href: NavigationRoutes.THEORY,
         label: "Theory",
         icon: BookOpenIcon,
+      },
+      {
+        href: NavigationRoutes.TRAINING,
+        label: "Training",
+        icon: PlayIcon,
       },
       {
         href: NavigationRoutes.HISTORY,
