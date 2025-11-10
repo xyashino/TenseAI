@@ -1,6 +1,5 @@
 ---
 import AppLayout from "@/layouts/AppLayout.astro";
-import TenseGrid from "@/components/theory/TenseGrid.astro";
 import { TenseCard } from "@/components/theory/TenseCard";
 import { getCollection } from "astro:content";
 import { getTenseIcon } from "@/lib/theory-utils";
@@ -21,16 +20,13 @@ const tenseData: TenseCardData[] = theoryEntries
 ---
 
 <AppLayout title="Theory - TenseAI">
-  <div class="max-w-6xl mx-auto">
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold tracking-tight mb-2">Theory</h1>
-      <p class="text-lg text-muted-foreground">
-        Learn about English grammar tenses - understand when to use them, how to construct sentences, and common time
-        expressions.
-      </p>
+  <div class="max-w-7xl mx-auto">
+    <header class="mb-12">
+      <h1 class="text-4xl font-bold tracking-tight text-foreground">Theory</h1>
+      <p class="mt-2 text-muted-foreground">Master grammar concepts at your own pace.</p>
     </header>
 
-    <TenseGrid>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
       {
         tenseData.map((tense) => (
           <TenseCard
@@ -42,6 +38,6 @@ const tenseData: TenseCardData[] = theoryEntries
           />
         ))
       }
-    </TenseGrid>
+    </div>
   </div>
 </AppLayout>

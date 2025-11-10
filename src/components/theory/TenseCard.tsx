@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { NavigationRoutes } from "@/lib/enums/navigation";
 import type { TenseName } from "@/types";
 
 interface TenseCardProps {
@@ -10,29 +10,23 @@ interface TenseCardProps {
 
 export function TenseCard({ name, slug, description, icon }: TenseCardProps) {
   return (
-    <a
-      href={`/app/theory/${slug}`}
-      className="block transition-transform hover:scale-105 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg"
-      aria-label={`Learn about ${name}`}
-    >
-      <Card className="h-full hover:border-primary transition-colors cursor-pointer">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {icon && (
-              <span className="text-2xl" aria-hidden="true">
-                {icon}
-              </span>
-            )}
-            <span>{name}</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">{description}</p>
-        </CardContent>
-        <CardFooter>
-          <span className="text-sm text-primary font-medium">Learn more →</span>
-        </CardFooter>
-      </Card>
-    </a>
+    <div className="group relative bg-card border border-border rounded-lg p-8 hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10 hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-300 cursor-pointer">
+      <div className="flex flex-col h-full">
+        <div className="mb-4">
+          {icon && (
+            <span className="text-4xl text-primary" aria-hidden="true">
+              {icon}
+            </span>
+          )}
+        </div>
+        <h2 className="text-2xl font-semibold text-card-foreground mb-2">{name}</h2>
+        <p className="text-muted-foreground flex-grow mb-6">{description}</p>
+        <div className="mt-auto flex items-center text-primary font-medium">
+          <span>Start Learning</span>
+          <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+        </div>
+      </div>
+      <a href={`${NavigationRoutes.THEORY}${slug}`} aria-label={`Learn about ${name}`} className="absolute inset-0" />
+    </div>
   );
 }
