@@ -1,8 +1,8 @@
 ---
+import { HistoryView } from "@/components/history/history-view";
 import AppLayout from "@/layouts/AppLayout.astro";
 ---
 
 <AppLayout title="History - TenseAI">
-  <h1 class="mb-6 text-3xl font-bold">History</h1>
-  <p class="text-muted-foreground">Review your completed training sessions and track your progress over time.</p>
+  <HistoryView client:load />
 </AppLayout>
