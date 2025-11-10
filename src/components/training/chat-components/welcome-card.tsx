@@ -13,12 +13,14 @@ export const WelcomeCard = memo(function WelcomeCard({ userName, tense, difficul
   const displayName = userName || "there";
 
   return (
-    <Card>
+    <Card className="border-2">
       <CardHeader>
         <CardTitle>Hello {displayName}!</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-muted-foreground">Welcome to your training session. Let's practice and improve together!</p>
+        <p className="text-muted-foreground">
+          Welcome to your training session. Let&apos;s practice and improve together!
+        </p>
         <div className="flex flex-wrap gap-3">
           <div className="flex gap-1">
             <span className="text-sm font-medium text-muted-foreground">Selected Tense</span>
