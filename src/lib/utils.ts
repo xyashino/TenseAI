@@ -28,8 +28,5 @@ export const scrollToElement = (elementId: string) => {
       block: "nearest",
       inline: "nearest",
     });
-    setTimeout(() => {
-      elementToFocus.focus();
-    }, 50);
   });
 };

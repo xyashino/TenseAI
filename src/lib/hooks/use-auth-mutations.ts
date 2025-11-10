@@ -34,7 +34,7 @@ export function useLogin() {
         return apiPost<AuthResponse>("/api/auth/login", data);
       },
       onSuccess: () => {
-        navigate(NavigationRoutes.PRACTICE);
+        navigate(NavigationRoutes.TRAINING);
       },
     },
     queryClient
