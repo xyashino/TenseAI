@@ -38,7 +38,7 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <h1 className="mb-2 text-3xl font-bold">Account Settings</h1>
       <p className="mb-6 text-muted-foreground">Manage your account settings and preferences.</p>
 

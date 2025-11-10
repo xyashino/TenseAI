@@ -8,7 +8,7 @@ export function AccountActions() {
 
   return (
     <>
-      <div className="mx-auto max-w-2xl mt-4 pt-4 border-t">
+      <div className="mt-4 pt-4 border-t">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <ResetPasswordDialog />
           <Button
