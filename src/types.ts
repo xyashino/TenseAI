@@ -242,9 +242,6 @@ export interface TrainingSessionsListResponseDTO {
   pagination: PaginationMeta;
 }
 
-/**
- * Navigation item configuration for rendering nav links
- */
 export interface NavigationItemConfig {
   href: string;
   label: string;
@@ -253,9 +250,6 @@ export interface NavigationItemConfig {
   badge?: number;
 }
 
-/**
- * Minimal user data for layout rendering
- */
 export interface LayoutUser {
   id: string;
   email: string;
@@ -276,35 +270,23 @@ export interface TheoryFrontmatter {
   order: number;
 }
 
-/**
- * ViewModel for displaying session progress in the Practice dashboard
- */
 export interface SessionProgressViewModel {
-  currentRound: number; // The round number currently in progress (1-3)
-  totalRounds: number; // Always 3
-  completedRounds: number; // Number of completed rounds (0-3)
-  progressText: string; // Human-readable text, e.g., "Round 2/3"
-  progressPercentage: number; // Percentage completion (0-100)
+  currentRound: number;
+  totalRounds: number;
+  completedRounds: number;
+  progressText: string;
+  progressPercentage: number;
 }
 
-/**
- * Form data for starting a new training session
- */
 export interface StartSessionFormData {
   tense: TenseName;
   difficulty: DifficultyLevel;
 }
 
-/**
- * Response from POST /api/training-sessions
- */
 export interface CreateSessionResponse {
   training_session: TrainingSessionDTO;
 }
 
-/**
- * Represents a chat component in the training session interface
- */
 export type ChatComponent =
   | SelectQuestionListChatComponent
   | RoundSummaryChatComponent
@@ -313,13 +295,13 @@ export type ChatComponent =
 
 export interface SelectQuestionListChatComponent {
   type: "selectQuestionList";
-  id: string; // Unique identifier for React key
+  id: string;
   data: {
     questions: QuestionWithoutAnswer[];
     roundNumber: number;
     totalQuestions: number;
-    isReadOnly?: boolean; // For historical rounds
-    questionsReview?: QuestionReview[]; // For read-only view with correct/incorrect indicators
+    isReadOnly?: boolean;
+    questionsReview?: QuestionReview[];
   };
 }
 
@@ -330,9 +312,9 @@ export interface RoundSummaryChatComponent {
     roundNumber: number;
     score: number;
     totalQuestions: number;
-    feedback: string; // Markdown
+    feedback: string;
     questionsReview: QuestionReview[];
-    isReadOnly?: boolean; // For historical rounds
+    isReadOnly?: boolean;
   };
 }
 
@@ -344,7 +326,7 @@ export interface FinalFeedbackChatComponent {
     totalScore: string;
     accuracyPercentage: number;
     perfectScore: boolean;
-    finalFeedback: string; // Markdown
+    finalFeedback: string;
   };
 }
 
@@ -356,31 +338,22 @@ export interface LoadingChatComponent {
   };
 }
 
-/**
- * Training session state for the view
- */
 export interface TrainingSessionState {
   sessionId: string;
   tense: TenseName;
   difficulty: DifficultyLevel;
   status: SessionStatus;
-  currentRoundNumber: number; // 1, 2, or 3
+  currentRoundNumber: number;
   chatComponents: ChatComponent[];
   isLoading: boolean;
   error: string | null;
 }
 
-/**
- * Answer submission for round completion
- */
 export interface AnswerSubmission {
   question_id: string;
   selected_answer: string;
 }
 
-/**
- * Base props shared by question card components (form and read-only variants)
- */
 export interface QuestionCardBaseProps {
   questionNumber: number;
   roundNumber: number;
