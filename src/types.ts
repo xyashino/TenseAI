@@ -332,6 +332,7 @@ export interface RoundSummaryChatComponent {
     totalQuestions: number;
     feedback: string; // Markdown
     questionsReview: QuestionReview[];
+    isReadOnly?: boolean; // For historical rounds
   };
 }
 
