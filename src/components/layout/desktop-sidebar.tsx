@@ -3,7 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { useLogout } from "@/lib/hooks/use-logout";
 import { LogOutIcon } from "lucide-react";
 import { AppLogo } from "../AppLogo";
-import { NavigationList } from "./NavigationList";
+import { NavigationList } from "./navigation-list";
 
 interface SidebarProps {
   currentPath: string;

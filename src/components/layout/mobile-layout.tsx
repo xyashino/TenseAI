@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { NavigationList } from "./NavigationList";
+import { NavigationList } from "./navigation-list";
 
 interface MobileLayoutProps {
   currentPath: string;

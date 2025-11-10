@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/lib/hooks/use-logout";
 import { LogOutIcon } from "lucide-react";
-import { ResetPasswordDialog } from "./ResetPasswordDialog";
+import { ResetPasswordDialog } from "./reset-password-dialog";
 
 export function AccountActions() {
   const { mutate: logout, isPending: isLoggingOut } = useLogout();

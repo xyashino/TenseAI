@@ -1,6 +1,6 @@
 import { useActiveSessionsCount } from "@/lib/hooks/use-active-sessions-count";
 import { useNavigation } from "@/lib/hooks/use-navigation";
-import { NavigationItem } from "./NavigationItem";
+import { NavigationItem } from "./navigation-item";
 
 interface NavigationListProps {
   currentPath: string;
