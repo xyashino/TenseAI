@@ -97,7 +97,7 @@ export function RegisterForm() {
               />
               <div>
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Creating account..." : "Create Account"}
+                  Create Account
                 </Button>
                 <AuthFooterLink text="Already have an account?" linkText="Log in" href={NavigationRoutes.LOGIN} />
               </div>

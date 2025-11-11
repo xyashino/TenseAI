@@ -54,7 +54,7 @@ export function ForgotPasswordForm() {
               />
               <div>
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Sending..." : "Send Reset Link"}
+                  Send Reset Link
                 </Button>
                 <AuthFooterLink text="Remember your password?" linkText="Log in" href={NavigationRoutes.LOGIN} />
               </div>

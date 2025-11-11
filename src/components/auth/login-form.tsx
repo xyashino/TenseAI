@@ -78,7 +78,7 @@ export function LoginForm() {
               />
               <div>
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  {isPending ? "Logging in..." : "Login"}
+                  Login
                 </Button>
                 <AuthFooterLink text="Don't have an account?" linkText="Sign up" href={NavigationRoutes.REGISTER} />
               </div>
