@@ -3,14 +3,16 @@ import { DesktopSidebar } from "@/components/layout/desktop-sidebar";
 import { MobileLayout } from "@/components/layout/mobile-layout";
 import { Toaster } from "@/components/ui/sonner";
 import { queryClient } from "@/lib/query-client";
+import { cn } from "@/lib/utils";
+import "@/styles/global.css";
 import { QueryClientProvider } from "@tanstack/react-query";
-import "../styles/global.css";
 
 interface Props {
   title?: string;
+  mainClassName?: string;
 }
 
-const { title = "TenseAI" } = Astro.props;
+const { title = "TenseAI", mainClassName = "" } = Astro.props;
 
 const session = Astro.locals.user;
 const profile = Astro.locals.profile;
@@ -19,7 +21,6 @@ if (!session) {
   return Astro.redirect("/login", 302);
 }
 
-// Check if user has completed onboarding
 if (profile && !profile.onboarding_completed) {
   return Astro.redirect("/onboarding", 302);
 }
@@ -46,10 +47,8 @@ const currentPath = Astro.url.pathname;
           <div class="lg:hidden">
             <MobileLayout currentPath={currentPath} client:load />
           </div>
-          <main class="flex-1 overflow-y-auto p-6 pb-24 lg:p-8 lg:pb-8 min-h-0">
-            <div class="mx-auto max-w-4xl">
-              <slot />
-            </div>
+          <main class={cn("flex-1 overflow-y-auto p-6 pb-24 lg:p-8 lg:pb-8 min-h-0 mx-auto max-w-4xl", mainClassName)}>
+            <slot />
           </main>
         </div>
       </div>

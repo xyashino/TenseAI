@@ -1,0 +1,44 @@
+---
+import { ErrorBoundary } from "@/components/common/error-boundary";
+import { HistoryDetailWrapper } from "@/components/history/history-detail-wrapper";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { NavigationRoutes } from "@/lib/enums/navigation";
+import { ProfileRepository } from "@/server/repositories/profile.repository";
+import { TrainingSessionService } from "@/server/services/training-session.service";
+import { authenticateUser } from "@/server/utils/auth";
+
+export const prerender = false;
+
+const { sessionId } = Astro.params;
+if (!sessionId) {
+  return Astro.redirect(NavigationRoutes.HISTORY, 302);
+}
+
+const supabase = Astro.locals.supabase;
+let userId: string;
+try {
+  userId = await authenticateUser(supabase);
+} catch {
+  return Astro.redirect("/login", 302);
+}
+
+const service = new TrainingSessionService(supabase);
+let sessionDetail;
+try {
+  sessionDetail = await service.getSessionDetail(userId, sessionId);
+  if (sessionDetail.training_session.status !== "completed") {
+    return Astro.redirect(`${NavigationRoutes.TRAINING}/${sessionId}`, 302);
+  }
+} catch {
+  return Astro.redirect(NavigationRoutes.HISTORY, 302);
+}
+
+const profile = await new ProfileRepository(supabase).getProfileById(userId);
+const userName = profile?.name ?? null;
+---
+
+<AppLayout title={`History: ${sessionDetail.training_session.tense} - TenseAI`} mainClassName="lg:p-0">
+  <ErrorBoundary context="History detail view" defaultMessage="Unable to load session details. Please try again.">
+    <HistoryDetailWrapper client:load sessionData={sessionDetail} userName={userName} />
+  </ErrorBoundary>
+</AppLayout>
