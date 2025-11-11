@@ -1,5 +1,4 @@
 ---
-import { ErrorBoundary } from "@/components/common/error-boundary";
 import { HistoryDetailWrapper } from "@/components/history-detail/history-detail-wrapper";
 import AppLayout from "@/layouts/app-layout.astro";
 import { NavigationRoutes } from "@/lib/enums/navigation";
@@ -37,8 +36,9 @@ const profile = await new ProfileRepository(supabase).getProfileById(userId);
 const userName = profile?.name ?? null;
 ---
 
-<AppLayout title={`History: ${sessionDetail.training_session.tense} - TenseAI`} mainClassName="p-0">
-  <ErrorBoundary context="History detail view" defaultMessage="Unable to load session details. Please try again.">
-    <HistoryDetailWrapper client:load sessionData={sessionDetail} userName={userName} />
-  </ErrorBoundary>
+<AppLayout
+  title={`History: ${sessionDetail.training_session.tense} - TenseAI`}
+  mainClassName="p-0 lg:p-0 lg:px-8 lg:pb-8"
+>
+  <HistoryDetailWrapper sessionData={sessionDetail} userName={userName} />
 </AppLayout>
