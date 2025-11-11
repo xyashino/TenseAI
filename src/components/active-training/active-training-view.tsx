@@ -2,7 +2,6 @@ import { useProfile } from "@/lib/hooks/use-profile";
 import { useActiveTrainings } from "@/lib/hooks/use-trainings-sessions";
 import { Suspense } from "react";
 import { ActiveSessionsList } from "./list/active-sessions-list";
-import { PageHeader } from "./page-header";
 import { StartSessionCTA } from "./start-session/start-session-cta";
 
 function ActiveTrainingViewContent() {
@@ -32,13 +31,10 @@ function ActiveTrainingViewFallback() {
 
 export function ActiveTrainingView() {
   return (
-    <div className="h-full flex flex-col">
-      <PageHeader />
-      <div className="flex-grow">
-        <Suspense fallback={<ActiveTrainingViewFallback />}>
-          <ActiveTrainingViewContent />
-        </Suspense>
-      </div>
+    <div className="h-full">
+      <Suspense fallback={<ActiveTrainingViewFallback />}>
+        <ActiveTrainingViewContent />
+      </Suspense>
     </div>
   );
 }

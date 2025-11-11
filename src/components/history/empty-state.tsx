@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 interface EmptyStateProps {
   title: string;
@@ -14,7 +15,8 @@ export function EmptyState({ title, description, ctaText, ctaLink }: EmptyStateP
       <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-md">{description}</p>
       <Button asChild>
         <a href={ctaLink} aria-label={ctaText}>
-          {ctaText}
+          <PlusIcon className="size-4" />
+          <span>{ctaText}</span>
         </a>
       </Button>
     </div>

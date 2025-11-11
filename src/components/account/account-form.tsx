@@ -31,56 +31,51 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
   };
 
   return (
-    <div>
-      <h1 className="mb-2 text-3xl font-bold">Account Settings</h1>
-      <p className="mb-6 text-muted-foreground">Manage your account settings and preferences.</p>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="name">Name</FormLabel>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="name">Name</FormLabel>
+              <FormControl>
+                <Input {...field} id="name" placeholder="Enter your name" disabled={updateProfile.isPending} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="default_difficulty"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="difficulty">Default Difficulty</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={updateProfile.isPending}>
                 <FormControl>
-                  <Input {...field} id="name" placeholder="Enter your name" disabled={updateProfile.isPending} />
+                  <SelectTrigger id="difficulty" className="w-full">
+                    <SelectValue placeholder="Select difficulty" />
+                  </SelectTrigger>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="default_difficulty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="difficulty">Default Difficulty</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={updateProfile.isPending}>
-                  <FormControl>
-                    <SelectTrigger id="difficulty" className="w-full">
-                      <SelectValue placeholder="Select difficulty" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Basic">Basic (A2/B1)</SelectItem>
-                    <SelectItem value="Advanced">Advanced (B2)</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                <SelectContent>
+                  <SelectItem value="Basic">Basic (A2/B1)</SelectItem>
+                  <SelectItem value="Advanced">Advanced (B2)</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <Button
-            type="submit"
-            disabled={!form.formState.isDirty || updateProfile.isPending}
-            className="w-full sm:w-auto ml-auto"
-          >
-            Save Changes
-          </Button>
-        </form>
-      </Form>
-    </div>
+        <Button
+          type="submit"
+          disabled={!form.formState.isDirty || updateProfile.isPending}
+          className="w-full sm:w-auto ml-auto"
+        >
+          Save Changes
+        </Button>
+      </form>
+    </Form>
   );
 }

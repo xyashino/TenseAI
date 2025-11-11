@@ -1,8 +1,13 @@
 ---
+import { PageHeader } from "@/components/common/page-header";
 import { HistoryView } from "@/components/history/history-view";
 import AppLayout from "@/layouts/app-layout.astro";
 ---
 
 <AppLayout title="History - TenseAI">
+  <PageHeader
+    title="History"
+    description="Review your completed training sessions and track your progress over time."
+  />
   <HistoryView client:load />
 </AppLayout>

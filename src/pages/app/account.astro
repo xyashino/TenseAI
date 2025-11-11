@@ -1,6 +1,7 @@
 ---
 import { AccountForm } from "@/components/account/account-form";
 import { ResetPasswordDialog } from "@/components/account/reset-password-dialog";
+import { PageHeader } from "@/components/common/page-header";
 import AppLayout from "@/layouts/app-layout.astro";
 import { ProfileRepository } from "@/server/repositories/profile.repository";
 
@@ -16,6 +17,7 @@ const profile = await profileRepository.getProfileById(session.id);
 ---
 
 <AppLayout title="Account - TenseAI">
+  <PageHeader title="Account Settings" description="Manage your account settings and preferences." />
   <AccountForm initialProfile={profile} client:load />
   <div class="mt-4 pt-4 border-t">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center">

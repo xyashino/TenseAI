@@ -1,14 +1,13 @@
 ---
+import { PageHeader } from "@/components/common/page-header";
 import { TenseCard } from "@/components/theory/tense-card";
 import AppLayout from "@/layouts/app-layout.astro";
 import { getTenseIcon } from "@/lib/theory-utils";
 import type { TenseCardData } from "@/types";
 import { getCollection } from "astro:content";
 
-// Load theory entries from content collection
 const theoryEntries = await getCollection("theory");
 
-// Map entries to TenseCardData and sort by order
 const tenseData: TenseCardData[] = theoryEntries
   .sort((a, b) => a.data.order - b.data.order)
   .map((entry) => ({
@@ -20,26 +19,12 @@ const tenseData: TenseCardData[] = theoryEntries
 ---
 
 <AppLayout title="Theory - TenseAI">
-  <div class="-mx-6 lg:-mx-8 px-6 lg:px-8">
-    <div class="mx-auto max-w-7xl">
-      <header class="mb-12">
-        <h1 class="text-4xl font-bold tracking-tight text-foreground">Theory</h1>
-        <p class="mt-2 text-muted-foreground">Master grammar concepts at your own pace.</p>
-      </header>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
-        {
-          tenseData.map((tense) => (
-            <TenseCard
-              name={tense.name}
-              slug={tense.slug}
-              description={tense.description}
-              icon={tense.icon}
-              client:load
-            />
-          ))
-        }
-      </div>
-    </div>
+  <PageHeader title="Theory" description="Master grammar concepts at your own pace." />
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
+    {
+      tenseData.map((tense) => (
+        <TenseCard name={tense.name} slug={tense.slug} description={tense.description} icon={tense.icon} client:load />
+      ))
+    }
   </div>
 </AppLayout>
