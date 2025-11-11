@@ -18,6 +18,13 @@ State management is handled by **React Query** for all server state (API interac
 
 ### Public & Auth Views
 
+- **View:** Landing Page
+
+  - **Path:** `/`
+  - **Main Purpose:** Marketing/landing page for unauthenticated users.
+  - **Key Information:** Hero section, features, call-to-action buttons.
+  - **Key View Components:** Hero section, feature cards, CTA buttons linking to `/register` and `/login`.
+
 - **View:** Login
 
   - **Path:** `/login`
@@ -41,27 +48,27 @@ State management is handled by **React Query** for all server state (API interac
   - **Key Information:** Static "Check your email" message.
   - **Key View Components:** `Card`, Text.
 
-- **View:** Update Password
-  - **Path:** `/update-password`
+- **View:** Reset Password
+  - **Path:** `/reset-password`
   - **Main Purpose:** Allow a user to set a new password from a reset link (`US-004`).
-  - **Key Information:** New password and confirm password fields.
+  - **Key Information:** New password and confirm password fields. Requires `token` query parameter.
   - **Key View Components:** `Card`, `Form`, `Input` (password type), `Button` ("Set New Password").
-  - **UX/Security:** This page uses the Supabase SDK to handle the password update logic from the URL token.
+  - **UX/Security:** This page requires a token query parameter. If missing, redirects to `/forgot-password`. Uses Supabase SDK to handle the password update logic from the URL token.
 
 ### Onboarding
 
 - **View:** Onboarding
   - **Path:** `/onboarding`
-  - **Main Purpose:** Mandatory 2-step setup for new users (`REQ-06`, `US-005`).
+  - **Main Purpose:** Mandatory setup for new users (`REQ-06`, `US-005`).
   - **Key Information:** User's name, default difficulty choice.
-  - **Key View Components:** Full-screen layout (no nav), `Card` (for steps), `Input` (for name, `REQ-07`), large clickable `Card`s or `RadioGroup` (for difficulty, `REQ-08`), `Button` ("Continue" / "Finish").
-  - **UX/Security:** This view is shown via a redirect from the main layout if `GET /api/profile` returns `onboarding_completed: false`. On submit, it calls `PATCH /api/profile` and redirects to `/practice`.
+  - **Key View Components:** Full-screen layout (no nav), `Card`, `Form` (React Hook Form), `Input` (for name, `REQ-07`), `Select` (for difficulty, `REQ-08`), `Button` ("Finish Setup").
+  - **UX/Security:** This view is shown via a redirect from the main layout if `GET /api/profile` returns `onboarding_completed: false`. On submit, it calls `PATCH /api/profile` and redirects to `/app/training`.
 
 ### Main Application Views
 
 - **View:** Practice (Dashboard)
 
-  - **Path:** `/app` or `/app/practice`
+  - **Path:** `/app/training`
   - **Main Purpose:** Main app dashboard. Displays active sessions (`US-011`) and allows starting new ones (`US-008`). _This view replaces the separate "Active Sessions" page._
   - **Key Information:** List of active sessions from `GET /api/training-sessions?status=active`.
   - **Key View Components:**
@@ -97,8 +104,8 @@ State management is handled by **React Query** for all server state (API interac
 
   - **Path:** `/app/theory/[tenseSlug]`
   - **Main Purpose:** Display educational content for a specific tense (`REQ-12`, `US-007`).
-  - **Key Information:** Rendered Markdown content.
-  - **Key View Components:** A static Astro page that renders Markdown content, styled using `@tailwindcss/typography`.
+  - **Key Information:** Rendered Markdown content from Astro content collections.
+  - **Key View Components:** A static Astro page that renders Markdown content from content collections, styled using `@tailwindcss/typography`. Includes breadcrumb navigation.
 
 - **View:** History (List)
 
@@ -132,24 +139,24 @@ State management is handled by **React Query** for all server state (API interac
 
 This map outlines the "golden path" for a new user, from registration to completing their first session.
 
-1.  **Start:** User lands on `/register`.
+1.  **Start:** User lands on `/` (landing page) or `/register`.
 2.  **Register:** Submits form -> Redirected to `/check-email`.
 3.  **Activate:** User clicks email link -> Redirected to `/login`.
 4.  **First Login:** Submits `/login` form -> App fetches `GET /api/profile`.
 5.  **Onboarding:** `onboarding_completed: false` -> Redirect to `/onboarding`.
-6.  **Setup:** User submits name and difficulty -> `PATCH /api/profile`.
-7.  **Dashboard:** Redirected to `/practice` (main dashboard).
+6.  **Setup:** User submits name and difficulty in single form -> `PATCH /api/profile`.
+7.  **Dashboard:** Redirected to `/app/training` (main dashboard).
 8.  **Start Session:** Clicks "Start New Session" -> Opens `Dialog` modal.
 9.  **Configure:** Selects Tense & Difficulty -> Clicks "Start".
-10. **Navigate & Load:** `POST /api/training-sessions` (fast) -> Navigate to `/training/[sessionId]`.
-11. **Fetch Questions:** `/training/[sessionId]` page shows loader -> `POST /api/training-sessions/{sessionId}/rounds` (slow) to get Round 1 questions.
+10. **Navigate & Load:** `POST /api/training-sessions` (fast) -> Navigate to `/app/training/[sessionId]`.
+11. **Fetch Questions:** `/app/training/[sessionId]` page shows loader -> `POST /api/training-sessions/{sessionId}/rounds` (slow) to get Round 1 questions.
 12. **Round 1:** Loader replaced by Question 1/10. User submits 10 answers (no feedback).
 13. **Submit Round 1:** Clicks "Submit" -> `POST /api/rounds/{roundId}/complete`.
 14. **Round 1 Summary:** Loader replaced by Round 1 Summary component (`REQ-18`).
 15. **Rounds 2 & 3:** User clicks "Start Round 2" -> Repeats steps 11-14.
 16. **Final Summary:** After Round 3 Summary, user clicks "Finish Session" -> `POST /api/training-sessions/{sessionId}/complete`.
 17. **Session Complete:** Loader replaced by Final Session Summary (`REQ-19`).
-18. **Review:** User navigates to `/history` -> Clicks new entry -> Navigates to `/history/[sessionId]` to see the read-only summary (`US-014`).
+18. **Review:** User navigates to `/app/history` -> Clicks new entry -> Navigates to `/app/history/[sessionId]` to see the read-only summary (`US-014`).
 
 ---
 
@@ -157,18 +164,19 @@ This map outlines the "golden path" for a new user, from registration to complet
 
 - **Layouts:** As defined in Section 1 (Public, Main App, Focus Mode).
 - **Navigation:** Based on the "Main App Layout."
-  - **Desktop (md: and up):** A fixed vertical **Sidebar**.
+  - **Desktop (lg: and up):** A fixed vertical **Sidebar**.
     - Logo (TenseAI)
-    - "Practice" (Home)
-    - "Theory"
-    - "History"
-    - "Profile" (at the bottom)
-  - **Mobile (sm:):** A fixed **Bottom Bar**.
-    - Icon: "Practice"
-    - Icon: "Theory"
-    - Icon: "History"
-    - Icon: "Profile"
-- **Transitions:** Astro View Transitions will be enabled to provide smooth, app-like cross-fade animations between page navigations.
+    - "Practice" (Home) - `/app/training`
+    - "Theory" - `/app/theory`
+    - "History" - `/app/history`
+    - "Account" - `/app/account`
+    - Logout button (at the bottom)
+  - **Mobile (below lg:):** A fixed **Bottom Bar**.
+    - Icon: "Practice" - `/app/training`
+    - Icon: "Theory" - `/app/theory`
+    - Icon: "History" - `/app/history`
+    - Icon: "Account" - `/app/account`
+- **Transitions:** Astro View Transitions are enabled to provide smooth, app-like cross-fade animations between page navigations.
 
 ---
 
@@ -176,21 +184,17 @@ This map outlines the "golden path" for a new user, from registration to complet
 
 This list highlights reusable React components built with Shadcn/ui.
 
-- **`AuthForm` (React):** A client-side component used for Login, Register, and Update Password, powered by React Hook Form.
-- **`OnboardingWizard` (React):** A multi-step form component for the `/onboarding` view.
-- **`SessionStarter` (React):** The "Start New Session" `Button` and its associated `Dialog` modal. Manages the `POST /api/training-sessions` mutation and subsequent navigation.
-- **`ActiveSessionList` (React):** Fetches (`GET ...?status=active`) and displays the list of `Card`s on the `/practice` page. Handles "Resume" and "Delete" actions.
-- **`HistoryList` (React):** Fetches (`GET ...?status=completed`) and displays the paginated list of completed sessions on the `/history` page.
-- **`TrainingChat` (React):** The main component for `/training/[sessionId]`.
-  - Manages the `messages: [object]` `useState` array.
-  - Manages the "chat log" UI, mapping `messages` to components.
+- **`LoginForm`, `RegisterForm`, `ForgotPasswordForm`, `ResetPasswordForm` (React):** Client-side form components for authentication, powered by React Hook Form.
+- **`OnboardingForm` (React):** A single-form component for the `/onboarding` view that collects name and default difficulty.
+- **`StartSessionDialog` (React):** The "Start New Session" `Button` and its associated `Dialog` modal. Manages the `POST /api/training-sessions` mutation and subsequent navigation.
+- **`ActiveSessionsList` (React):** Fetches (`GET ...?status=active`) and displays the list of `Card`s on the `/app/training` page. Handles "Resume" and "Delete" actions.
+- **`HistoryList` (React):** Fetches (`GET ...?status=completed`) and displays the paginated list of completed sessions on the `/app/history` page.
+- **`TrainingSessionView` (React):** The main component for `/app/training/[sessionId]`.
+  - Manages the chat components state using Zustand store.
+  - Manages the "chat log" UI, mapping chat components to rendered components.
   - Handles all `React Query` mutations for `POST .../rounds`, `POST .../complete`.
-  - Manages the child `QuestionForm`.
-- **`QuestionForm` (React):** The form fixed to the bottom of the training view.
-  - Powered by `React Hook Form` to collect 10 answers.
-  - Displays one question at a time.
-  - Handles the "Report Error" `Dialog`.
-- **`ReadOnlyChat` (React):** The component for `/history/[sessionId]`. Fetches the full session (`GET /api/training-sessions/{sessionId}`) and renders the entire chat log statically.
-- **`MarkdownRenderer` (React):** A simple wrapper for `react-markdown` and `@tailwindcss/typography` used in theory pages and feedback bubbles.
-- **`EmptyState` (React):** A shared component displayed on `/practice` and `/history` when lists are empty (`US-016`).
-- **`GlobalErrorHandler` (React):** An `<ErrorBoundary>` component that wraps the main app to catch client-side React errors and display a "friendly coach" message.
+- **`ChatComponentRenderer` (React):** Renders different chat component types (questions, round summaries, final feedback, loading).
+- **`HistoryDetailWrapper` (React):** The component for `/app/history/[sessionId]`. Fetches the full session (`GET /api/training-sessions/{sessionId}`) and renders the entire chat log statically using the same chat component renderer.
+- **`TheoryContent` (Astro):** A wrapper component that styles Markdown content using `@tailwindcss/typography` for theory pages.
+- **`EmptyState` (React):** A shared component displayed on `/app/training` and `/app/history` when lists are empty (`US-016`).
+- **`ErrorBoundary` (React):** An error boundary component that wraps views to catch client-side React errors and display a "friendly coach" message.
