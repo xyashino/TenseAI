@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/db/supabase.client";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { defineMiddleware } from "astro:middleware";
+import { ProfileRepository } from "../server/repositories/profile.repository";
 
 const PUBLIC_PATHS = [NavigationRoutes.HOME, NavigationRoutes.AUTH_CONFIRM];
 const AUTH_PATHS = [
@@ -15,6 +16,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (context.url.pathname.startsWith("/api/auth/")) {
     return next();
   }
+
+  const isApiPath = context.url.pathname.startsWith("/api/");
 
   const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
 
@@ -39,14 +42,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return context.redirect("/login", 302);
   }
 
-  // Get session after verifying user (safe since user is authenticated)
   const { data: sessionData } = await supabase.auth.getSession();
-  const { data: profile } = await supabase.from("profiles").select("*").eq("user_id", userData.user.id).single();
-  if (profile && !profile.onboarding_completed && !isOnboardingPath) {
-    return context.redirect(ONBOARDING_PATH, 302);
-  }
-  if (profile && profile.onboarding_completed && isOnboardingPath) {
-    return context.redirect(NavigationRoutes.THEORY, 302);
+  const profileRepository = new ProfileRepository(supabase);
+  const profile = await profileRepository.getProfileById(userData.user.id);
+
+  if (!isApiPath) {
+    if (profile && !profile.onboarding_completed && !isOnboardingPath) {
+      return context.redirect(ONBOARDING_PATH, 302);
+    }
+    if (profile && profile.onboarding_completed && isOnboardingPath) {
+      return context.redirect(NavigationRoutes.THEORY, 302);
+    }
   }
 
   context.locals.session = sessionData.session;
