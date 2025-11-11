@@ -40,6 +40,7 @@ try {
 
 const profile = await new ProfileRepository(supabase).getProfileById(userId);
 const userName = profile?.name ?? null;
+console.log({ sessionData, roundsData, sessionSummary });
 ---
 
 <FocusLayout title={`Training: ${sessionData.tense} - TenseAI`}>

@@ -22,7 +22,7 @@ import type {
   TrainingSessionsListResponseDTO,
   UserAnswerInsert,
 } from "@/types";
-import { mockAiGeneratorService } from "./ai-generator.service";
+import { aiGeneratorService } from "./ai-generator.service";
 
 export class TrainingSessionService {
   private repository: TrainingSessionRepository;
@@ -31,13 +31,6 @@ export class TrainingSessionService {
     this.repository = new TrainingSessionRepository(supabase);
   }
 
-  /**
-   * Create a new training session record only (without rounds or questions)
-   * @param userId - The authenticated user's ID
-   * @param dto - Session creation data (tense and difficulty)
-   * @returns Session object only
-   * @throws Error if session creation fails
-   */
   async createSessionOnly(userId: string, dto: CreateSessionDTO): Promise<{ training_session: TrainingSessionDTO }> {
     const sessionData: TrainingSessionInsert = {
       user_id: userId,
@@ -62,15 +55,7 @@ export class TrainingSessionService {
     };
   }
 
-  /**
-   * Create a new round with 10 AI-generated questions for an existing session
-   * @param userId - The authenticated user's ID
-   * @param sessionId - The session ID to create a round for
-   * @returns Round with questions (without correct answers)
-   * @throws Error if any step fails (round or question creation)
-   */
   async createRound(userId: string, sessionId: string): Promise<RoundWithQuestionsDTO> {
-    // Verify session belongs to user and is active
     const sessionData = await this.repository.getSessionById(userId, sessionId);
 
     if (!sessionData) {
@@ -81,7 +66,6 @@ export class TrainingSessionService {
       throw new Error("Cannot create round for a completed session");
     }
 
-    // Get existing rounds to determine next round number
     const existingRounds = await this.repository.getRoundsBySessionId(sessionId);
     const nextRoundNumber = existingRounds.length + 1;
 
@@ -89,7 +73,6 @@ export class TrainingSessionService {
       throw new Error("Cannot create more than 3 rounds per session");
     }
 
-    // Check if previous round is completed (if not round 1)
     if (nextRoundNumber > 1) {
       const previousRound = existingRounds.find((r) => r.round_number === nextRoundNumber - 1);
       if (!previousRound?.completed_at) {
@@ -109,11 +92,12 @@ export class TrainingSessionService {
       const round = await this.repository.createRound(roundData);
       roundId = round.id;
 
-      const generatedQuestions = await mockAiGeneratorService.generateQuestions(
+      const generatedQuestions = await aiGeneratorService.generateQuestions(
         sessionData.tense,
         sessionData.difficulty,
         10
       );
+
       const questionsToInsert: QuestionInsert[] = generatedQuestions.map((q, index) => ({
         round_id: round.id,
         question_number: index + 1,
@@ -140,7 +124,6 @@ export class TrainingSessionService {
         questions: questionsWithoutAnswer,
       };
     } catch (error) {
-      // Rollback round creation if question generation fails
       if (roundId) {
         await this.repository.deleteRound(roundId);
       }
@@ -148,16 +131,6 @@ export class TrainingSessionService {
     }
   }
 
-  /**
-   * Get a paginated list of training sessions with their summaries
-   * @param userId - The authenticated user's ID
-   * @param status - Filter by session status ("active" or "completed")
-   * @param page - Page number (1-based)
-   * @param limit - Number of items per page (1-100)
-   * @param sortOrder - Sort order for started_at field
-   * @returns Paginated list of session summaries
-   * @throws Error if database query fails
-   */
   async getSessionsList(
     userId: string,
     status: SessionStatus,
@@ -179,14 +152,6 @@ export class TrainingSessionService {
     };
   }
 
-  /**
-   * Get detailed information about a specific training session
-   * @param userId - The authenticated user's ID
-   * @param sessionId - The session ID to retrieve
-   * @returns Complete session details with rounds, questions, answers, and summary
-   * @throws NotFoundError if session doesn't exist or doesn't belong to user
-   * @throws Error if database query fails
-   */
   async getSessionDetail(userId: string, sessionId: string): Promise<SessionDetailResponseDTO> {
     const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
 
@@ -194,7 +159,6 @@ export class TrainingSessionService {
       throw new NotFoundError("Session not found");
     }
 
-    // Transform data to match response DTO
     const rounds: RoundDetailDTO[] = sessionData.rounds
       .sort((a, b) => a.round_number - b.round_number)
       .map((round) => ({
@@ -207,9 +171,7 @@ export class TrainingSessionService {
         questions: round.questions
           .sort((a, b) => a.question_number - b.question_number)
           .map((q) => {
-            // User answer is a One-to-One relationship (each question has one answer)
             const userAnswer = q.user_answer;
-
             return {
               id: q.id,
               question_number: q.question_number,
@@ -225,7 +187,6 @@ export class TrainingSessionService {
           }),
       }));
 
-    // Calculate summary statistics
     const total_questions = rounds.length * 10;
     const correct_answers = rounds.reduce((sum, round) => sum + round.score, 0);
     const accuracy_percentage = Math.round((correct_answers / total_questions) * 100);
@@ -251,31 +212,13 @@ export class TrainingSessionService {
     };
   }
 
-  /**
-   * Delete a training session
-   * @param userId - The authenticated user's ID
-   * @param sessionId - The session ID to delete
-   * @throws NotFoundError if session doesn't exist or doesn't belong to user
-   * @throws Error if database query fails
-   */
   async deleteSession(userId: string, sessionId: string): Promise<void> {
     const deleted = await this.repository.deleteSessionWithAuth(userId, sessionId);
-
     if (!deleted) {
       throw new NotFoundError("Session not found");
     }
   }
 
-  /**
-   * Complete a round by validating and saving user answers, calculating score, and generating feedback
-   * @param userId - The authenticated user's ID
-   * @param roundId - The round ID to complete
-   * @param answers - Array of user answers (10 items)
-   * @returns Round completion data with questions review
-   * @throws NotFoundError if round doesn't exist or doesn't belong to user
-   * @throws BadRequestError if validation fails or round already completed
-   * @throws Error if database operations fail
-   */
   async completeRound(
     userId: string,
     roundId: string,
@@ -362,14 +305,13 @@ export class TrainingSessionService {
           correct_answer: q.correct_answer,
         }));
 
-      feedback = await mockAiGeneratorService.generateRoundFeedback(
+      feedback = await aiGeneratorService.generateRoundFeedback(
         incorrectAnswers,
         roundWithSession.session.tense as TenseName,
         roundWithSession.session.difficulty as DifficultyLevel,
         correctCount
       );
     } catch (error) {
-      console.error("Failed to generate round feedback:", error);
       feedback = `You scored ${correctCount}/10. Review your answers and try the next round!`;
     }
     const completedRound = await this.repository.updateRoundCompletion(roundId, correctCount, feedback);
@@ -380,16 +322,6 @@ export class TrainingSessionService {
     };
   }
 
-  /**
-   * Complete a training session after all 3 rounds are finished
-   * Generates comprehensive AI feedback and updates session status
-   * @param userId - The authenticated user's ID
-   * @param sessionId - The session ID to complete
-   * @returns Session completion data with summary and feedback
-   * @throws NotFoundError if session doesn't exist or doesn't belong to user
-   * @throws BadRequestError if session is already completed or not all rounds are completed
-   * @throws Error if AI service or database operations fail
-   */
   async completeSession(userId: string, sessionId: string): Promise<CompleteSessionResponseDTO> {
     const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
 
@@ -452,18 +384,14 @@ export class TrainingSessionService {
 
     let finalFeedback = "";
     try {
-      finalFeedback = await mockAiGeneratorService.generateFinalFeedback(
+      finalFeedback = await aiGeneratorService.generateFinalFeedback(
         incorrectAnswers,
         sessionData.tense as TenseName,
-        sessionData.difficulty as DifficultyLevel
+        sessionData.difficulty as DifficultyLevel,
+        roundsScores
       );
     } catch (error) {
-      console.error("Failed to generate final feedback:", error);
-      if (perfectScore) {
-        finalFeedback = `# 🎉 Perfect Score!\n\nCongratulations! You've achieved a flawless 30/30 on ${sessionData.tense} at the ${sessionData.difficulty} level!`;
-      } else {
-        finalFeedback = `# Training Session Complete\n\nYou scored ${totalScore}/30 (${accuracyPercentage}%) on ${sessionData.tense} at the ${sessionData.difficulty} level. Great effort! Keep practicing to improve your skills.`;
-      }
+      throw new Error(`Failed to generate final feedback: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 
     let updatedSession;
