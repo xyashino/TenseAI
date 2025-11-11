@@ -2,19 +2,12 @@ import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
 import { useCreateSession } from "@/lib/hooks/use-create-session";
+import { startSessionSchema, type StartSessionFormData } from "@/lib/validation";
 import type { DifficultyLevel } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { DifficultySelect } from "./difficulty-select";
 import { TenseSelect } from "./tense-select";
-
-const startSessionSchema = z.object({
-  tense: z.enum(["Present Simple", "Past Simple", "Present Perfect", "Future Simple"]),
-  difficulty: z.enum(["Basic", "Advanced"]),
-});
-
-type StartSessionFormData = z.infer<typeof startSessionSchema>;
 
 interface StartSessionFormProps {
   defaultDifficulty?: DifficultyLevel;

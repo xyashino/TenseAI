@@ -3,17 +3,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useUpdateProfile } from "@/lib/hooks/use-profile";
+import { accountFormSchema, type AccountFormData } from "@/lib/validation";
 import type { ProfileDTO } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const accountFormSchema = z.object({
-  name: z.string().trim().min(1, "Name cannot be empty"),
-  default_difficulty: z.enum(["Basic", "Advanced"]),
-});
-
-type AccountFormData = z.infer<typeof accountFormSchema>;
 
 interface AccountFormProps {
   initialProfile: ProfileDTO | null;

@@ -13,19 +13,10 @@ import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/componen
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useReportQuestion } from "@/lib/hooks/use-report-question";
+import { reportSchema, type ReportFormValues } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Flag } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const reportSchema = z.object({
-  comment: z
-    .string()
-    .max(1000, { message: "Comment must be 1000 characters or less" })
-    .min(1, { message: "Comment is required" }),
-});
-
-type ReportFormValues = z.infer<typeof reportSchema>;
 
 interface ReportQuestionDialogProps {
   questionId: string;

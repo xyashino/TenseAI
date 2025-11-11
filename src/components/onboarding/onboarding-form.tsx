@@ -3,16 +3,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useOnboarding } from "@/lib/hooks/use-onboarding";
+import { onboardingFormSchema, type OnboardingFormData } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const onboardingFormSchema = z.object({
-  name: z.string().trim().min(1, "Name cannot be empty"),
-  default_difficulty: z.enum(["Basic", "Advanced"]),
-});
-
-type OnboardingFormData = z.infer<typeof onboardingFormSchema>;
 
 export function OnboardingForm() {
   const { mutateAsync: updateProfile, isPending } = useOnboarding();

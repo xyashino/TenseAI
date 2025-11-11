@@ -6,15 +6,9 @@ import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/componen
 import { Input } from "@/components/ui/input";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useForgotPassword } from "@/lib/hooks/use-auth-mutations";
+import { forgotPasswordSchema, type ForgotPasswordFormValues } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const forgotPasswordSchema = z.object({
-  email: z.email({ message: "Please enter a valid email address" }),
-});
-
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
   const { mutateAsync: forgotPassword, isPending, isError, error, isSuccess } = useForgotPassword();

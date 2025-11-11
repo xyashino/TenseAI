@@ -7,21 +7,14 @@ import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/componen
 import { Input } from "@/components/ui/input";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useLogin } from "@/lib/hooks/use-auth-mutations";
+import { loginSchema, type LoginFormValues } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.email({ message: "Please enter a valid email address" }),
-  password: z.string().min(1, { message: "Password is required" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const { mutateAsync: login, isPending, isError, error } = useLogin();
 
-  const form = useForm<z.infer<typeof loginSchema>>({
+  const form = useForm<LoginFormValues>({
     resolver: standardSchemaResolver(loginSchema),
     defaultValues: {
       email: "",
