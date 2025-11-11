@@ -21,6 +21,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export async function apiClient<T>(url: string, options: AxiosRequestConfig = {}): Promise<T> {

@@ -9,33 +9,63 @@ const AUTH_PATHS = [
   NavigationRoutes.FORGOT_PASSWORD,
   NavigationRoutes.RESET_PASSWORD,
 ];
+const ONBOARDING_PATH = "/onboarding";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (context.url.pathname.startsWith("/api/auth/")) {
+  const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
+  const isApiPath = context.url.pathname.startsWith("/api/");
+
+  // For API endpoints, only set up locals without redirects
+  if (isApiPath) {
+    const { data: userData } = await supabase.auth.getUser();
+    const { data: sessionData } = await supabase.auth.getSession();
+
+    if (userData.user) {
+      context.locals.session = sessionData.session;
+      context.locals.user = userData.user;
+      context.locals.supabase = supabase;
+    } else {
+      context.locals.supabase = supabase;
+    }
+
     return next();
   }
 
-  const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
-  const { data } = await supabase.auth.getSession();
-  const isAuthenticated = !!data.session;
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  const isAuthenticated = !!userData.user && !userError;
   const isAuthPath = AUTH_PATHS.includes(context.url.pathname as (typeof AUTH_PATHS)[number]);
   const isPublicPath = PUBLIC_PATHS.includes(context.url.pathname as (typeof PUBLIC_PATHS)[number]);
+  const isOnboardingPath = context.url.pathname === ONBOARDING_PATH;
 
-  if (isAuthenticated && isAuthPath) {
-    return context.redirect(NavigationRoutes.THEORY, 302);
-  }
-
-  if (isPublicPath || isAuthPath) {
+  if (isPublicPath) {
     return next();
   }
 
-  if (!isAuthenticated) {
+  if (isAuthPath) {
+    if (isAuthenticated) {
+      return context.redirect(NavigationRoutes.THEORY, 302);
+    }
+    return next();
+  }
+
+  if (!isAuthenticated || !userData.user) {
     return context.redirect("/login", 302);
   }
 
-  context.locals.session = data.session;
-  context.locals.user = data.session.user;
+  // Get session after verifying user (safe since user is authenticated)
+  const { data: sessionData } = await supabase.auth.getSession();
+  const { data: profile } = await supabase.from("profiles").select("*").eq("user_id", userData.user.id).single();
+  if (profile && !profile.onboarding_completed && !isOnboardingPath) {
+    return context.redirect(ONBOARDING_PATH, 302);
+  }
+  if (profile && profile.onboarding_completed && isOnboardingPath) {
+    return context.redirect(NavigationRoutes.THEORY, 302);
+  }
+
+  context.locals.session = sessionData.session;
+  context.locals.user = userData.user;
   context.locals.supabase = supabase;
+  context.locals.profile = profile;
 
   return next();
 });

@@ -27,7 +27,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     const validatedData = updateProfileSchema.parse(await request.json());
 
     const profileRepository = new ProfileRepository(supabase);
-    const updatedProfile = await profileRepository.updateProfile(userId, validatedData);
+    const updatedProfile = await profileRepository.updateProfile(userId, {
+      ...validatedData,
+      onboarding_completed: true,
+    });
 
     return successResponse(updatedProfile);
   } catch (error) {

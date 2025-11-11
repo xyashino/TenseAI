@@ -1,0 +1,8 @@
+---
+import OnboardingView from "@/components/onboarding/onboarding-view";
+import FocusLayout from "@/layouts/FocusLayout.astro";
+---
+
+<FocusLayout title="Onboarding">
+  <OnboardingView client:only="react" />
+</FocusLayout>

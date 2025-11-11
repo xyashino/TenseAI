@@ -13,9 +13,15 @@ interface Props {
 const { title = "TenseAI" } = Astro.props;
 
 const session = Astro.locals.user;
+const profile = Astro.locals.profile;
 
 if (!session) {
-  return Astro.redirect("/login");
+  return Astro.redirect("/login", 302);
+}
+
+// Check if user has completed onboarding
+if (profile && !profile.onboarding_completed) {
+  return Astro.redirect("/onboarding", 302);
 }
 
 const currentPath = Astro.url.pathname;
