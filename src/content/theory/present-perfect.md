@@ -5,23 +5,41 @@ description: "Learn about the Present Perfect tense: when to use it, how to form
 order: 3
 ---
 
-# Usage
+## Video Lesson
+
+Watch this video to learn more about the Present Perfect tense:
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; height: auto;">
+    <iframe
+        src="https://youtu.be/tLaiUarjNj8?si=peqmC3ogOXT2t1gl"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+    </iframe>
+</div>
+
+## Usage
 
 The Present Perfect tense is used to describe:
 
 - **Past actions with present relevance**: Actions that happened at an unspecified time and are relevant now
+
   - _I have lost my keys._ (I don't have them now)
   - _She has finished her homework._ (It's done now)
 
 - **Life experiences**: Things you have or haven't done in your life (without specific time)
+
   - _I have visited Japan._
   - _He has never eaten sushi._
 
 - **Recently completed actions**: Actions that just finished or happened in the recent past
+
   - _They have just arrived._
   - _I have already eaten lunch._
 
 - **Actions continuing from past to present**: Situations that started in the past and continue now
+
   - _I have lived here for five years._ (I still live here)
   - _She has worked at the company since 2019._ (She still works there)
 
@@ -29,27 +47,19 @@ The Present Perfect tense is used to describe:
   - _I have read three books this month._ (The month isn't over)
   - _He has been busy today._ (Today isn't finished)
 
-# Sentence Construction
+## Sentence Construction
 
-## Affirmative Sentences
+### Affirmative Sentences
 
 **Structure**: Subject + have/has + past participle
 
-- I/You/We/They **have** (I've/You've/We've/They've) + past participle
-- He/She/It **has** (He's/She's/It's) + past participle
+| Subject             | Auxiliary Verb | Past Participle | Example                               |
+| ------------------- | -------------- | --------------- | ------------------------------------- |
+| I / You / We / They | have ('ve)     | finished/gone   | _I've finished my work._              |
+| He / She / It       | has ('s)       | traveled/seen   | _She has traveled to many countries._ |
 
-**Regular verbs**: add -ed to the base form
-
-- work → worked
-- play → played
-- finish → finished
-
-**Irregular verbs**: use the specific past participle form
-
-- go → gone
-- have → had
-- see → seen
-- eat → eaten
+**Regular verbs**: add -ed to the base form (e.g., work → worked)
+**Irregular verbs**: use the specific past participle form (e.g., go → gone, see → seen)
 
 **Examples**:
 
@@ -57,12 +67,14 @@ The Present Perfect tense is used to describe:
 - _She has traveled to many countries._
 - _They have known each other for years._
 
-## Negative Sentences
+### Negative Sentences
 
 **Structure**: Subject + have/has + not + past participle
 
-- I/You/We/They **have not** (haven't) + past participle
-- He/She/It **has not** (hasn't) + past participle
+| Subject             | Auxiliary Verb     | Past Participle | Example                      |
+| ------------------- | ------------------ | --------------- | ---------------------------- |
+| I / You / We / They | have not (haven't) | seen/finished   | _I haven't seen that movie._ |
+| He / She / It       | has not (hasn't)   | called/arrived  | _He hasn't called me yet._   |
 
 **Examples**:
 
@@ -70,9 +82,14 @@ The Present Perfect tense is used to describe:
 - _He hasn't called me yet._
 - _They haven't finished the project._
 
-## Questions
+### Questions
 
 **Structure**: Have/Has + subject + past participle?
+
+| Auxiliary Verb | Subject  | Past Participle | Example                            |
+| -------------- | -------- | --------------- | ---------------------------------- |
+| Have           | you/they | been/arrived    | _Have you ever been to Australia?_ |
+| Has            | she      | finished        | _Has she finished her homework?_   |
 
 **Examples**:
 
@@ -80,11 +97,12 @@ The Present Perfect tense is used to describe:
 - _Has she finished her homework?_
 - _Have they arrived yet?_
 
-# Common Time Expressions
+## Common Time Expressions
 
 Present Perfect is often used with these time expressions:
 
 - **Unspecified time**: ever, never, before, already, yet, just, recently
+
   - _Have you ever been to Paris?_
   - _I have never tried skiing._
   - _She has already left._
@@ -92,6 +110,7 @@ Present Perfect is often used with these time expressions:
   - _We have just finished dinner._
 
 - **Duration from past to present**: for, since, so far, up to now, until now
+
   - _I have lived here for three years._
   - _She has worked there since 2020._
   - _So far, everything has been great._
