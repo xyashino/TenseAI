@@ -9,7 +9,7 @@ import { z } from "zod";
 import { SelectQuestionWrapper } from "../common/select-question-wrapper";
 import { SelectQuestionAnswer } from "./select-question-answer";
 import { QuestionSubmit } from "./select-question-submit";
-import { getFormSchema } from "./utils";
+import { getFormSchema } from "@/lib/utils";
 
 interface SelectQuestionFormProps {
   questions: QuestionWithoutAnswer[];
