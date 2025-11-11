@@ -1,19 +1,10 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useHistorySessions } from "@/lib/hooks/use-history-sessions";
 import { EmptyState } from "./empty-state";
 import { HistoryList } from "./history-list";
 
 export function HistoryViewContent() {
-  const { sessions, isError, error } = useHistorySessions();
-
-  if (isError) {
-    return (
-      <div role="alert" aria-live="assertive">
-        <Alert variant="error">{error?.message || "Failed to load history. Please try again later."}</Alert>
-      </div>
-    );
-  }
+  const { sessions } = useHistorySessions();
 
   if (sessions.length === 0) {
     return (

@@ -1,4 +1,3 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { Component, type ReactNode } from "react";
 
 interface ErrorBoundaryProps {
@@ -47,11 +46,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <Alert variant="error">
+        <div className="bg-destructive text-destructive-foreground p-4 rounded-md">
           {this.state.error?.message ||
             this.props.defaultMessage ||
             "Something went wrong. Please try refreshing the page."}
-        </Alert>
+        </div>
       );
     }
 

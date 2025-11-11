@@ -1,11 +1,10 @@
 ---
 import { TrainingSessionWrapper } from "@/components/training/training-session-wrapper";
-import FocusLayout from "@/layouts/focus-layout.astro";
+import BaseLayout from "@/layouts/base-layout.astro";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { ProfileRepository } from "@/server/repositories/profile.repository";
 import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
-
 export const prerender = false;
 
 const { sessionId } = Astro.params;
@@ -43,7 +42,7 @@ const userName = profile?.name ?? null;
 console.log({ sessionData, roundsData, sessionSummary });
 ---
 
-<FocusLayout title={`Training: ${sessionData.tense} - TenseAI`}>
+<BaseLayout title={`Training: ${sessionData.tense} - TenseAI`}>
   <TrainingSessionWrapper
     client:load
     sessionId={sessionId}
@@ -55,4 +54,4 @@ console.log({ sessionData, roundsData, sessionSummary });
     summary={sessionSummary}
     finalFeedback={sessionData.finalFeedback}
   />
-</FocusLayout>
+</BaseLayout>

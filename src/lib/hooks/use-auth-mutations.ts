@@ -1,8 +1,9 @@
-import { apiPost } from "@/lib/api-client";
+import { apiPost, type ApiClientError } from "@/lib/api-client";
+import { NavigationRoutes } from "@/lib/enums/navigation";
 import { queryClient } from "@/lib/query-client";
 import { useMutation } from "@tanstack/react-query";
 import { navigate } from "astro:transitions/client";
-import { NavigationRoutes } from "../enums/navigation";
+import { toast } from "sonner";
 
 interface LoginRequest {
   email: string;
@@ -40,6 +41,9 @@ export function useLogin() {
       onSuccess: () => {
         navigate(NavigationRoutes.TRAINING);
       },
+      onError: (error: ApiClientError) => {
+        toast.error(error.message);
+      },
     },
     queryClient
   );
@@ -54,6 +58,9 @@ export function useRegister() {
       onSuccess: () => {
         navigate(NavigationRoutes.AUTH_CONFIRM);
       },
+      onError: (error: ApiClientError) => {
+        toast.error(error.message);
+      },
     },
     queryClient
   );
@@ -64,6 +71,12 @@ export function useForgotPassword() {
     {
       mutationFn: async (data: ForgotPasswordRequest) => {
         return apiPost<AuthResponse>("/api/auth/forgot-password", data);
+      },
+      onSuccess: () => {
+        toast.success("Password reset link sent! Check your email for instructions.");
+      },
+      onError: (error: ApiClientError) => {
+        toast.error(error.message);
       },
     },
     queryClient
@@ -76,6 +89,9 @@ export function useResetPassword() {
       mutationFn: async (data: ResetPasswordRequest) => {
         return apiPost<AuthResponse>("/api/auth/reset-password", { password: data.password });
       },
+      onError: (error: ApiClientError) => {
+        toast.error(error.message);
+      },
     },
     queryClient
   );
@@ -86,6 +102,9 @@ export function useResetEmail() {
     {
       mutationFn: async (data: ResetEmailRequest) => {
         return apiPost<AuthResponse>("/api/auth/reset-email", data);
+      },
+      onError: (error: ApiClientError) => {
+        toast.error(error.message);
       },
     },
     queryClient

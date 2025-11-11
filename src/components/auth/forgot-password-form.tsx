@@ -1,4 +1,3 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { AuthCard } from "@/components/auth/common/AuthCard";
 import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
 export function ForgotPasswordForm() {
-  const { mutateAsync: forgotPassword, isPending, isError, error, isSuccess } = useForgotPassword();
+  const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: standardSchemaResolver(forgotPasswordSchema),
@@ -25,7 +24,7 @@ export function ForgotPasswordForm() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full">
       <AuthCard
         title="Reset your password"
         description="Enter your email address and we'll send you a link to reset your password"
@@ -33,10 +32,6 @@ export function ForgotPasswordForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              {isError && <Alert variant="error">{error.message}</Alert>}
-              {isSuccess && (
-                <Alert variant="success">Password reset link sent! Check your email for instructions.</Alert>
-              )}
               <FormField
                 control={form.control}
                 name="email"

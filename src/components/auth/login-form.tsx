@@ -1,4 +1,3 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { AuthCard } from "@/components/auth/common/AuthCard";
 import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
 import { LegalFooter } from "@/components/auth/common/LegalFooter";
@@ -12,7 +11,7 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
 export function LoginForm() {
-  const { mutateAsync: login, isPending, isError, error } = useLogin();
+  const { mutateAsync: login, isPending } = useLogin();
 
   const form = useForm<LoginFormValues>({
     resolver: standardSchemaResolver(loginSchema),
@@ -27,12 +26,11 @@ export function LoginForm() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full">
       <AuthCard title="Welcome back" description="Login to continue learning English grammar">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              {isError && <Alert variant="error">{error.message}</Alert>}
               <FormField
                 control={form.control}
                 name="email"

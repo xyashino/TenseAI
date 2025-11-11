@@ -1,4 +1,3 @@
-import { Alert } from "@/components/auth/common/Alert";
 import { AuthCard } from "@/components/auth/common/AuthCard";
 import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
 import { LegalFooter } from "@/components/auth/common/LegalFooter";
@@ -12,7 +11,7 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
 export function RegisterForm() {
-  const { mutateAsync: register, isPending, isError, error } = useRegister();
+  const { mutateAsync: register, isPending } = useRegister();
 
   const form = useForm<RegisterFormValues>({
     resolver: standardSchemaResolver(registerSchema),
@@ -31,12 +30,11 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full">
       <AuthCard title="Create an account" description="Start mastering English grammar with AI">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              {isError && <Alert variant="error">{error?.message}</Alert>}
               <FormField
                 control={form.control}
                 name="email"
