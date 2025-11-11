@@ -9,7 +9,7 @@ export const prerender = false;
 
 const { sessionId } = Astro.params;
 if (!sessionId) {
-  return Astro.redirect("/app/training");
+  return Astro.redirect(NavigationRoutes.TRAINING);
 }
 
 const supabase = Astro.locals.supabase;
@@ -34,12 +34,11 @@ try {
   roundsData = rounds ?? [];
   sessionSummary = summary;
 } catch {
-  return Astro.redirect("/app/training");
+  return Astro.redirect(NavigationRoutes.TRAINING);
 }
 
 const profile = await new ProfileRepository(supabase).getProfileById(userId);
 const userName = profile?.name ?? null;
-console.log({ sessionData, roundsData, sessionSummary });
 ---
 
 <BaseLayout title={`Training: ${sessionData.tense} - TenseAI`}>

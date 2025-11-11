@@ -19,7 +19,7 @@ let userId: string;
 try {
   userId = await authenticateUser(supabase);
 } catch {
-  return Astro.redirect("/login", 302);
+  return Astro.redirect(NavigationRoutes.LOGIN, 302);
 }
 
 const service = new TrainingSessionService(supabase);
@@ -37,7 +37,7 @@ const profile = await new ProfileRepository(supabase).getProfileById(userId);
 const userName = profile?.name ?? null;
 ---
 
-<AppLayout title={`History: ${sessionDetail.training_session.tense} - TenseAI`} mainClassName="lg:p-0">
+<AppLayout title={`History: ${sessionDetail.training_session.tense} - TenseAI`} mainClassName="p-0">
   <ErrorBoundary context="History detail view" defaultMessage="Unable to load session details. Please try again.">
     <HistoryDetailWrapper client:load sessionData={sessionDetail} userName={userName} />
   </ErrorBoundary>

@@ -18,7 +18,7 @@ export const ChatLogArea = memo(function ChatLogArea({
   difficulty,
 }: ChatLogAreaProps) {
   return (
-    <ChatLogWrapper className="flex-1 overflow-y-auto px-4 py-6">
+    <ChatLogWrapper className="flex-1 overflow-y-auto no-scrollbar px-4 py-6">
       <WelcomeCard userName={userName} tense={tense} difficulty={difficulty} />
       {chatComponents.map((component) => (
         <ChatComponentRenderer key={component.id} component={component} />

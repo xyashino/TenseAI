@@ -36,7 +36,7 @@ export function AbandonSessionDialog({ sessionId }: AbandonSessionDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-destructive hidden lg:block">
+        <Button variant="outline" size="sm" className="text-destructive hidden lg:flex">
           <TrashIcon />
           Abandon Session
         </Button>

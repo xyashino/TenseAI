@@ -27,7 +27,7 @@ export function TenseCard({ name, slug, description, icon }: TenseCardProps) {
           <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">→</span>
         </div>
       </CardContent>
-      <a href={`${NavigationRoutes.THEORY}${slug}`} aria-label={`Learn about ${name}`} className="absolute inset-0" />
+      <a href={`${NavigationRoutes.THEORY}/${slug}`} aria-label={`Learn about ${name}`} className="absolute inset-0" />
     </Card>
   );
 }

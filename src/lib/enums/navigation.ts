@@ -10,4 +10,5 @@ export const NavigationRoutes = {
   THEORY: "/app/theory",
   HISTORY: "/app/history",
   ACCOUNT: "/app/account",
+  ONBOARDING: "/onboarding",
 } as const;

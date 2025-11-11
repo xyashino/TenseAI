@@ -1,9 +1,9 @@
 ---
-import AppLayout from "@/layouts/app-layout.astro";
 import { TenseCard } from "@/components/theory/tense-card";
-import { getCollection } from "astro:content";
+import AppLayout from "@/layouts/app-layout.astro";
 import { getTenseIcon } from "@/lib/theory-utils";
 import type { TenseCardData } from "@/types";
+import { getCollection } from "astro:content";
 
 // Load theory entries from content collection
 const theoryEntries = await getCollection("theory");

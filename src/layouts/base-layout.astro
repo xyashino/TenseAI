@@ -20,7 +20,7 @@ const { title, className } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class={cn("w-screen h-screen", className)}>
+  <body class={cn("w-screen h-screen overflow-hidden", className)}>
     <slot />
     <Toaster client:load />
   </body>

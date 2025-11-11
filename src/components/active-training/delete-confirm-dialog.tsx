@@ -36,9 +36,9 @@ export function DeleteConfirmDialog({ sessionId }: DeleteConfirmDialogProps) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction asChild onClick={() => deleteSession(sessionId)} disabled={isPending}>
-            <Button variant="destructive">Delete</Button>
-          </AlertDialogAction>
+          <Button variant="destructive" asChild onClick={() => deleteSession(sessionId)} disabled={isPending}>
+            <AlertDialogAction>Delete</AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

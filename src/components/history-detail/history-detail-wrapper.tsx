@@ -1,9 +1,5 @@
-import type {
-  DifficultyLevel,
-  SessionDetailResponseDTO,
-  TenseName,
-} from "@/types";
 import { transformSessionDataToChatComponents } from "@/lib/utils";
+import type { DifficultyLevel, SessionDetailResponseDTO, TenseName } from "@/types";
 import { useMemo } from "react";
 import { HistoryChatLogArea } from "./history-chat-log-area";
 import { HistoryDetailHeader } from "./history-detail-header";
@@ -35,15 +31,17 @@ export function HistoryDetailWrapper({ sessionData, userName }: HistoryDetailWra
   const completedAt = sessionData.training_session.completed_at ?? sessionData.training_session.started_at;
 
   return (
-    <div className="flex flex-col h-full">
+    <>
       <HistoryDetailHeader tense={tense} completedAt={completedAt} />
-      <HistoryChatLogArea
-        chatComponents={chatComponents}
-        userName={userName}
-        tense={tense}
-        difficulty={difficulty}
-        summary={sessionData.summary}
-      />
-    </div>
+      <div className="flex flex-col h-full px-4">
+        <HistoryChatLogArea
+          chatComponents={chatComponents}
+          userName={userName}
+          tense={tense}
+          difficulty={difficulty}
+          summary={sessionData.summary}
+        />
+      </div>
+    </>
   );
 }
