@@ -2,7 +2,7 @@ ignoredBuiltDependencies:
   - supabase
 
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
+  - "@tailwindcss/oxide"
   - esbuild
   - msw
   - sharp
