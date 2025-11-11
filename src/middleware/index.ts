@@ -12,24 +12,11 @@ const AUTH_PATHS = [
 const ONBOARDING_PATH = "/onboarding";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
-  const isApiPath = context.url.pathname.startsWith("/api/");
-
-  // For API endpoints, only set up locals without redirects
-  if (isApiPath) {
-    const { data: userData } = await supabase.auth.getUser();
-    const { data: sessionData } = await supabase.auth.getSession();
-
-    if (userData.user) {
-      context.locals.session = sessionData.session;
-      context.locals.user = userData.user;
-      context.locals.supabase = supabase;
-    } else {
-      context.locals.supabase = supabase;
-    }
-
+  if (context.url.pathname.startsWith("/api/auth/")) {
     return next();
   }
+
+  const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const isAuthenticated = !!userData.user && !userError;
