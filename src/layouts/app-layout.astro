@@ -27,7 +27,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <BaseLayout title={title} className="bg-[#1a0f08] flex flex-col lg:flex-row h-screen">
-  <aside class="hidden lg:flex w-25 flex-col justify-between h-full py-10">
+  <aside class="hidden lg:flex flex-col justify-between h-full py-10">
     <div class="relative flex items-center justify-center p-6">
       <AppLogo showText={false} />
     </div>
@@ -38,7 +38,7 @@ const currentPath = Astro.url.pathname;
       <LogoutDialog client:load />
     </div>
   </aside>
-  <div class="flex flex-1 flex-col w-full h-full lg:pr-6 lg:py-6 px-2 lg:pb-4">
+  <div class="flex flex-1 flex-col w-full h-full lg:pr-6 lg:py-6 px-2 lg:pl-0 lg:pb-4">
     <header class="flex items-center justify-between lg:hidden w-full p-4">
       <AppLogo showText invert />
       <LogoutDialog client:load />
