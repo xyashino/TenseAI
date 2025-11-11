@@ -47,7 +47,12 @@ const currentPath = Astro.url.pathname;
           <div class="lg:hidden">
             <MobileLayout currentPath={currentPath} client:load />
           </div>
-          <main class={cn("flex-1 overflow-y-auto p-6 pb-24 lg:p-8 lg:pb-8 min-h-0 w-full mx-auto max-w-4xl", mainClassName)}>
+          <main
+            class={cn(
+              "flex-1 overflow-y-auto p-6 pb-24 lg:p-8 lg:pb-8 min-h-0 w-full mx-auto max-w-4xl",
+              mainClassName
+            )}
+          >
             <slot />
           </main>
         </div>

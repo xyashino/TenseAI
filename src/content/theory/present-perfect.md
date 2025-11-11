@@ -10,24 +10,24 @@ order: 3
 The Present Perfect tense is used to describe:
 
 - **Past actions with present relevance**: Actions that happened at an unspecified time and are relevant now
-  - *I have lost my keys.* (I don't have them now)
-  - *She has finished her homework.* (It's done now)
+  - _I have lost my keys._ (I don't have them now)
+  - _She has finished her homework._ (It's done now)
 
 - **Life experiences**: Things you have or haven't done in your life (without specific time)
-  - *I have visited Japan.*
-  - *He has never eaten sushi.*
+  - _I have visited Japan._
+  - _He has never eaten sushi._
 
 - **Recently completed actions**: Actions that just finished or happened in the recent past
-  - *They have just arrived.*
-  - *I have already eaten lunch.*
+  - _They have just arrived._
+  - _I have already eaten lunch._
 
 - **Actions continuing from past to present**: Situations that started in the past and continue now
-  - *I have lived here for five years.* (I still live here)
-  - *She has worked at the company since 2019.* (She still works there)
+  - _I have lived here for five years._ (I still live here)
+  - _She has worked at the company since 2019._ (She still works there)
 
 - **Unfinished time periods**: Actions in time periods that include the present
-  - *I have read three books this month.* (The month isn't over)
-  - *He has been busy today.* (Today isn't finished)
+  - _I have read three books this month._ (The month isn't over)
+  - _He has been busy today._ (Today isn't finished)
 
 # Sentence Construction
 
@@ -39,20 +39,23 @@ The Present Perfect tense is used to describe:
 - He/She/It **has** (He's/She's/It's) + past participle
 
 **Regular verbs**: add -ed to the base form
+
 - work → worked
 - play → played
 - finish → finished
 
 **Irregular verbs**: use the specific past participle form
+
 - go → gone
 - have → had
 - see → seen
 - eat → eaten
 
 **Examples**:
-- *I have finished my work.*
-- *She has traveled to many countries.*
-- *They have known each other for years.*
+
+- _I have finished my work._
+- _She has traveled to many countries._
+- _They have known each other for years._
 
 ## Negative Sentences
 
@@ -62,41 +65,43 @@ The Present Perfect tense is used to describe:
 - He/She/It **has not** (hasn't) + past participle
 
 **Examples**:
-- *I haven't seen that movie.*
-- *He hasn't called me yet.*
-- *They haven't finished the project.*
+
+- _I haven't seen that movie._
+- _He hasn't called me yet._
+- _They haven't finished the project._
 
 ## Questions
 
 **Structure**: Have/Has + subject + past participle?
 
 **Examples**:
-- *Have you ever been to Australia?*
-- *Has she finished her homework?*
-- *Have they arrived yet?*
+
+- _Have you ever been to Australia?_
+- _Has she finished her homework?_
+- _Have they arrived yet?_
 
 # Common Time Expressions
 
 Present Perfect is often used with these time expressions:
 
 - **Unspecified time**: ever, never, before, already, yet, just, recently
-  - *Have you ever been to Paris?*
-  - *I have never tried skiing.*
-  - *She has already left.*
-  - *They haven't arrived yet.*
-  - *We have just finished dinner.*
+  - _Have you ever been to Paris?_
+  - _I have never tried skiing._
+  - _She has already left._
+  - _They haven't arrived yet._
+  - _We have just finished dinner._
 
 - **Duration from past to present**: for, since, so far, up to now, until now
-  - *I have lived here for three years.*
-  - *She has worked there since 2020.*
-  - *So far, everything has been great.*
+  - _I have lived here for three years._
+  - _She has worked there since 2020._
+  - _So far, everything has been great._
 
 - **Unfinished time periods**: today, this week/month/year
-  - *I have read two books this month.*
-  - *He has been very busy today.*
+  - _I have read two books this month._
+  - _He has been very busy today._
 
 **Note**: Don't use Present Perfect with specific past time expressions like "yesterday," "last year," or "in 2020." Use Past Simple instead.
 
-❌ *I have seen him yesterday.* (incorrect)
-✅ *I saw him yesterday.* (correct - Past Simple)
-✅ *I have seen him recently.* (correct - Present Perfect)
+❌ _I have seen him yesterday._ (incorrect)
+✅ _I saw him yesterday._ (correct - Past Simple)
+✅ _I have seen him recently._ (correct - Present Perfect)

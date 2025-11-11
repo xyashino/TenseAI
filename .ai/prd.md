@@ -114,7 +114,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: New User Registration
 - Description: As a new user, I want to create an account using my email and a password so that I can save my progress and access my session history.
 - Acceptance Criteria:
-
   - Given I am on the registration screen,
   - When I enter a valid email, my name, and a password that meets the security criteria,
   - And I click the "Register" button,
@@ -125,7 +124,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Account Activation
 - Description: As a new user who has just registered, I want to activate my account via an email link so that I can log in and start using the app.
 - Acceptance Criteria:
-
   - Given I have received an account activation email,
   - When I click the activation link,
   - Then I am taken to a confirmation page or the app's login screen,
@@ -135,7 +133,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: User Login
 - Description: As a registered user, I want to log in with my email and password to access my account and continue my learning.
 - Acceptance Criteria:
-
   - Given I have an active account,
   - When I enter my correct email and password on the login screen,
   - And I click "Log In",
@@ -168,7 +165,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Navigating the App
 - Description: As a user, I want to easily switch between the main sections of the application using the site's navigation (sidebar on desktop, bottom bar on mobile).
 - Acceptance Criteria:
-
   - Given I am on any main screen of the application,
   - When I click "Practice", "Theory", "History", or "Account" in the navigation,
   - Then I am taken to the corresponding screen without losing my logged-in state.
@@ -177,7 +173,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Accessing Theory
 - Description: As a user, I want to read the theoretical explanations for a grammar tense to refresh my knowledge before practicing.
 - Acceptance Criteria:
-
   - Given I am on the "Theory" screen,
   - When I see the list of available tenses (Present Simple, etc.),
   - And I click on one of them,
@@ -187,7 +182,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Starting a Training Session
 - Description: As a user, I want to start a new practice session by choosing a tense and difficulty level.
 - Acceptance Criteria:
-
   - Given I am on the "Practice" screen,
   - When I select a tense from the available options,
   - And I select a difficulty level ("Basic" or "Advanced"),
@@ -198,7 +192,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Answering a Question
 - Description: As a user in a training session, I want to answer a multiple-choice question.
 - Acceptance Criteria:
-
   - Given I am presented with a question and multiple answer choices,
   - When I select an answer,
   - **Then the system records my answer _without_ showing me if it is correct or incorrect,**
@@ -208,7 +201,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Viewing a Round Summary
 - Description: As a user, I want to see my score and get brief feedback after completing each round of 10 questions to understand my performance.
 - Acceptance Criteria:
-
   - Given I have just answered the 10th question of a round,
   - When the round ends,
   - Then I am shown a summary screen displaying my score for that round (e.g., "8/10"),
@@ -219,7 +211,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Pausing and Resuming Sessions
 - Description: As a user, I want to be able to leave the app in the middle of a session and resume from where I left off, even if I have multiple sessions open.
 - Acceptance Criteria:
-
   - Given I am in the middle of one or more training sessions,
   - When I close the site or browser tab,
   - Then my current progress for all active sessions is saved to the server.
@@ -231,7 +222,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Viewing the Final Session Summary
 - Description: As a user who has completed all three rounds, I want to see a detailed summary of my performance to learn from my mistakes.
 - Acceptance Criteria:
-
   - Given I have completed the third and final round of a session,
   - When I proceed from the final round summary,
   - Then I am shown a final summary screen.
@@ -243,7 +233,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Viewing Session History
 - Description: As a returning user, I want to view a list of my past sessions to track my learning journey.
 - Acceptance Criteria:
-
   - Given I have completed at least one training session,
   - When I navigate to the "History" screen,
   - Then I see a list of all my completed sessions.
@@ -263,7 +252,6 @@ TenseAI addresses these problems by providing an interactive learning environmen
 - Title: Reporting an Incorrect Question
 - Description: As a user, if I believe a question or its answer is incorrect, I want to report it so the app can be improved.
 - Acceptance Criteria:
-
   - Given I am viewing a question during a training session,
   - When I click the "Report Error" icon,
   - Then a confirmation message is shown (e.g., "Thank you for your feedback!"),

@@ -28,7 +28,6 @@ Generate comprehensive, detailed feedback in Markdown format. This feedback will
 1. **Structure:** Use clear Markdown headings and sections for easy reading
 2. **Tone:** Be informal, friendly, and supportive throughout - like a helpful coach
 3. **Content Sections:**
-
    - **Overall Performance Summary:** Celebrate their achievement, acknowledge their score, and provide context. If they got a perfect score (30/30), give enthusiastic congratulations!
    - **Areas for Improvement:** If there were mistakes, analyze patterns and provide specific guidance
    - **Grammar Rules Review:** If there were mistakes, provide clear explanations of key rules for {{tense}} relevant to their mistakes
@@ -36,21 +35,18 @@ Generate comprehensive, detailed feedback in Markdown format. This feedback will
    - **Encouragement:** End with motivating words
 
 4. **Special Cases:**
-
    - **Perfect Score (30/30):** Generate an enthusiastic congratulations message with next steps for continued learning
    - **High Score (24-29/30):** Celebrate strong performance, highlight minor areas for improvement
    - **Medium Score (18-23/30):** Acknowledge progress, identify key patterns in mistakes, provide focused guidance
    - **Lower Score (<18/30):** Be very supportive and encouraging, emphasize that practice helps, provide foundational guidance
 
 5. **Tense-Specific Guidance:**
-
    - For **Present Simple**: Focus on subject-verb agreement, third-person singular, usage contexts
    - For **Past Simple**: Focus on regular vs irregular verbs, past form patterns
    - For **Present Perfect**: Focus on has/have usage, past participles, usage contexts
    - For **Future Simple**: Focus on "will" structure, usage contexts
 
 6. **Error Analysis (if applicable):**
-
    - If there are multiple mistakes, identify common patterns
    - Group similar errors together
    - Provide specific examples to illustrate correct usage

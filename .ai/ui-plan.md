@@ -19,14 +19,12 @@ State management is handled by **React Query** for all server state (API interac
 ### Public & Auth Views
 
 - **View:** Landing Page
-
   - **Path:** `/`
   - **Main Purpose:** Marketing/landing page for unauthenticated users.
   - **Key Information:** Hero section, features, call-to-action buttons.
   - **Key View Components:** Hero section, feature cards, CTA buttons linking to `/register` and `/login`.
 
 - **View:** Login
-
   - **Path:** `/login`
   - **Main Purpose:** Authenticate an existing user (`US-003`).
   - **Key Information:** Email and password fields.
@@ -34,7 +32,6 @@ State management is handled by **React Query** for all server state (API interac
   - **UX/Security:** On success, Supabase SDK sets an auth cookie. The main layout loader will then fetch `/api/profile` to determine the next step (Onboarding or Practice).
 
 - **View:** Register
-
   - **Path:** `/register`
   - **Main Purpose:** Register a new user (`US-001`).
   - **Key Information:** Name, email, and password fields.
@@ -42,7 +39,6 @@ State management is handled by **React Query** for all server state (API interac
   - **UX/Security:** On success (`US-001`), redirects to `/check-email`.
 
 - **View:** Check Email
-
   - **Path:** `/check-email`
   - **Main Purpose:** Instruct user to activate their account via email (`REQ-03`).
   - **Key Information:** Static "Check your email" message.
@@ -67,7 +63,6 @@ State management is handled by **React Query** for all server state (API interac
 ### Main Application Views
 
 - **View:** Practice (Dashboard)
-
   - **Path:** `/app/training`
   - **Main Purpose:** Main app dashboard. Displays active sessions (`US-011`) and allows starting new ones (`US-008`). _This view replaces the separate "Active Sessions" page._
   - **Key Information:** List of active sessions from `GET /api/training-sessions?status=active`.
@@ -80,7 +75,6 @@ State management is handled by **React Query** for all server state (API interac
     - **Empty State Component:** Shown if no active sessions exist.
 
 - **View:** Training Session
-
   - **Path:** `/app/training/[sessionId]`
   - **Main Purpose:** The core, interactive training loop (`US-009`, `US-010`, `US-012`).
   - **Key Information:** Current question, options, round summaries, and final feedback.
@@ -94,21 +88,18 @@ State management is handled by **React Query** for all server state (API interac
     - `react-markdown`: Used to render AI-generated feedback.
 
 - **View:** Theory (List)
-
   - **Path:** `/app/theory`
   - **Main Purpose:** List available grammar tenses for study (`US-007`).
   - **Key Information:** The four tenses (Present Simple, Past Simple, etc.).
   - **Key View Components:** A grid of 4 large, clickable `Card` components.
 
 - **View:** Theory (Detail)
-
   - **Path:** `/app/theory/[tenseSlug]`
   - **Main Purpose:** Display educational content for a specific tense (`REQ-12`, `US-007`).
   - **Key Information:** Rendered Markdown content from Astro content collections.
   - **Key View Components:** A static Astro page that renders Markdown content from content collections, styled using `@tailwindcss/typography`. Includes breadcrumb navigation.
 
 - **View:** History (List)
-
   - **Path:** `/app/history`
   - **Main Purpose:** Display all _completed_ training sessions (`REQ-21`, `US-013`).
   - **Key Information:** List of completed sessions from `GET /api/training-sessions?status=completed`.
@@ -118,7 +109,6 @@ State management is handled by **React Query** for all server state (API interac
     - **Empty State Component:** Shown if no sessions are completed (`US-016`).
 
 - **View:** History (Detail)
-
   - **Path:** `/app/history/[sessionId]`
   - **Main Purpose:** Allow a user to review a past, completed session (`REQ-23`, `US-014`).
   - **Key Information:** All questions, answers, scores, and feedback for the session.

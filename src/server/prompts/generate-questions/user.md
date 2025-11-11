@@ -7,7 +7,7 @@ Generate exactly {{count}} multiple-choice questions for practicing **{{tense}}*
    - **Advanced (B2)**: Use more sophisticated vocabulary and complex sentence structures. Include professional, academic, or abstract contexts.
 
 2. **Question Format:**
-   - Each question should be a sentence with a blank (represented by "___")
+   - Each question should be a sentence with a blank (represented by "\_\_\_")
    - Provide exactly 4 multiple-choice options
    - One option must be the correct answer
    - The other 3 options should be plausible distractors that test understanding of the tense rules

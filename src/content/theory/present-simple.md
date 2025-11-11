@@ -10,20 +10,20 @@ order: 1
 The Present Simple tense is used to describe:
 
 - **Habitual actions and routines**: Things we do regularly or repeatedly
-  - *I wake up at 7 AM every day.*
-  - *She drinks coffee in the morning.*
+  - _I wake up at 7 AM every day._
+  - _She drinks coffee in the morning._
 
 - **General truths and facts**: Things that are always true
-  - *Water boils at 100 degrees Celsius.*
-  - *The Earth orbits the Sun.*
+  - _Water boils at 100 degrees Celsius._
+  - _The Earth orbits the Sun._
 
 - **Permanent situations**: Long-lasting or permanent states
-  - *He lives in New York.*
-  - *They work at a hospital.*
+  - _He lives in New York._
+  - _They work at a hospital._
 
 - **Scheduled future events**: Fixed timetables and schedules
-  - *The train leaves at 9:30 PM.*
-  - *The meeting starts at 2 PM tomorrow.*
+  - _The train leaves at 9:30 PM._
+  - _The meeting starts at 2 PM tomorrow._
 
 # Sentence Construction
 
@@ -35,9 +35,10 @@ The Present Simple tense is used to describe:
 - He/She/It **works**
 
 **Examples**:
-- *I play tennis every weekend.*
-- *She studies English at university.*
-- *They live in London.*
+
+- _I play tennis every weekend._
+- _She studies English at university._
+- _They live in London._
 
 ## Negative Sentences
 
@@ -47,9 +48,10 @@ The Present Simple tense is used to describe:
 - He/She/It **does not** (doesn't) work
 
 **Examples**:
-- *I don't eat meat.*
-- *He doesn't like cold weather.*
-- *They don't watch TV.*
+
+- _I don't eat meat._
+- _He doesn't like cold weather._
+- _They don't watch TV._
 
 ## Questions
 
@@ -59,22 +61,23 @@ The Present Simple tense is used to describe:
 - **Does** he/she/it work?
 
 **Examples**:
-- *Do you speak French?*
-- *Does she work on weekends?*
-- *Do they know about the meeting?*
+
+- _Do you speak French?_
+- _Does she work on weekends?_
+- _Do they know about the meeting?_
 
 # Common Time Expressions
 
 Present Simple is often used with these time expressions:
 
 - **Frequency adverbs**: always, usually, often, sometimes, rarely, never
-  - *She always arrives on time.*
-  - *I sometimes go to the gym.*
+  - _She always arrives on time._
+  - _I sometimes go to the gym._
 
 - **Time phrases**: every day/week/month/year, on Mondays, in the morning/afternoon/evening
-  - *We have meetings every Friday.*
-  - *He exercises in the morning.*
+  - _We have meetings every Friday._
+  - _He exercises in the morning._
 
 - **General time**: nowadays, these days, in general
-  - *People work from home these days.*
-  - *In general, I prefer tea to coffee.*
+  - _People work from home these days._
+  - _In general, I prefer tea to coffee._

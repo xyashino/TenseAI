@@ -48,7 +48,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       return (
         <Alert variant="error">
-          {this.state.error?.message || this.props.defaultMessage || "Something went wrong. Please try refreshing the page."}
+          {this.state.error?.message ||
+            this.props.defaultMessage ||
+            "Something went wrong. Please try refreshing the page."}
         </Alert>
       );
     }
