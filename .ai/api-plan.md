@@ -36,22 +36,50 @@ Content-Type: application/json
 
 ### 3.1. Authentication Mechanism
 
-The API uses **Supabase Auth** for authentication. All authentication operations (registration, login, password reset) are handled directly through the Supabase client SDK, not through custom API endpoints.
+The API uses **Supabase Auth** for authentication. Authentication operations are handled through custom API endpoints that wrap Supabase Auth SDK calls.
 
 **Authentication Flow**:
 
-1.  User registers/logs in via Supabase Auth SDK
-2.  Supabase returns a JWT token
-3.  Client includes JWT token in `Authorization` header for all API requests
-4.  API validates token and extracts `user_id` from `auth.uid()`
-5.  RLS policies enforce data access control based on `user_id`
+1.  User registers/logs in via API endpoints (`POST /api/auth/register`, `POST /api/auth/login`)
+2.  API endpoints call Supabase Auth SDK internally
+3.  Supabase returns a JWT token (stored in cookies/headers)
+4.  Client includes JWT token in `Authorization` header for all API requests
+5.  API validates token and extracts `user_id` from `auth.uid()`
+6.  RLS policies enforce data access control based on `user_id`
 
-**Supabase Auth Operations** (handled by Supabase SDK, not custom endpoints):
+**Authentication Endpoints**:
 
-- Registration: `supabase.auth.signUp()`
-- Login: `supabase.auth.signInWithPassword()`
-- Password Reset: `supabase.auth.resetPasswordForEmail()`
-- Logout: `supabase.auth.signOut()`
+- `POST /api/auth/register` - User registration
+
+  - Request Body: `{ "email": "string", "password": "string" }`
+  - Response (201): Returns user object
+  - Errors: 400 (Bad Request), 422 (Validation Error)
+
+- `POST /api/auth/login` - User login
+
+  - Request Body: `{ "email": "string", "password": "string" }`
+  - Response (200): Returns user object
+  - Errors: 401 (Invalid credentials), 422 (Validation Error)
+
+- `POST /api/auth/logout` - User logout
+
+  - Response (200): Success response
+  - Errors: 401 (Unauthorized)
+
+- `POST /api/auth/forgot-password` - Request password reset
+
+  - Request Body: `{ "email": "string" }`
+  - Response (200): Success response
+  - Errors: 422 (Validation Error)
+
+- `POST /api/auth/reset-password` - Reset password with token
+
+  - Request Body: `{ "password": "string", "token": "string" }`
+  - Response (200): Success response
+  - Errors: 400 (Invalid token), 422 (Validation Error)
+
+- `GET /api/auth/callback` - OAuth callback handler
+  - Handles OAuth provider callbacks
 
 ### 3.2. Authorization
 
@@ -136,14 +164,21 @@ Update the current user's profile (used for onboarding and preference changes).
 - `name`: Non-empty string if provided
 - `default_difficulty`: Must be "Basic" or "Advanced" if provided
 
+**Business Logic**:
+
+- When any field is updated, `onboarding_completed` is automatically set to `true` by the implementation
+- This ensures that once a user updates their profile, they are considered onboarded
+
 **Response (200 OK)**:
+
+Returns updated profile data directly (wrapped by `successResponse` utility):
 
 ```json
 {
   "user_id": "uuid",
   "name": "string",
   "default_difficulty": "Basic" | "Advanced",
-  "onboarding_completed": boolean,
+  "onboarding_completed": true,
   "created_at": "ISO 8601 datetime",
   "updated_at": "ISO 8601 datetime"
 }
@@ -151,184 +186,19 @@ Update the current user's profile (used for onboarding and preference changes).
 
 **Error Responses**:
 
-- `400 Bad Request`: Invalid request body or validation failure
+- `400 Bad Request`: Invalid request body
+- `401 Unauthorized`: Missing or invalid authentication token
+- `422 Unprocessable Entity`: Validation error (Zod schema validation)
   ```json
   {
-    "error": "Validation error",
+    "error": "Validation Error",
+    "message": "Invalid request data",
     "details": {
       "field": "error message"
     }
   }
   ```
-- `401 Unauthorized`: Missing or invalid authentication token
-
----
-
-### 5.2. Training Session Endpoints
-
-#### POST # TenseAI REST API Plan
-
-## 1\. Overview
-
-This REST API plan defines all endpoints required for the TenseAI MVP application. The API is designed to work with:
-
-- **Frontend**: Astro 5 + React 19 + TypeScript 5
-- **Backend**: Supabase (PostgreSQL + Auth + BaaS)
-- **AI Service**: Openrouter.ai for question generation and feedback
-- **Authentication**: Supabase Auth with JWT tokens
-
-All endpoints use Row-Level Security (RLS) to ensure users can only access their own data. The API follows RESTful principles with some RPC-style endpoints for complex business operations.
-
----
-
-## 2\. Base URL and Common Headers
-
-**Base URL**: `/api` (relative to application root)
-
-**Common Request Headers**:
-
-```
-Authorization: Bearer <supabase_jwt_token>
-Content-Type: application/json
-```
-
-**Common Response Headers**:
-
-```
-Content-Type: application/json
-```
-
----
-
-## 3\. Authentication
-
-### 3.1. Authentication Mechanism
-
-The API uses **Supabase Auth** for authentication. All authentication operations (registration, login, password reset) are handled directly through the Supabase client SDK, not through custom API endpoints.
-
-**Authentication Flow**:
-
-1.  User registers/logs in via Supabase Auth SDK
-2.  Supabase returns a JWT token
-3.  Client includes JWT token in `Authorization` header for all API requests
-4.  API validates token and extracts `user_id` from `auth.uid()`
-5.  RLS policies enforce data access control based on `user_id`
-
-**Supabase Auth Operations** (handled by Supabase SDK, not custom endpoints):
-
-- Registration: `supabase.auth.signUp()`
-- Login: `supabase.auth.signInWithPassword()`
-- Password Reset: `supabase.auth.resetPasswordForEmail()`
-- Logout: `supabase.auth.signOut()`
-
-### 3.2. Authorization
-
-All API endpoints require a valid JWT token in the `Authorization` header. Users can only access their own data due to RLS policies:
-
-- **profiles**: `auth.uid() = user_id`
-- **training_sessions**: `auth.uid() = user_id`
-- **rounds/questions/answers**: Accessible if user owns the parent session
-- **question_reports**: `auth.uid() = user_id`
-
----
-
-## 4\. Resources
-
-### 4.1. Resource List
-
-| Resource             | Database Table      | Description                                              |
-| -------------------- | ------------------- | -------------------------------------------------------- |
-| **Profile**          | `profiles`          | User profile data (name, preferences, onboarding status) |
-| **Sessions**         | `training_sessions` | Training sessions with 3 rounds each                     |
-| **Rounds**           | `rounds`            | Individual rounds within a session (3 per session)       |
-| **Questions**        | `questions`         | AI-generated multiple-choice questions (10 per round)    |
-| **Answers**          | `user_answers`      | User's answers to questions                              |
-| **Question Reports** | `question_reports`  | User-reported question errors                            |
-
----
-
-## 5\. API Endpoints
-
-### 5.1. Profile Endpoints
-
-#### GET /api/profile
-
-Get the current user's profile.
-
-**Authentication**: Required
-
-**Query Parameters**: None
-
-**Request Body**: None
-
-**Response (200 OK)**:
-
-```json
-{
-  "user_id": "uuid",
-  "name": "string",
-  "default_difficulty": "Basic" | "Advanced",
-  "onboarding_completed": boolean,
-  "created_at": "ISO 8601 datetime",
-  "updated_at": "ISO 8601 datetime"
-}
-```
-
-**Error Responses**:
-
-- `401 Unauthorized`: Missing or invalid authentication token
-- `404 Not Found`: Profile not found (should not happen if trigger works correctly)
-
----
-
-#### PATCH /api/profile
-
-Update the current user's profile (used for onboarding and preference changes).
-
-**Authentication**: Required
-
-**Query Parameters**: None
-
-**Request Body**:
-
-```json
-{
-  "name": "string (optional)",
-  "default_difficulty": "Basic" | "Advanced (optional)",
-  "onboarding_completed": boolean (optional)
-}
-```
-
-**Validation**:
-
-- `name`: Non-empty string if provided
-- `default_difficulty`: Must be "Basic" or "Advanced" if provided
-
-**Response (200 OK)**:
-
-```json
-{
-  "user_id": "uuid",
-  "name": "string",
-  "default_difficulty": "Basic" | "Advanced",
-  "onboarding_completed": boolean,
-  "created_at": "ISO 8601 datetime",
-  "updated_at": "ISO 8601 datetime"
-}
-```
-
-**Error Responses**:
-
-- `400 Bad Request`: Invalid request body or validation failure
-  ```json
-  {
-    "error": "Validation error",
-    "details": {
-      "field": "error message"
-    }
-  }
-  ```
-- `401 Unauthorized`: Missing or invalid authentication token
+- `500 Internal Server Error`: Database or server error
 
 ---
 
