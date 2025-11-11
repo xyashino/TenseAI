@@ -1,8 +1,8 @@
+import { AppLogo } from "@/components/app-logo";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useLogout } from "@/lib/hooks/use-logout";
 import { LogOutIcon } from "lucide-react";
-import { AppLogo } from "../AppLogo";
 import { NavigationList } from "./navigation-list";
 
 interface SidebarProps {
