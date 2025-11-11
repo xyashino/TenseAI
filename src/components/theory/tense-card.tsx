@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import type { TenseName } from "@/types";
 
@@ -10,8 +11,8 @@ interface TenseCardProps {
 
 export function TenseCard({ name, slug, description, icon }: TenseCardProps) {
   return (
-    <div className="group relative bg-card border border-border rounded-lg p-8 hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10 hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-300 cursor-pointer">
-      <div className="flex flex-col h-full">
+    <Card className="group relative hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10 hover:border-primary/30 dark:hover:border-primary/50 transition-all duration-300 cursor-pointer">
+      <CardContent className="flex flex-col h-full">
         <div className="mb-4">
           {icon && (
             <span className="text-4xl text-primary" aria-hidden="true">
@@ -25,8 +26,8 @@ export function TenseCard({ name, slug, description, icon }: TenseCardProps) {
           <span>Start Learning</span>
           <span className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">→</span>
         </div>
-      </div>
+      </CardContent>
       <a href={`${NavigationRoutes.THEORY}${slug}`} aria-label={`Learn about ${name}`} className="absolute inset-0" />
-    </div>
+    </Card>
   );
 }

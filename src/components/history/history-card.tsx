@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import type { TenseName, TrainingSessionWithRounds } from "@/types";
 import { ArrowRight, Award, History, Sparkles, Target } from "lucide-react";
@@ -57,7 +57,7 @@ export function HistoryCard({ session }: HistoryCardProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardContent>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-3">
             <span className="flex-shrink-0" aria-hidden="true">
@@ -79,8 +79,6 @@ export function HistoryCard({ session }: HistoryCardProps) {
             </time>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
         <div className="flex items-center justify-between">
           <p className="text-xs sm:text-sm text-muted-foreground">
             <span className="font-medium">Scores:</span>{" "}

@@ -23,7 +23,7 @@ export const FinalFeedbackElement = memo(function FinalFeedbackElement({
   finalFeedback,
 }: FinalFeedbackElementProps) {
   return (
-    <Card className="border-2 border-primary">
+    <Card className="border-primary">
       <FinalFeedbackHeader perfectScore={perfectScore} />
 
       <CardContent className="space-y-6">

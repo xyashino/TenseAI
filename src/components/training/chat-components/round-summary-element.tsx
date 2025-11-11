@@ -44,7 +44,7 @@ export const RoundSummaryElement = memo(function RoundSummaryElement({
 
   return (
     <ChatLogWrapper>
-      <Card id={`round-summary-${roundNumber}`} className="border-2">
+      <Card id={`round-summary-${roundNumber}`}>
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <CardTitle className="text-lg sm:text-xl">Round {roundNumber} Complete!</CardTitle>

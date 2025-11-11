@@ -13,7 +13,7 @@ export const WelcomeCard = memo(function WelcomeCard({ userName, tense, difficul
   const displayName = userName || "there";
 
   return (
-    <Card className="border-2">
+    <Card>
       <CardHeader>
         <CardTitle>Hello {displayName}!</CardTitle>
       </CardHeader>

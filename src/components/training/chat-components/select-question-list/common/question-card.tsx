@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { QuestionCardBaseProps, QuestionWithoutAnswer } from "@/types";
 import { memo } from "react";
@@ -31,41 +32,42 @@ export const QuestionCard = memo(function QuestionCard(props: QuestionCardProps)
   if (isFormMode(props)) {
     const { value, onChange, hasError } = props;
     return (
-      <div
+      <Card
         id={elementId}
-        className={cn(
-          "p-6 border-2 rounded-lg bg-card space-y-4 transition-colors",
-          hasError && "border-destructive bg-destructive/5"
-        )}
+        className={cn("space-y-4 transition-colors", hasError && "border-destructive bg-destructive/5")}
       >
-        <QuestionHeader
-          questionId={question.id}
-          questionText={question.question_text}
-          questionNumber={questionNumber}
-          totalQuestions={totalQuestions}
-          isAnswered={!!value}
-        />
-        <QuestionOptions questionId={question.id} options={question.options} value={value} onValueChange={onChange} />
-      </div>
+        <CardContent className="space-y-4">
+          <QuestionHeader
+            questionId={question.id}
+            questionText={question.question_text}
+            questionNumber={questionNumber}
+            totalQuestions={totalQuestions}
+            isAnswered={!!value}
+          />
+          <QuestionOptions questionId={question.id} options={question.options} value={value} onValueChange={onChange} />
+        </CardContent>
+      </Card>
     );
   }
 
   const { selectedAnswer, correctAnswer, isCorrect } = props;
   return (
-    <div id={elementId} className="p-6 border-2 rounded-lg bg-card space-y-4">
-      <QuestionHeader
-        questionText={question.question_text}
-        questionNumber={questionNumber}
-        totalQuestions={totalQuestions}
-        isCorrect={isCorrect}
-      />
-      <QuestionOptions
-        questionId={question.id}
-        options={question.options}
-        selectedAnswer={selectedAnswer}
-        correctAnswer={correctAnswer}
-        isCorrect={isCorrect}
-      />
-    </div>
+    <Card id={elementId}>
+      <CardContent className="space-y-4">
+        <QuestionHeader
+          questionText={question.question_text}
+          questionNumber={questionNumber}
+          totalQuestions={totalQuestions}
+          isCorrect={isCorrect}
+        />
+        <QuestionOptions
+          questionId={question.id}
+          options={question.options}
+          selectedAnswer={selectedAnswer}
+          correctAnswer={correctAnswer}
+          isCorrect={isCorrect}
+        />
+      </CardContent>
+    </Card>
   );
 });

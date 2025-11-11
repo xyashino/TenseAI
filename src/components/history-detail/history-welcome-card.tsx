@@ -25,7 +25,7 @@ export const HistoryWelcomeCard = memo(function HistoryWelcomeCard({
   const totalScore = summary.rounds_scores.reduce((sum, score) => sum + score, 0);
 
   return (
-    <Card className="border-2">
+    <Card>
       <CardHeader>
         <CardTitle>Session Review - Hello {displayName}!</CardTitle>
       </CardHeader>
