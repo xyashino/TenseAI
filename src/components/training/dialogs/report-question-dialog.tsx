@@ -99,9 +99,11 @@ export function ReportQuestionDialog({ questionId, questionText }: ReportQuestio
             </div>
 
             <DialogFooter>
-              <Button type="button" variant="outline" disabled={isReportingQuestion}>
-                Cancel
-              </Button>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" disabled={isReportingQuestion}>
+                  Cancel
+                </Button>
+              </DialogClose>
               <DialogClose asChild>
                 <Button type="submit" disabled={isReportingQuestion}>
                   Report Question

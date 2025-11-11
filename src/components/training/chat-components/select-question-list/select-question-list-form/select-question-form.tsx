@@ -1,5 +1,6 @@
 import { Form, FormField } from "@/components/ui/form";
 import { useTrainingSessionActions } from "@/lib/hooks/use-training-session-actions";
+import { getFormSchema } from "@/lib/utils";
 import type { QuestionWithoutAnswer } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { memo } from "react";
@@ -9,7 +10,6 @@ import { z } from "zod";
 import { SelectQuestionWrapper } from "../common/select-question-wrapper";
 import { SelectQuestionAnswer } from "./select-question-answer";
 import { QuestionSubmit } from "./select-question-submit";
-import { getFormSchema } from "@/lib/utils";
 
 interface SelectQuestionFormProps {
   questions: QuestionWithoutAnswer[];
@@ -22,7 +22,7 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
   roundNumber,
   totalQuestions,
 }: SelectQuestionFormProps) {
-  const { completeRound } = useTrainingSessionActions();
+  const { completeRound, isCompletingRound } = useTrainingSessionActions();
 
   const formSchema = getFormSchema(questions, totalQuestions);
   type FormValues = z.infer<typeof formSchema>;
@@ -85,6 +85,7 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
           answeredCount={answeredCount}
           totalQuestions={totalQuestions}
           hasError={hasError}
+          isLoading={isCompletingRound}
         />
       </form>
     </Form>

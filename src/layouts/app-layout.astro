@@ -45,7 +45,10 @@ const currentPath = Astro.url.pathname;
     </header>
     <div class="w-full flex-1 min-h-0 bg-background rounded-lg lg:rounded-lg">
       <main
-        class={cn("w-full h-full max-w-4xl mx-auto px-4 py-8 lg:p-8 overflow-x-hidden no-scrollbar", mainClassName)}
+        class={cn(
+          "w-full h-full flex flex-col max-w-4xl mx-auto px-4 py-8 lg:p-8 overflow-x-hidden no-scrollbar",
+          mainClassName
+        )}
       >
         <slot />
       </main>

@@ -31,10 +31,8 @@ function ActiveTrainingViewFallback() {
 
 export function ActiveTrainingView() {
   return (
-    <div className="h-full">
-      <Suspense fallback={<ActiveTrainingViewFallback />}>
-        <ActiveTrainingViewContent />
-      </Suspense>
-    </div>
+    <Suspense fallback={<ActiveTrainingViewFallback />}>
+      <ActiveTrainingViewContent />
+    </Suspense>
   );
 }

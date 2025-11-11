@@ -9,9 +9,16 @@ interface QuestionSubmitProps {
   answeredCount: number;
   totalQuestions: number;
   hasError: boolean;
+  isLoading: boolean;
 }
 
-export function QuestionSubmit({ roundNumber, answeredCount, totalQuestions, hasError }: QuestionSubmitProps) {
+export function QuestionSubmit({
+  roundNumber,
+  answeredCount,
+  totalQuestions,
+  hasError,
+  isLoading,
+}: QuestionSubmitProps) {
   const remaining = totalQuestions - answeredCount;
 
   return (
@@ -25,7 +32,7 @@ export function QuestionSubmit({ roundNumber, answeredCount, totalQuestions, has
             )}
           </div>
 
-          <Button size="lg" className="w-full" type="submit">
+          <Button size="lg" className="w-full" type="submit" disabled={isLoading}>
             <CheckCircle className="mr-2 h-5 w-5" />
             Check Answers
           </Button>
