@@ -79,16 +79,13 @@ export const POST: APIRoute = async (context) => {
     const supabase = context.locals.supabase;
     const userId = await authenticateUser(supabase);
 
-    // Validate path parameter
     const { roundId } = completeRoundParamsSchema.parse({
       roundId: context.params.roundId,
     });
 
-    // Parse and validate request body
     const body = await context.request.json();
     const { answers } = completeRoundBodySchema.parse(body);
 
-    // Complete the round
     const sessionService = new TrainingSessionService(supabase);
     const result = await sessionService.completeRound(userId, roundId, answers);
 

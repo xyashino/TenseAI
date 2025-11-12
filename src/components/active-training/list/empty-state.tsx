@@ -18,7 +18,7 @@ export function EmptyState({ defaultDifficulty }: EmptyStateProps) {
       <StartSessionDialog
         defaultDifficulty={defaultDifficulty}
         trigger={
-          <Button className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto" data-test-id="start-new-training-button">
             <Plus className="h-4 w-4" />
             Start new training
           </Button>

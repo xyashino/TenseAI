@@ -32,7 +32,13 @@ export function QuestionSubmit({
             )}
           </div>
 
-          <Button size="lg" className="w-full" type="submit" disabled={isLoading}>
+          <Button
+            size="lg"
+            className="w-full"
+            type="submit"
+            disabled={isLoading}
+            data-test-id={`submit-round-${roundNumber}-button`}
+          >
             <CheckCircle className="mr-2 h-5 w-5" />
             Check Answers
           </Button>

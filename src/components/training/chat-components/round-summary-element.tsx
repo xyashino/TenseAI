@@ -44,13 +44,14 @@ export const RoundSummaryElement = memo(function RoundSummaryElement({
 
   return (
     <ChatLogWrapper>
-      <Card id={`round-summary-${roundNumber}`}>
+      <Card id={`round-summary-${roundNumber}`} data-test-id={`round-summary-${roundNumber}`}>
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <CardTitle className="text-lg sm:text-xl">Round {roundNumber} Complete!</CardTitle>
             <Badge
               variant={percentage >= 70 ? "default" : "secondary"}
               className="text-base sm:text-lg px-3 sm:px-4 py-1 shrink-0"
+              data-test-id={`round-summary-score-${roundNumber}`}
             >
               {score}/{totalQuestions}
             </Badge>
@@ -69,7 +70,7 @@ export const RoundSummaryElement = memo(function RoundSummaryElement({
           </div>
 
           {feedback && (
-            <div className="space-y-2">
+            <div className="space-y-2" data-test-id={`round-summary-feedback-${roundNumber}`}>
               <h4 className="text-xs sm:text-sm font-semibold">Feedback</h4>
               <div className="prose prose-sm dark:prose-invert max-w-none text-xs sm:text-sm">
                 <ReactMarkdown>{feedback}</ReactMarkdown>
@@ -79,7 +80,13 @@ export const RoundSummaryElement = memo(function RoundSummaryElement({
           {!isReadOnly && (
             <>
               <Separator />
-              <Button onClick={handleContinue} disabled={isLoading} className="w-full" size="lg">
+              <Button
+                onClick={handleContinue}
+                disabled={isLoading}
+                className="w-full"
+                size="lg"
+                data-test-id={isNextRound ? `start-round-${roundNumber + 1}-button` : "finish-session-button"}
+              >
                 {buttonText}
               </Button>
             </>

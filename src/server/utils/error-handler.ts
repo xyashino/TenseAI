@@ -14,7 +14,6 @@ function handleZodError(error: ZodError): ValidationError {
 }
 
 function handleServiceError(error: Error): ApiError {
-  // Not Found errors
   if (error.message === "Profile not found") {
     return new NotFoundError("Profile not found");
   }
@@ -28,7 +27,6 @@ function handleServiceError(error: Error): ApiError {
     return new NotFoundError("Question not found");
   }
 
-  // AI service errors
   if (
     error.message.includes("AI service") ||
     error.message.includes("Failed to generate") ||

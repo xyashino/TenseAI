@@ -13,7 +13,7 @@ export function StartSessionCTA({ defaultDifficulty }: StartSessionCTAProps) {
       <StartSessionDialog
         defaultDifficulty={defaultDifficulty}
         trigger={
-          <Button variant="link" className="">
+          <Button variant="link" className="" data-test-id="start-new-training-button">
             Start new training
           </Button>
         }

@@ -12,8 +12,6 @@ import type {
   UserAnswerInsert,
 } from "@/types";
 
-// Type for the nested query result from getSessionWithDetails
-// Note: user_answer is a One-to-One relationship (UNIQUE constraint on question_id)
 interface SessionWithDetailsRaw {
   id: string;
   tense: string;
@@ -33,7 +31,7 @@ interface SessionWithDetailsRaw {
       id: string;
       question_number: number;
       question_text: string;
-      options: unknown; // Json type from Supabase
+      options: unknown;
       correct_answer: string;
       user_answer: {
         selected_answer: string;
@@ -63,7 +61,6 @@ export class TrainingSessionRepository {
       .single();
 
     if (error) {
-      // PGRST116 is Supabase's "no rows returned" error code
       if (error.code === "PGRST116") {
         return null;
       }
@@ -169,7 +166,6 @@ export class TrainingSessionRepository {
       .single();
 
     if (error) {
-      // PGRST116 is Supabase's "no rows returned" error code
       if (error.code === "PGRST116") {
         return false;
       }
@@ -279,7 +275,6 @@ export class TrainingSessionRepository {
       .single();
 
     if (error) {
-      // PGRST116 is Supabase's "no rows returned" error code
       if (error.code === "PGRST116") {
         return null;
       }

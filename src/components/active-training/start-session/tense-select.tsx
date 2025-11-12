@@ -15,12 +15,16 @@ export function TenseSelect({ value, onChange, disabled }: TenseSelectProps) {
     <div className="space-y-2">
       <Label htmlFor="tense-select">Select Tense</Label>
       <Select value={value} onValueChange={onChange} disabled={disabled}>
-        <SelectTrigger id="tense-select" className="w-full truncate">
+        <SelectTrigger id="tense-select" className="w-full truncate" data-test-id="tense-select">
           <SelectValue placeholder="Choose a tense..." />
         </SelectTrigger>
         <SelectContent>
           {TENSE_OPTIONS.map((tense) => (
-            <SelectItem key={tense} value={tense}>
+            <SelectItem
+              key={tense}
+              value={tense}
+              data-test-id={`tense-option-${tense.toLowerCase().replace(/\s+/g, "-")}`}
+            >
               {tense}
             </SelectItem>
           ))}

@@ -44,7 +44,6 @@ export class AIGeneratorService {
         maxTokens: 2000,
       });
       const parsed = questionsResponseSchema.parse(JSON.parse(completion));
-      console.log({ parsed });
       return parsed.questions;
     } catch (error) {
       throw new Error(`Failed to generate questions: ${error instanceof Error ? error.message : "Unknown error"}`);

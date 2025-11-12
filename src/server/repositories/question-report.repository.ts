@@ -67,26 +67,21 @@ export class QuestionReportRepository {
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    // Apply optional status filter to both queries
     if (status) {
       countQuery = countQuery.eq("status", status);
       dataQuery = dataQuery.eq("status", status);
     }
 
-    // Execute queries in parallel
     const [countResult, dataResult] = await Promise.all([countQuery, dataQuery]);
 
-    // Handle count query errors
     if (countResult.error) {
       throw new Error(`Failed to count reports: ${countResult.error.message}`);
     }
 
-    // Handle data query errors
     if (dataResult.error || !dataResult.data) {
       throw new Error(`Failed to fetch reports: ${dataResult.error?.message}`);
     }
 
-    // Transform data to match QuestionReportWithPreview type
     const reports: QuestionReportWithPreview[] = dataResult.data.map((row) => ({
       id: row.id,
       question_id: row.question_id,

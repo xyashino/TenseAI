@@ -39,6 +39,7 @@ export const QuestionOptions = memo(function QuestionOptions({
         return (
           <div
             key={index}
+            data-test-id={`question-option-${questionId}-${index}`}
             className={cn(
               "flex items-center space-x-3 p-2 rounded-md transition-colors",
               showAsCorrect && "bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800",

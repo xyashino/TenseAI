@@ -34,6 +34,7 @@ export const QuestionCard = memo(function QuestionCard(props: QuestionCardProps)
     return (
       <Card
         id={elementId}
+        data-test-id={elementId}
         className={cn("space-y-4 transition-colors", hasError && "border-destructive bg-destructive/5")}
       >
         <CardContent className="space-y-4">
@@ -52,7 +53,7 @@ export const QuestionCard = memo(function QuestionCard(props: QuestionCardProps)
 
   const { selectedAnswer, correctAnswer, isCorrect } = props;
   return (
-    <Card id={elementId}>
+    <Card id={elementId} data-test-id={elementId}>
       <CardContent className="space-y-4">
         <QuestionHeader
           questionText={question.question_text}

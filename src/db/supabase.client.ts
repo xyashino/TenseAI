@@ -14,13 +14,15 @@ export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
 
 export type SupabaseClient = typeof supabaseClient;
 
+const isSecure = import.meta.env.SITE_URL?.startsWith("https://") ?? false;
+
 export const cookieOptions: CookieOptionsWithName = {
   name: "sb-token",
   path: "/",
-  secure: true,
+  secure: isSecure,
   httpOnly: true,
   sameSite: "lax",
-  maxAge: 60 * 60 * 24 * 7, // 1 week
+  maxAge: 60 * 60 * 24 * 7,
 };
 
 function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {

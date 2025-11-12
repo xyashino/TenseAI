@@ -27,12 +27,16 @@ export function DifficultySelect({ value, onChange, defaultValue, disabled }: Di
     <div className="space-y-2">
       <Label htmlFor="difficulty-select">Select Difficulty</Label>
       <Select value={value} onValueChange={onChange} defaultValue={defaultValue} disabled={disabled}>
-        <SelectTrigger id="difficulty-select" className="w-full truncate">
+        <SelectTrigger id="difficulty-select" className="w-full truncate" data-test-id="difficulty-select">
           <SelectValue placeholder="Choose difficulty..." />
         </SelectTrigger>
         <SelectContent>
           {DIFFICULTY_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              data-test-id={`difficulty-option-${option.value.toLowerCase()}`}
+            >
               <span className="font-medium">{option.label}</span>
               <span className="text-muted-foreground text-sm ml-2">({option.description})</span>
             </SelectItem>

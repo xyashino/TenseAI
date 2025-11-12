@@ -8,7 +8,7 @@ interface LoadingElementProps {
 
 export const LoadingElement = memo(function LoadingElement({ message }: LoadingElementProps) {
   return (
-    <Card className="bg-muted/70">
+    <Card className="bg-muted/70" data-test-id="loading-element">
       <CardContent className="flex items-center gap-3">
         <Loader2 className="h-5 w-5 animate-spin text-primary" />
         <p className="text-sm text-muted-foreground">{message}</p>

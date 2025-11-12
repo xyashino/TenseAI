@@ -7,11 +7,7 @@ interface ApiError {
 }
 
 export class ApiClientError extends Error {
-  constructor(
-    public status: number,
-    public data: ApiError,
-    message?: string
-  ) {
+  constructor(public status: number, public data: ApiError, message?: string) {
     super(message || data.message || "An error occurred");
     this.name = "ApiClientError";
   }

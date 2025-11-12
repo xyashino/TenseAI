@@ -41,7 +41,7 @@ export const POST: APIRoute = async (context) => {
     const validated = createSessionSchema.parse(body);
 
     const rateLimitCheck = await rateLimitService.checkLimit(userId, "session_create", {
-      limit: 10,
+      limit: 15,
       windowSeconds: 60,
     });
 

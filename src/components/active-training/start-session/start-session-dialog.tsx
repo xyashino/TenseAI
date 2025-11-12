@@ -18,7 +18,7 @@ export function StartSessionDialog({ defaultDifficulty, trigger }: StartSessionD
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent data-test-id="start-training-dialog">
         <DialogHeader>
           <DialogTitle>Start New Training</DialogTitle>
           <DialogDescription>Select a tense and difficulty level to begin your training.</DialogDescription>

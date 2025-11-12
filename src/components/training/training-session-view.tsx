@@ -18,7 +18,7 @@ export function TrainingSessionView({
   userName,
 }: TrainingSessionViewProps) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" data-test-id="training-session-view">
       <FocusHeader tense={tense} sessionId={sessionId} />
       <ChatLogArea chatComponents={chatComponents} userName={userName} tense={tense} difficulty={difficulty} />
     </div>

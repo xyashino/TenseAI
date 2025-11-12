@@ -26,7 +26,11 @@ export function StartSessionForm({ defaultDifficulty }: StartSessionFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit((data) => createSession(data))} className="space-y-4 sm:space-y-6">
+      <form
+        onSubmit={form.handleSubmit((data) => createSession(data))}
+        className="space-y-4 sm:space-y-6"
+        data-test-id="start-training-form"
+      >
         <FormField
           control={form.control}
           name="tense"
@@ -43,11 +47,22 @@ export function StartSessionForm({ defaultDifficulty }: StartSessionFormProps) {
 
         <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="outline" disabled={isSubmitting} className="w-full sm:w-auto">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto"
+              data-test-id="cancel-button"
+            >
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full sm:w-auto"
+            data-test-id="start-training-button"
+          >
             Start Training
           </Button>
         </div>
