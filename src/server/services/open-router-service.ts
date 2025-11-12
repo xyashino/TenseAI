@@ -71,7 +71,7 @@ export class OpenRouterService {
           },
         });
         return completion.choices[0]?.message?.content;
-      } catch (_error: unknown) {
+      } catch {
         const delay = RETRY_CONFIG.initialDelayMs * Math.pow(2, i);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }

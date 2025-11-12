@@ -12,8 +12,12 @@ export class TrainingSessionPage {
   async waitForQuestionsToLoad(roundNumber = 1): Promise<void> {
     try {
       const loadingElement = this.page.getByTestId("loading-element");
-      await loadingElement.waitFor({ state: "hidden", timeout: 30000 }).catch(() => {});
-    } catch {}
+      await loadingElement.waitFor({ state: "hidden", timeout: 30000 }).catch(() => {
+        // Ignore errors during loading element wait
+      });
+    } catch {
+      // Ignore errors during loading element wait
+    }
 
     const testId = `round-${roundNumber}-question-1`;
     const firstQuestionLocator = this.page
@@ -21,7 +25,9 @@ export class TrainingSessionPage {
       .last();
 
     if (roundNumber > 1) {
-      await this.page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+      await this.page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+        // Ignore network idle wait errors
+      });
 
       await firstQuestionLocator.waitFor({ state: "attached", timeout: 30000 });
 
@@ -69,7 +75,9 @@ export class TrainingSessionPage {
     try {
       const loadingElement = this.page.getByTestId("loading-element");
       await loadingElement.waitFor({ state: "visible", timeout: 5000 });
-    } catch {}
+    } catch {
+      // Ignore loading element visibility errors
+    }
 
     await this.waitForQuestionsToLoad(roundNumber);
   }

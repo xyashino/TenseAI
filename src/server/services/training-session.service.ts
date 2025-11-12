@@ -311,7 +311,7 @@ export class TrainingSessionService {
         roundWithSession.session.difficulty as DifficultyLevel,
         correctCount
       );
-    } catch (error) {
+    } catch {
       feedback = `You scored ${correctCount}/10. Review your answers and try the next round!`;
     }
     const completedRound = await this.repository.updateRoundCompletion(roundId, correctCount, feedback);
