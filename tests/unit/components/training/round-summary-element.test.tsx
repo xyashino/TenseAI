@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { RoundSummaryElement } from "@/components/training/chat-components/round-summary-element";
 import * as sessionActions from "@/lib/hooks/use-training-session-actions";
 
-type UseTrainingSessionActionsReturn = {
+interface UseTrainingSessionActionsReturn {
   startRound: () => Promise<void>;
   completeRound: (answersMap: Map<string, string>) => Promise<void>;
   completeSession: () => Promise<void>;
@@ -13,7 +13,7 @@ type UseTrainingSessionActionsReturn = {
   isCompletingSession: boolean;
   isLoadingRound: boolean;
   isAbandoning: boolean;
-};
+}
 
 vi.mock("@/lib/hooks/use-training-session-actions", () => ({
   useTrainingSessionActions: vi.fn(),

@@ -4,13 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/training/chat-components/select-question-list/common/question-header", () => ({
-  QuestionHeader: ({
-    questionText,
-    questionNumber,
-  }: {
-    questionText: string;
-    questionNumber: number;
-  }) => (
+  QuestionHeader: ({ questionText, questionNumber }: { questionText: string; questionNumber: number }) => (
     <div>
       <span>Question {questionNumber}</span>
       <p>{questionText}</p>
