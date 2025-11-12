@@ -1,5 +1,5 @@
 import { StartSessionForm } from "@/components/active-training/start-session/start-session-form";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import * as sessionHook from "@/lib/hooks/use-create-session";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -24,7 +24,11 @@ describe("StartSessionForm", () => {
   const renderInDialog = (component: React.ReactElement) => {
     return render(
       <Dialog open>
-        <DialogContent>{component}</DialogContent>
+        <DialogContent>
+          <DialogTitle className="sr-only">Start New Training</DialogTitle>
+          <DialogDescription className="sr-only">Select a tense and difficulty level to begin your training.</DialogDescription>
+          {component}
+        </DialogContent>
       </Dialog>
     );
   };
