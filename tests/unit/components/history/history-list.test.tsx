@@ -1,10 +1,10 @@
-import { render, screen } from "../../test-utils";
 import { HistoryList } from "@/components/history/history-list";
 import type { TrainingSessionWithRounds } from "@/types";
+import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/history/history-card", () => ({
   HistoryCard: ({ session }: { session: TrainingSessionWithRounds }) => (
-    <div data-testid="history-card">
+    <div data-test-id="history-card">
       {session.tense} - {session.difficulty}
     </div>
   ),

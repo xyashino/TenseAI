@@ -1,21 +1,23 @@
-import { render, screen } from "../../test-utils";
-import userEvent from "@testing-library/user-event";
 import { ActiveSessionsList } from "@/components/active-training/list/active-sessions-list";
 import type { TrainingSessionWithRounds } from "@/types";
+import userEvent from "@testing-library/user-event";
+import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/active-training/session-card/active-session-card", () => ({
   ActiveSessionCard: ({ session }: { session: TrainingSessionWithRounds }) => (
-    <div data-testid="active-session-card">
-      <div>{session.tense} - {session.difficulty}</div>
-      <button data-testid={`resume-${session.id}`}>Resume</button>
-      <button data-testid={`delete-${session.id}`}>Delete</button>
+    <div data-test-id="active-session-card">
+      <div>
+        {session.tense} - {session.difficulty}
+      </div>
+      <button data-test-id={`resume-${session.id}`}>Resume</button>
+      <button data-test-id={`delete-${session.id}`}>Delete</button>
     </div>
   ),
 }));
 
 vi.mock("@/components/active-training/list/empty-state", () => ({
   EmptyState: ({ defaultDifficulty }: { defaultDifficulty?: string }) => (
-    <div data-testid="empty-state">No active sessions. Default: {defaultDifficulty || "None"}</div>
+    <div data-test-id="empty-state">No active sessions. Default: {defaultDifficulty || "None"}</div>
   ),
 }));
 

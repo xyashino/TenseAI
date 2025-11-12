@@ -1,7 +1,7 @@
-import { render, screen } from "../../test-utils";
-import userEvent from "@testing-library/user-event";
 import { QuestionCard } from "@/components/training/chat-components/select-question-list/common/question-card";
 import type { QuestionWithoutAnswer } from "@/types";
+import userEvent from "@testing-library/user-event";
+import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/training/chat-components/select-question-list/common/question-header", () => ({
   QuestionHeader: ({ questionText, questionNumber }: any) => (
@@ -23,7 +23,7 @@ vi.mock("@/components/training/chat-components/select-question-list/common/quest
             checked={value === option || selectedAnswer === option}
             onChange={(e) => onValueChange?.(e.target.value)}
             disabled={!onValueChange}
-            data-testid={`option-${index}`}
+            data-test-id={`option-${index}`}
             data-correct={option === correctAnswer}
             data-is-correct={isCorrect}
           />

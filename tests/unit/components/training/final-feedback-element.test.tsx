@@ -1,21 +1,21 @@
-import { render, screen } from "../../test-utils";
 import { FinalFeedbackElement } from "@/components/training/chat-components/final-feedback-element/final-feedback-element";
+import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/training/chat-components/final-feedback-element/final-feedback-header", () => ({
   FinalFeedbackHeader: ({ perfectScore }: { perfectScore: boolean }) => (
-    <div data-testid="feedback-header">Perfect Score: {perfectScore ? "Yes" : "No"}</div>
+    <div data-test-id="feedback-header">Perfect Score: {perfectScore ? "Yes" : "No"}</div>
   ),
 }));
 
 vi.mock("@/components/training/chat-components/final-feedback-element/rounds-scores-display", () => ({
   RoundsScoresDisplay: ({ roundsScores }: { roundsScores: number[] }) => (
-    <div data-testid="rounds-scores">Scores: {roundsScores.join(", ")}</div>
+    <div data-test-id="rounds-scores">Scores: {roundsScores.join(", ")}</div>
   ),
 }));
 
 vi.mock("@/components/training/chat-components/final-feedback-element/stats-grid", () => ({
   StatsGrid: ({ totalScore, accuracyPercentage }: { totalScore: string; accuracyPercentage: number }) => (
-    <div data-testid="stats-grid">
+    <div data-test-id="stats-grid">
       Total: {totalScore}, Accuracy: {accuracyPercentage}%
     </div>
   ),
@@ -23,12 +23,12 @@ vi.mock("@/components/training/chat-components/final-feedback-element/stats-grid
 
 vi.mock("@/components/training/chat-components/final-feedback-element/detailed-analysis", () => ({
   DetailedAnalysis: ({ finalFeedback }: { finalFeedback: string }) => (
-    <div data-testid="detailed-analysis">{finalFeedback}</div>
+    <div data-test-id="detailed-analysis">{finalFeedback}</div>
   ),
 }));
 
 vi.mock("@/components/training/chat-components/final-feedback-element/final-feedback-actions", () => ({
-  FinalFeedbackActions: () => <div data-testid="feedback-actions">Actions</div>,
+  FinalFeedbackActions: () => <div data-test-id="feedback-actions">Actions</div>,
 }));
 
 describe("FinalFeedbackElement", () => {
@@ -55,9 +55,7 @@ describe("FinalFeedbackElement", () => {
   it("should render final feedback from AI", () => {
     render(<FinalFeedbackElement {...defaultProps} />);
 
-    expect(screen.getByTestId("detailed-analysis")).toHaveTextContent(
-      "Overall, you performed well across all rounds."
-    );
+    expect(screen.getByTestId("detailed-analysis")).toHaveTextContent("Overall, you performed well across all rounds.");
   });
 
   it("should display perfect score indicator when perfectScore is true", () => {
