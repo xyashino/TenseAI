@@ -1,6 +1,4 @@
-import { AuthCard } from "@/components/auth/common/AuthCard";
-import { AuthFooterLink } from "@/components/auth/common/AuthFooterLink";
-import { LegalFooter } from "@/components/auth/common/LegalFooter";
+import { AuthCard, AuthFooterLink, LegalFooter } from "@/components/auth/common";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
