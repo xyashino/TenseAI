@@ -27,7 +27,7 @@ export function useNavigation(currentPath: string, activeSessionsCount: number) 
         icon: SettingsIcon,
       },
     ],
-    [activeSessionsCount]
+    []
   );
 
   const isActive = useCallback((href: string) => currentPath.startsWith(href), [currentPath]);
