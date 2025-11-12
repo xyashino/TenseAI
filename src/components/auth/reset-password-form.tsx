@@ -34,7 +34,7 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   return (
     <AuthCard title="Set new password" description="Enter a new password for your account">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -89,4 +89,5 @@ function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   );
 }
 
+export { ResetPasswordForm };
 export const ResetPasswordFormWithQueryClient = withQueryClient(ResetPasswordForm);

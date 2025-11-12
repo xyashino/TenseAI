@@ -32,7 +32,7 @@ function RegisterForm() {
     <div className="flex flex-col gap-6 w-full">
       <AuthCard title="Create an account" description="Start mastering English grammar with AI">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -109,4 +109,5 @@ function RegisterForm() {
   );
 }
 
+export { RegisterForm };
 export const RegisterFormWithQueryClient = withQueryClient(RegisterForm);

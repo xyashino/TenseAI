@@ -81,4 +81,5 @@ function AccountForm({ initialProfile }: AccountFormProps) {
   );
 }
 
+export { AccountForm };
 export const AccountFormWithQueryClient = withQueryClient(AccountForm);

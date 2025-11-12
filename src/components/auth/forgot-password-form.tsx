@@ -30,7 +30,7 @@ export function ForgotPasswordForm() {
         description="Enter your email address and we'll send you a link to reset your password"
       >
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
             <div className="space-y-4">
               <FormField
                 control={form.control}

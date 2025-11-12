@@ -9,7 +9,7 @@ import { loginSchema, type LoginFormValues } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
-export function LoginForm() {
+function LoginForm() {
   const { mutateAsync: login, isPending } = useLogin();
 
   const form = useForm<LoginFormValues>({
@@ -28,7 +28,7 @@ export function LoginForm() {
     <div className="flex flex-col gap-6 w-full">
       <AuthCard title="Welcome back" description="Login to continue learning English grammar">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -90,4 +90,5 @@ export function LoginForm() {
   );
 }
 
+export { LoginForm };
 export const LoginFormWithQueryClient = withQueryClient(LoginForm);
