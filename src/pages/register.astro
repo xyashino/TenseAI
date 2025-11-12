@@ -1,8 +1,8 @@
 ---
-import { RegisterForm } from "@/components/auth/register-form";
+import { RegisterFormWithQueryClient } from "@/components/auth/register-form";
 import AuthLayout from "@/layouts/auth-layout.astro";
 ---
 
 <AuthLayout title="Create Account - TenseAI">
-  <RegisterForm client:load />
+  <RegisterFormWithQueryClient client:load />
 </AuthLayout>

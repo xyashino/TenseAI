@@ -1,3 +1,4 @@
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { useActiveSessionsCount } from "@/lib/hooks/use-active-sessions-count";
 import { useNavigation } from "@/lib/hooks/use-navigation";
 import { NavigationItem } from "./navigation-item";
@@ -7,7 +8,7 @@ interface NavigationListProps {
   onNavigate?: () => void;
 }
 
-export function NavigationList({ currentPath, onNavigate }: NavigationListProps) {
+function NavigationList({ currentPath, onNavigate }: NavigationListProps) {
   const { data: activeSessionsCount = 0 } = useActiveSessionsCount();
   const { visibleItems, isActive } = useNavigation(currentPath, activeSessionsCount);
 
@@ -28,3 +29,5 @@ export function NavigationList({ currentPath, onNavigate }: NavigationListProps)
     </ul>
   );
 }
+
+export const NavigationListWithQueryClient = withQueryClient(NavigationList);

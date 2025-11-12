@@ -1,6 +1,7 @@
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { OnboardingForm } from "./onboarding-form";
 
-export default function OnboardingView() {
+export function OnboardingView() {
   return (
     <div className="w-full max-w-md mx-auto flex flex-col gap-8 pt-16 px-4 pb-8">
       <div className="flex flex-col gap-2 text-center">
@@ -14,3 +15,5 @@ export default function OnboardingView() {
     </div>
   );
 }
+
+export const OnboardingViewWithQueryClient = withQueryClient(OnboardingView);

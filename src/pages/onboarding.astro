@@ -1,8 +1,8 @@
 ---
-import OnboardingView from "@/components/onboarding/onboarding-view";
+import { OnboardingViewWithQueryClient } from "@/components/onboarding/onboarding-view";
 import BaseLayout from "@/layouts/base-layout.astro";
 ---
 
 <BaseLayout title="Onboarding">
-  <OnboardingView client:only="react" />
+  <OnboardingViewWithQueryClient client:only="react" />
 </BaseLayout>

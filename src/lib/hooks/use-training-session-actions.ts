@@ -1,5 +1,4 @@
 import { apiDelete, apiPost } from "@/lib/api-client";
-import { queryClient } from "@/lib/query-client";
 import { useTrainingSessionStore } from "@/lib/stores/training-session-store";
 import type {
   AnswerSubmission,
@@ -8,10 +7,11 @@ import type {
   CreateQuestionReportDTO,
   RoundWithQuestionsDTO,
 } from "@/types";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 
 export function useTrainingSessionActions() {
+  const queryClient = useQueryClient();
   const setQuestions = useTrainingSessionStore((state) => state.setQuestions);
   const setError = useTrainingSessionStore((state) => state.setError);
   const removeChatComponent = useTrainingSessionStore((state) => state.removeChatComponent);
@@ -22,87 +22,72 @@ export function useTrainingSessionActions() {
   const sessionId = useTrainingSessionStore((state) => state.sessionId);
   const currentRoundId = useTrainingSessionStore((state) => state.currentRoundId);
 
-  const createRoundMutation = useMutation(
-    {
-      mutationFn: async () => {
-        return apiPost<RoundWithQuestionsDTO>(`/api/training-sessions/${sessionId}/rounds`, {});
-      },
-      onSuccess: (data) => {
-        const { round, questions } = data;
-        setQuestions(questions, round.id, round.round_number);
-      },
-      onError: (err) => {
-        setError(err as Error);
-        removeChatComponent((c) => c.type === "loading");
-      },
+  const createRoundMutation = useMutation({
+    mutationFn: async () => {
+      return apiPost<RoundWithQuestionsDTO>(`/api/training-sessions/${sessionId}/rounds`, {});
     },
-    queryClient
-  );
+    onSuccess: (data) => {
+      const { round, questions } = data;
+      setQuestions(questions, round.id, round.round_number);
+    },
+    onError: (err) => {
+      setError(err as Error);
+      removeChatComponent((c) => c.type === "loading");
+    },
+  });
 
-  const completeRoundMutation = useMutation(
-    {
-      mutationFn: async (answersArray: AnswerSubmission[]) => {
-        if (!currentRoundId) {
-          throw new Error("No current round ID");
-        }
-        return apiPost<CompleteRoundResponseDTO>(`/api/rounds/${currentRoundId}/complete`, {
-          answers: answersArray,
-        });
-      },
-      onSuccess: (data) => {
-        setRoundComplete(data);
-      },
-      onError: (err) => {
-        setError(err as Error);
-        removeChatComponent((c) => c.type === "loading");
-      },
+  const completeRoundMutation = useMutation({
+    mutationFn: async (answersArray: AnswerSubmission[]) => {
+      if (!currentRoundId) {
+        throw new Error("No current round ID");
+      }
+      return apiPost<CompleteRoundResponseDTO>(`/api/rounds/${currentRoundId}/complete`, {
+        answers: answersArray,
+      });
     },
-    queryClient
-  );
+    onSuccess: (data) => {
+      setRoundComplete(data);
+    },
+    onError: (err) => {
+      setError(err as Error);
+      removeChatComponent((c) => c.type === "loading");
+    },
+  });
 
-  const completeSessionMutation = useMutation(
-    {
-      mutationFn: async () => {
-        return apiPost<CompleteSessionResponseDTO>(`/api/training-sessions/${sessionId}/complete`, {});
-      },
-      onSuccess: (data) => {
-        setSessionComplete(data);
-        queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
-      },
-      onError: (err) => {
-        setError(err as Error);
-        removeChatComponent((c) => c.type === "loading");
-      },
+  const completeSessionMutation = useMutation({
+    mutationFn: async () => {
+      return apiPost<CompleteSessionResponseDTO>(`/api/training-sessions/${sessionId}/complete`, {});
     },
-    queryClient
-  );
+    onSuccess: (data) => {
+      setSessionComplete(data);
+      queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
+    },
+    onError: (err) => {
+      setError(err as Error);
+      removeChatComponent((c) => c.type === "loading");
+    },
+  });
 
-  const reportQuestionMutation = useMutation(
-    {
-      mutationFn: async (data: CreateQuestionReportDTO) => {
-        return apiPost("/api/question-reports", data);
-      },
-      onError: (err) => {
-        setError(err as Error);
-      },
+  const reportQuestionMutation = useMutation({
+    mutationFn: async (data: CreateQuestionReportDTO) => {
+      return apiPost("/api/question-reports", data);
     },
-    queryClient
-  );
+    onError: (err) => {
+      setError(err as Error);
+    },
+  });
 
-  const abandonSessionMutation = useMutation(
-    {
-      mutationFn: async () => {
-        await apiDelete(`/api/training-sessions/${sessionId}`);
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
-      },
-      onError: (err) => {
-        setError(err as Error);
-      },
+  const abandonSessionMutation = useMutation({
+    mutationFn: async () => {
+      await apiDelete(`/api/training-sessions/${sessionId}`);
     },
-    queryClient
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["training-sessions"] });
+    },
+    onError: (err) => {
+      setError(err as Error);
+    },
+  });
 
   const startRound = useCallback(async () => {
     addChatComponent({

@@ -1,4 +1,5 @@
 import { AuthCard, AuthFooterLink, LegalFooter } from "@/components/auth/common";
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -88,3 +89,5 @@ export function LoginForm() {
     </div>
   );
 }
+
+export const LoginFormWithQueryClient = withQueryClient(LoginForm);

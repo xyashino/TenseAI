@@ -1,6 +1,6 @@
 ---
 import { PageHeader } from "@/components/common/page-header";
-import { HistoryView } from "@/components/history/history-view";
+import { HistoryViewWithQueryClient } from "@/components/history/history-view";
 import AppLayout from "@/layouts/app-layout.astro";
 ---
 
@@ -9,5 +9,5 @@ import AppLayout from "@/layouts/app-layout.astro";
     title="History"
     description="Review your completed training sessions and track your progress over time."
   />
-  <HistoryView client:load />
+  <HistoryViewWithQueryClient client:load />
 </AppLayout>

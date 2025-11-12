@@ -1,10 +1,11 @@
 import { useProfile } from "@/lib/hooks/use-profile";
 import { useActiveTrainings } from "@/lib/hooks/use-trainings-sessions";
 import { Suspense } from "react";
+import { withQueryClient } from "../providers/with-query-client";
 import { ActiveSessionsList } from "./list/active-sessions-list";
 import { StartSessionCTA } from "./start-session/start-session-cta";
 
-function ActiveTrainingViewContent() {
+export function ActiveTrainingViewContent() {
   const { data: trainingsData } = useActiveTrainings();
   const { data: profile } = useProfile();
 
@@ -14,7 +15,7 @@ function ActiveTrainingViewContent() {
       <div className="overflow-y-auto">
         <ActiveSessionsList sessions={sessions} defaultDifficulty={profile?.default_difficulty} />
       </div>
-      {sessions.length > 0 && <StartSessionCTA defaultDifficulty={profile.default_difficulty} />}
+      {sessions.length > 0 && <StartSessionCTA defaultDifficulty={profile?.default_difficulty} />}
     </div>
   );
 }
@@ -29,10 +30,12 @@ function ActiveTrainingViewFallback() {
   );
 }
 
-export function ActiveTrainingView() {
+function ActiveTrainingView() {
   return (
     <Suspense fallback={<ActiveTrainingViewFallback />}>
       <ActiveTrainingViewContent />
     </Suspense>
   );
 }
+
+export const ActiveTrainingViewWithQueryClient = withQueryClient(ActiveTrainingView);

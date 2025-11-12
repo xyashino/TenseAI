@@ -1,7 +1,6 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { apiGet, apiPatch } from "@/lib/api-client";
-import { queryClient } from "@/lib/query-client";
 import type { ProfileDTO, UpdateProfileDTO } from "@/types";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 /**
  * Custom hook for fetching the current user's profile.
@@ -15,17 +14,14 @@ import type { ProfileDTO, UpdateProfileDTO } from "@/types";
  * </Suspense>
  */
 export function useProfile() {
-  return useSuspenseQuery(
-    {
-      queryKey: ["profile"],
-      queryFn: async () => {
-        return apiGet<ProfileDTO>("/api/profile");
-      },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
+  return useSuspenseQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      return apiGet<ProfileDTO>("/api/profile");
     },
-    queryClient
-  );
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
 }
 
 /**
@@ -41,19 +37,18 @@ export function useProfile() {
  * updateProfile.mutate({ name: "John Doe" });
  */
 export function useUpdateProfile() {
-  return useMutation(
-    {
-      mutationFn: async (data: UpdateProfileDTO) => {
-        return apiPatch<ProfileDTO>("/api/profile", data);
-      },
-      onSuccess: () => {
-        // Invalidate profile query to refresh data
-        queryClient.invalidateQueries({ queryKey: ["profile"] });
+  const queryClient = useQueryClient();
 
-        // Optionally invalidate layout user data if name changed
-        queryClient.invalidateQueries({ queryKey: ["user"] });
-      },
+  return useMutation({
+    mutationFn: async (data: UpdateProfileDTO) => {
+      return apiPatch<ProfileDTO>("/api/profile", data);
     },
-    queryClient
-  );
+    onSuccess: () => {
+      // Invalidate profile query to refresh data
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+
+      // Optionally invalidate layout user data if name changed
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
+  });
 }

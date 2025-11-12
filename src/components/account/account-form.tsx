@@ -7,12 +7,13 @@ import { accountFormSchema, type AccountFormData } from "@/lib/validation";
 import type { ProfileDTO } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
+import { withQueryClient } from "../providers/with-query-client";
 
 interface AccountFormProps {
   initialProfile: ProfileDTO | null;
 }
 
-export function AccountForm({ initialProfile }: AccountFormProps) {
+function AccountForm({ initialProfile }: AccountFormProps) {
   const form = useForm<AccountFormData>({
     resolver: standardSchemaResolver(accountFormSchema),
     defaultValues: {
@@ -79,3 +80,5 @@ export function AccountForm({ initialProfile }: AccountFormProps) {
     </Form>
   );
 }
+
+export const AccountFormWithQueryClient = withQueryClient(AccountForm);

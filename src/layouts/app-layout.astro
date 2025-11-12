@@ -1,7 +1,7 @@
 ---
 import { AppLogo } from "@/components/app-logo";
-import { LogoutDialog } from "@/components/common/logout-dialog";
-import { NavigationList } from "@/components/common/navigation-list/navigation-list";
+import { LogoutDialogWithQueryClient } from "@/components/common/logout-dialog";
+import { NavigationListWithQueryClient } from "@/components/common/navigation-list/navigation-list";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { cn } from "@/lib/utils";
 import BaseLayout from "./base-layout.astro";
@@ -32,16 +32,16 @@ const currentPath = Astro.url.pathname;
       <AppLogo showText={false} />
     </div>
     <nav class="relative">
-      <NavigationList currentPath={currentPath} />
+      <NavigationListWithQueryClient currentPath={currentPath} client:load />
     </nav>
     <div class="relative">
-      <LogoutDialog client:load />
+      <LogoutDialogWithQueryClient client:load />
     </div>
   </aside>
   <div class="flex flex-1 flex-col w-full h-full lg:pr-6 lg:py-6 px-2 lg:pl-0 lg:pb-4">
     <header class="flex items-center justify-between lg:hidden w-full p-4">
       <AppLogo showText invert />
-      <LogoutDialog client:load />
+      <LogoutDialogWithQueryClient client:load />
     </header>
     <div class="w-full flex-1 min-h-0 bg-background rounded-lg lg:rounded-lg">
       <main
@@ -54,7 +54,7 @@ const currentPath = Astro.url.pathname;
       </main>
     </div>
     <div class="flex items-center justify-between px-2 flex-shrink-0 lg:hidden">
-      <NavigationList currentPath={currentPath} />
+      <NavigationListWithQueryClient currentPath={currentPath} client:load />
     </div>
   </div>
 </BaseLayout>

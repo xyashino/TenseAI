@@ -1,4 +1,5 @@
 import { AuthCard, AuthFooterLink } from "@/components/auth/common";
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,7 @@ interface ResetPasswordFormProps {
   token: string;
 }
 
-export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const { mutateAsync: resetPassword, isPending } = useResetPassword();
 
   const form = useForm<ResetPasswordFormValues>({
@@ -87,3 +88,5 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     </AuthCard>
   );
 }
+
+export const ResetPasswordFormWithQueryClient = withQueryClient(ResetPasswordForm);

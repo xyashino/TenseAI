@@ -1,3 +1,4 @@
+import { withQueryClient } from "@/components/providers/with-query-client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,3 +58,5 @@ export function LogoutDialog({ trigger, className }: LogoutDialogProps) {
     </AlertDialog>
   );
 }
+
+export const LogoutDialogWithQueryClient = withQueryClient(LogoutDialog);

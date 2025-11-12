@@ -16,8 +16,9 @@ import { resetPasswordSchema, type ResetPasswordFormValues } from "@/lib/validat
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { withQueryClient } from "../providers/with-query-client";
 
-export function ResetPasswordDialog() {
+function ResetPasswordDialog() {
   const [open, setOpen] = useState(false);
 
   const { mutate: resetPassword, isPending: isResettingPassword, error } = useResetPassword();
@@ -115,3 +116,5 @@ export function ResetPasswordDialog() {
     </Dialog>
   );
 }
+
+export const ResetPasswordDialogWithQueryClient = withQueryClient(ResetPasswordDialog);

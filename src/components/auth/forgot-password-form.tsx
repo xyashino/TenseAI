@@ -1,4 +1,5 @@
 import { AuthCard, AuthFooterLink } from "@/components/auth/common";
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -64,3 +65,5 @@ export function ForgotPasswordForm() {
     </div>
   );
 }
+
+export const ForgotPasswordFormWithQueryClient = withQueryClient(ForgotPasswordForm);

@@ -2,6 +2,7 @@ import { useTrainingSession } from "@/lib/hooks/use-training-session";
 import { useTrainingSessionStore } from "@/lib/stores/training-session-store";
 import type { DifficultyLevel, RoundDetailDTO, SessionStatus, SessionSummary, TenseName } from "@/types";
 import { useEffect, useRef } from "react";
+import { withQueryClient } from "../providers/with-query-client";
 import { TrainingSessionView } from "./training-session-view";
 
 interface TrainingSessionWrapperProps {
@@ -15,10 +16,6 @@ interface TrainingSessionWrapperProps {
   finalFeedback?: string | null;
 }
 
-/**
- * Wrapper component that initializes the Zustand store with SSR data
- * and manages the training session lifecycle
- */
 export function TrainingSessionWrapper({
   sessionId,
   tense,
@@ -60,3 +57,5 @@ export function TrainingSessionWrapper({
     />
   );
 }
+
+export const TrainingSessionWrapperWithQueryClient = withQueryClient(TrainingSessionWrapper);

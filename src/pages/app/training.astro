@@ -1,10 +1,10 @@
 ---
-import { ActiveTrainingView } from "@/components/active-training/active-training-view";
+import { ActiveTrainingViewWithQueryClient } from "@/components/active-training/active-training-view";
 import { PageHeader } from "@/components/common/page-header";
 import AppLayout from "@/layouts/app-layout.astro";
 ---
 
 <AppLayout title="Practice - TenseAI">
   <PageHeader title="Active Trainings" description="Continue your current training sessions." />
-  <ActiveTrainingView client:load />
+  <ActiveTrainingViewWithQueryClient client:load />
 </AppLayout>

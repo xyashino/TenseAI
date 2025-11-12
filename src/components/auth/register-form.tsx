@@ -1,4 +1,5 @@
 import { AuthCard, AuthFooterLink, LegalFooter } from "@/components/auth/common";
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import { registerSchema, type RegisterFormValues } from "@/lib/validation";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
-export function RegisterForm() {
+function RegisterForm() {
   const { mutateAsync: register, isPending } = useRegister();
 
   const form = useForm<RegisterFormValues>({
@@ -107,3 +108,5 @@ export function RegisterForm() {
     </div>
   );
 }
+
+export const RegisterFormWithQueryClient = withQueryClient(RegisterForm);
