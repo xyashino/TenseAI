@@ -1,3 +1,3 @@
-export { AuthCard } from "./AuthCard";
-export { AuthFooterLink } from "./AuthFooterLink";
-export { LegalFooter } from "./LegalFooter";
+export { AuthCard } from "./auth-card";
+export { AuthFooterLink } from "./auth-footer-link";
+export { LegalFooter } from "./legal-footer";
