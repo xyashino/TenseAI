@@ -1,7 +1,10 @@
 import { expect, type Locator } from "@playwright/test";
 
 export class RoundSummary {
-  constructor(private readonly locator: Locator, private readonly roundNumber: number) {}
+  constructor(
+    private readonly locator: Locator,
+    private readonly roundNumber: number
+  ) {}
 
   getLocator(): Locator {
     return this.locator;

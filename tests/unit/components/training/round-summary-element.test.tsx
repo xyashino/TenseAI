@@ -3,6 +3,18 @@ import userEvent from "@testing-library/user-event";
 import { RoundSummaryElement } from "@/components/training/chat-components/round-summary-element";
 import * as sessionActions from "@/lib/hooks/use-training-session-actions";
 
+interface UseTrainingSessionActionsReturn {
+  startRound: () => Promise<void>;
+  completeRound: (answersMap: Map<string, string>) => Promise<void>;
+  completeSession: () => Promise<void>;
+  reportQuestion: (questionId: string, comment?: string) => Promise<void>;
+  abandonSession: () => Promise<void>;
+  isCompletingRound: boolean;
+  isCompletingSession: boolean;
+  isLoadingRound: boolean;
+  isAbandoning: boolean;
+}
+
 vi.mock("@/lib/hooks/use-training-session-actions", () => ({
   useTrainingSessionActions: vi.fn(),
 }));
@@ -31,7 +43,12 @@ describe("RoundSummaryElement", () => {
       completeSession: mockCompleteSession,
       isLoadingRound: false,
       isCompletingSession: false,
-    } as any);
+      completeRound: vi.fn(),
+      reportQuestion: vi.fn(),
+      abandonSession: vi.fn(),
+      isCompletingRound: false,
+      isAbandoning: false,
+    } as UseTrainingSessionActionsReturn);
   });
 
   it("should render round summary with score", () => {
@@ -97,7 +114,12 @@ describe("RoundSummaryElement", () => {
       completeSession: mockCompleteSession,
       isLoadingRound: true,
       isCompletingSession: false,
-    } as any);
+      completeRound: vi.fn(),
+      reportQuestion: vi.fn(),
+      abandonSession: vi.fn(),
+      isCompletingRound: false,
+      isAbandoning: false,
+    } as UseTrainingSessionActionsReturn);
 
     render(<RoundSummaryElement {...defaultProps} roundNumber={1} />);
 

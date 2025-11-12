@@ -60,10 +60,13 @@ export const getQuestionSchema = (question: QuestionWithoutAnswer) => {
  * @returns A Zod object schema with validation for all questions
  */
 export const getFormSchema = (questions: QuestionWithoutAnswer[], totalQuestions: number) => {
-  const schemaObject = questions.reduce((acc, question) => {
-    acc[question.id] = getQuestionSchema(question);
-    return acc;
-  }, {} as Record<string, z.ZodString>);
+  const schemaObject = questions.reduce(
+    (acc, question) => {
+      acc[question.id] = getQuestionSchema(question);
+      return acc;
+    },
+    {} as Record<string, z.ZodString>
+  );
 
   return z.object(schemaObject).refine(
     (data) => {

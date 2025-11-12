@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 
 vi.mock("@/components/training/chat-components/select-question-list/common/question-header", () => ({
-  QuestionHeader: ({ questionText, questionNumber }: any) => (
+  QuestionHeader: ({ questionText, questionNumber }: { questionText: string; questionNumber: number }) => (
     <div>
       <span>Question {questionNumber}</span>
       <p>{questionText}</p>
@@ -13,7 +13,21 @@ vi.mock("@/components/training/chat-components/select-question-list/common/quest
 }));
 
 vi.mock("@/components/training/chat-components/select-question-list/common/question-options", () => ({
-  QuestionOptions: ({ options, value, onValueChange, selectedAnswer, correctAnswer, isCorrect }: any) => (
+  QuestionOptions: ({
+    options,
+    value,
+    onValueChange,
+    selectedAnswer,
+    correctAnswer,
+    isCorrect,
+  }: {
+    options: string[];
+    value?: string;
+    onValueChange?: (value: string) => void;
+    selectedAnswer?: string;
+    correctAnswer?: string;
+    isCorrect?: boolean;
+  }) => (
     <div>
       {options.map((option: string, index: number) => (
         <label key={index}>

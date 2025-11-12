@@ -21,7 +21,7 @@ import { withQueryClient } from "../providers/with-query-client";
 function ResetPasswordDialog() {
   const [open, setOpen] = useState(false);
 
-  const { mutate: resetPassword, isPending: isResettingPassword, error } = useResetPassword();
+  const { mutate: resetPassword, isPending: isResettingPassword } = useResetPassword();
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: standardSchemaResolver(resetPasswordSchema),
