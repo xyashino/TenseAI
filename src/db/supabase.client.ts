@@ -1,5 +1,5 @@
-import { requireEnv } from "@/server/utils/env";
-import { createServerClient } from "@supabase/ssr";
+import { requireEnv, getEnv } from "@/server/utils/env";
+import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import type { AstroCookies } from "astro";
 import type { Database } from "./database.types";
@@ -26,7 +26,26 @@ function parseCookieHeader(cookieHeader: string): { name: string; value: string 
   });
 }
 
+function getCookieOptions(headers: Headers): CookieOptionsWithName {
+  const forwardedProto = headers.get("x-forwarded-proto");
+  const isSecureFromHeader = forwardedProto === "https";
+
+  const siteUrl = getEnv("PUBLIC_SITE_URL") || "";
+  const isSecureFromUrl = siteUrl.startsWith("https://");
+
+  const isSecure = isSecureFromHeader || isSecureFromUrl;
+
+  return {
+    path: "/",
+    secure: isSecure,
+    httpOnly: true,
+    sameSite: "lax" as const,
+  };
+}
+
 export const createSupabaseServerClient = (context: { headers: Headers; cookies: AstroCookies }) => {
+  const cookieOptions = getCookieOptions(context.headers);
+
   const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
@@ -35,10 +54,15 @@ export const createSupabaseServerClient = (context: { headers: Headers; cookies:
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
-          context.cookies.set(name, value, options);
+          const mergedOptions = {
+            ...cookieOptions,
+            ...options,
+          };
+          context.cookies.set(name, value, mergedOptions);
         });
       },
     },
+    cookieOptions,
   });
 
   return supabase;
