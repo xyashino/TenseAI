@@ -4,8 +4,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "build": "astro build && pnpm postbuild",
+    "postbuild": "mkdir -p dist/server/prompts && cp -r src/server/prompts/* dist/server/prompts/",
+    "preview": "dotenv -e .env -- astro preview",
     "astro": "astro",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -19,7 +20,17 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:chromium": "playwright test --project=chromium",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "docker:build": "docker build -t smicek/tenseai:latest .",
+    "docker:run": "docker run -d -p 3000:4321 --env-file .env --name tense-ai-app --restart unless-stopped smicek/tenseai:latest",
+    "docker:stop": "docker stop tense-ai-app",
+    "docker:start": "docker start tense-ai-app",
+    "docker:restart": "docker restart tense-ai-app",
+    "docker:logs": "docker logs tense-ai-app",
+    "docker:logs:follow": "docker logs -f tense-ai-app",
+    "docker:remove": "docker rm -f tense-ai-app",
+    "docker:rebuild": "pnpm docker:remove && pnpm docker:build && pnpm docker:run",
+    "docker:clean": "docker rm -f tense-ai-app && docker rmi smicek/tenseai:latest"
   },
   "dependencies": {
     "@astrojs/node": "^9.4.4",
@@ -77,6 +88,7 @@
     "@vitest/coverage-v8": "^4.0.8",
     "@vitest/ui": "^4.0.8",
     "dotenv": "^17.2.3",
+    "dotenv-cli": "^8.0.0",
     "eslint": "9.23.0",
     "eslint-config-prettier": "10.1.1",
     "eslint-import-resolver-typescript": "4.2.5",
