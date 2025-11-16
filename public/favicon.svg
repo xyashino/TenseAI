@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+=======
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+>>>>>>> 5b28cdd (chore: remove outdated .windsurfrules file and update README with project details, environment variables, and testing setup)
   <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="oklch(0.7 0.14 30)"/>
 </svg>

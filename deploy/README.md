@@ -15,7 +15,7 @@ This guide covers both local Docker testing and automated VPS deployment.
    Then edit `.env` with your actual values for:
 
    - `PUBLIC_SUPABASE_URL`
-   - `PUBLIC_SUPABASE_ANON_KEY`
+   - `PUBLIC_SUPABASE_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `OPENROUTER_API_KEY`
    - `PORT=4321` (optional, defaults to 4321 in Docker)

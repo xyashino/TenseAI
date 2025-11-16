@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/db/supabase.client";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { BadRequestError } from "@/server/errors/api-errors";
 import { handleApiError } from "@/server/utils/error-handler";
 import type { APIRoute } from "astro";
@@ -11,8 +11,8 @@ export const GET: APIRoute = async (context) => {
       throw new BadRequestError("Authorization code is required");
     }
 
-    const supabase = createSupabaseServerClient({
-      request: context.request,
+    const supabase = createSupabaseServerInstance({
+      headers: context.request.headers,
       cookies: context.cookies,
     });
 

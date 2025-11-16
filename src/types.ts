@@ -260,7 +260,6 @@ export interface TenseCardData {
   name: TenseName;
   slug: string;
   description: string;
-  icon?: string;
 }
 
 export interface TheoryFrontmatter {

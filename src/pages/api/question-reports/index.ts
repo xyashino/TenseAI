@@ -13,49 +13,6 @@ import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-/**
- * GET /api/question-reports
- *
- * Get current user's question reports with pagination and optional filtering.
- *
- * Query Parameters:
- * - page (optional): Page number (1-based), default 1
- * - limit (optional): Items per page (1-100), default 20
- * - status (optional): Filter by status ("pending" | "reviewed" | "resolved")
- *
- * Success Response (200):
- * {
- *   "reports": [
- *     {
- *       "id": "uuid",
- *       "question_id": "uuid",
- *       "user_id": "uuid",
- *       "report_comment": "string or null",
- *       "status": "pending" | "reviewed" | "resolved",
- *       "created_at": "ISO 8601 datetime",
- *       "reviewed_at": "ISO 8601 datetime or null",
- *       "reviewed_by": "string or null",
- *       "question_preview": {
- *         "question_text": "string",
- *         "tense": "string"
- *       }
- *     }
- *   ],
- *   "pagination": {
- *     "current_page": 1,
- *     "total_pages": 3,
- *     "total_items": 47,
- *     "items_per_page": 20,
- *     "has_next": true,
- *     "has_previous": false
- *   }
- * }
- *
- * Error Responses:
- * - 400: Invalid query parameters
- * - 401: Authentication required
- * - 500: Internal server error
- */
 export const GET: APIRoute = async (context) => {
   try {
     const supabase = context.locals.supabase;
@@ -100,39 +57,6 @@ export const GET: APIRoute = async (context) => {
   }
 };
 
-/**
- * POST /api/question-reports
- *
- * Report a question as potentially incorrect.
- *
- * Request Body:
- * {
- *   "question_id": "uuid",
- *   "report_comment": "string (optional, max 1000 chars)"
- * }
- *
- * Rate Limit: 10 requests per minute per user
- *
- * Success Response (201):
- * {
- *   "report": {
- *     "id": "uuid",
- *     "question_id": "uuid",
- *     "user_id": "uuid",
- *     "report_comment": "string or null",
- *     "status": "pending",
- *     "created_at": "ISO 8601 datetime"
- *   },
- *   "message": "Thank you for your feedback! We will review this question."
- * }
- *
- * Error Responses:
- * - 401: Authentication required
- * - 404: Question not found
- * - 422: Validation failed
- * - 429: Rate limit exceeded
- * - 500: Internal server error
- */
 export const POST: APIRoute = async (context) => {
   try {
     const supabase = context.locals.supabase;

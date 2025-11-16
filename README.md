@@ -1,6 +1,6 @@
-# 10x Astro Starter
+# TenseAI
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+A web application designed to help English language learners master grammatical tenses. TenseAI leverages AI to provide personalized, context-rich exercises and intelligent feedback, moving beyond static, repetitive drills.
 
 ## Tech Stack
 
@@ -37,7 +37,7 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 
 ### Prerequisites
 
-- **Node.js**: Version `22.14.0` (use [nvm](https://github.com/nvm-sh/nvm) to manage Node versions)
+- **Node.js**: Version `22.20.0` (use [nvm](https://github.com/nvm-sh/nvm) or [Volta](https://volta.sh/) to manage Node versions)
 - **pnpm**: Package manager (install via `npm install -g pnpm`)
 - **Supabase Account**: For database and authentication
 - **Openrouter.ai API Key**: For AI model access
@@ -60,7 +60,7 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
    If you don't have the required version installed:
 
    ```bash
-   nvm install 22.14.0
+   nvm install 22.20.0
    ```
 
 3. **Install dependencies**
@@ -76,7 +76,7 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
    ```env
    # Supabase Configuration
    PUBLIC_SUPABASE_URL=your_supabase_project_url
-   PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   PUBLIC_SUPABASE_KEY=your_SUPABASE_KEY
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
    # Openrouter AI Configuration
@@ -89,23 +89,46 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
    pnpm dev
    ```
 
-   The application will be available at `http://localhost:4321`
+   The application will be available at `http://localhost:3000` (or the port specified in the `PORT` environment variable)
 
 ## Available Scripts
 
-| Command         | Description                            |
-| --------------- | -------------------------------------- |
-| `pnpm dev`      | Start the development server           |
-| `pnpm build`    | Build the production-ready application |
-| `pnpm preview`  | Preview the production build locally   |
-| `pnpm astro`    | Run Astro CLI commands                 |
-| `pnpm lint`     | Check code for linting errors          |
-| `pnpm lint:fix` | Automatically fix linting errors       |
-| `pnpm format`   | Format code using Prettier             |
+| Command            | Description                            |
+| ------------------ | -------------------------------------- |
+| `pnpm dev`         | Start the development server           |
+| `pnpm build`       | Build the production-ready application |
+| `pnpm preview`     | Preview the production build locally   |
+| `pnpm astro`       | Run Astro CLI commands                 |
+| `pnpm lint`        | Check code for linting errors          |
+| `pnpm lint:fix`    | Automatically fix linting errors       |
+| `pnpm format`      | Format code using Prettier             |
+| `pnpm test`        | Run unit tests                         |
+| `pnpm test:watch`  | Run unit tests in watch mode           |
+| `pnpm test:e2e`    | Run end-to-end tests                   |
+| `pnpm test:e2e:ui` | Run end-to-end tests with UI           |
 
 ## Deployment
 
 For detailed deployment instructions, including Docker setup and automated VPS deployment, see [deploy/README.md](deploy/README.md).
+
+## Project Structure
+
+The project follows a clear separation of concerns:
+
+- `./src` - Source code
+  - `./src/layouts` - Astro layouts (base, app, auth)
+  - `./src/pages` - Astro pages and API endpoints
+  - `./src/components` - React components (UI, training, theory, etc.)
+  - `./src/components/ui` - Shadcn/ui components
+  - `./src/lib` - Services, hooks, and utilities
+  - `./src/server` - Backend-only code (services, validation, errors)
+  - `./src/db` - Supabase clients and database types
+  - `./src/types.ts` - Shared TypeScript types
+  - `./src/content` - Content collections (theory markdown files)
+- `./public` - Public static assets
+- `./supabase` - Database migrations and configuration
+- `./tests` - Unit and E2E tests
+- `./deploy` - Deployment scripts and configuration
 
 ## Project Scope
 
@@ -120,6 +143,8 @@ For detailed deployment instructions, including Docker setup and automated VPS d
 - ✅ History of completed sessions with detailed summaries
 - ✅ Session pause and resume functionality
 - ✅ User-facing mechanism for reporting question errors
+- ✅ Onboarding flow for new users
+- ✅ Responsive navigation (sidebar on desktop, bottom bar on mobile)
 
 ### Out of Scope for MVP
 
@@ -139,11 +164,45 @@ For detailed deployment instructions, including Docker setup and automated VPS d
 
 TenseAI is currently in active development. The Minimum Viable Product (MVP) is being built to validate the core concept: AI-driven practice can significantly improve grammar acquisition for English language learners.
 
+### Key Features
+
+- **AI-Powered Learning**: Questions and feedback generated using OpenRouter.ai with access to multiple AI models
+- **Personalized Practice**: Customizable difficulty levels and tense selection
+- **Theory Content**: Comprehensive Markdown-based theory articles for each tense
+- **Session Management**: Pause, resume, and review completed training sessions
+- **Progress Tracking**: Detailed history of all completed sessions with AI-generated summaries
+- **Modern Tech Stack**: Built with Astro 5, React 19, TypeScript, and Tailwind CSS 4
+
 ### Success Metrics
 
 - **Primary Goal**: Launch a functional, stable MVP version
 - **Qualitative Goal**: Gather feedback from at least 10 test users with 70% positive reception
 - **Quantitative Metric**: Track total number of completed training sessions across all users
+
+## Testing
+
+The project includes comprehensive testing setup:
+
+- **Unit Tests**: Using Vitest with React Testing Library
+- **E2E Tests**: Using Playwright for end-to-end testing
+- **Test Coverage**: Coverage reports available via `pnpm test:coverage`
+
+## Development
+
+### Code Quality
+
+- **ESLint**: Configured with TypeScript, React, and Astro plugins
+- **Prettier**: Code formatting with Astro plugin support
+- **Husky**: Git hooks for pre-commit linting
+- **Lint-staged**: Run linters on staged files only
+
+### Database
+
+The project uses Supabase (PostgreSQL) with:
+
+- Row Level Security (RLS) enabled
+- Database migrations in `./supabase/migrations`
+- Type-safe database client generated from schema
 
 ## License
 

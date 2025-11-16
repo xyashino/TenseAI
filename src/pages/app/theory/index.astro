@@ -2,7 +2,6 @@
 import { PageHeader } from "@/components/common/page-header";
 import { TenseCard } from "@/components/theory/tense-card";
 import AppLayout from "@/layouts/app-layout.astro";
-import { getTenseIcon } from "@/lib/theory-utils";
 import type { TenseCardData } from "@/types";
 import { getCollection } from "astro:content";
 
@@ -14,7 +13,6 @@ const tenseData: TenseCardData[] = theoryEntries
     name: entry.data.tense,
     slug: entry.slug,
     description: entry.data.description,
-    icon: getTenseIcon(entry.data.tense),
   }));
 ---
 
@@ -23,7 +21,7 @@ const tenseData: TenseCardData[] = theoryEntries
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
     {
       tenseData.map((tense) => (
-        <TenseCard name={tense.name} slug={tense.slug} description={tense.description} icon={tense.icon} client:load />
+        <TenseCard name={tense.name} slug={tense.slug} description={tense.description} client:load />
       ))
     }
   </div>
