@@ -47,5 +47,6 @@ export const createSupabaseServerClient = (context: { request: Request; cookies:
         });
       },
     },
+    cookieOptions,
   });
 };
