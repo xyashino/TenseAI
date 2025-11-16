@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/db/supabase.client";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 import { defineMiddleware } from "astro:middleware";
@@ -32,10 +32,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return response;
   }
 
-  const supabase = createSupabaseServerClient({
-    request: context.request,
-    cookies: context.cookies,
-  });
+  const supabase = createSupabaseServerInstance({ headers: context.request.headers, cookies: context.cookies });
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const isAuthenticated = !!userData.user && !userError;

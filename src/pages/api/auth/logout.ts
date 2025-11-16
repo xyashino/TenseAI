@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/db/supabase.client";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { InternalServerError } from "@/server/errors/api-errors";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
@@ -6,8 +6,8 @@ import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async (context) => {
   try {
-    const supabase = createSupabaseServerClient({
-      request: context.request,
+    const supabase = createSupabaseServerInstance({
+      headers: context.request.headers,
       cookies: context.cookies,
     });
 

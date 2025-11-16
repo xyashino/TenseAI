@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/db/supabase.client";
+import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
@@ -11,8 +11,8 @@ export const POST: APIRoute = async (context) => {
     const result = resetPasswordSchema.parse(body);
 
     const { password } = result;
-    const supabase = createSupabaseServerClient({
-      request: context.request,
+    const supabase = createSupabaseServerInstance({
+      headers: context.request.headers,
       cookies: context.cookies,
     });
 
