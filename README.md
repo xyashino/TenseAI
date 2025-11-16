@@ -76,7 +76,7 @@ A web application designed to help English language learners master grammatical 
    ```env
    # Supabase Configuration
    PUBLIC_SUPABASE_URL=your_supabase_project_url
-   PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   PUBLIC_SUPABASE_KEY=your_SUPABASE_KEY
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
    # Openrouter AI Configuration
@@ -96,16 +96,16 @@ A web application designed to help English language learners master grammatical 
 | Command            | Description                            |
 | ------------------ | -------------------------------------- |
 | `pnpm dev`         | Start the development server           |
-| `pnpm build`        | Build the production-ready application |
-| `pnpm preview`      | Preview the production build locally   |
-| `pnpm astro`        | Run Astro CLI commands                 |
-| `pnpm lint`         | Check code for linting errors          |
-| `pnpm lint:fix`     | Automatically fix linting errors       |
-| `pnpm format`       | Format code using Prettier             |
-| `pnpm test`         | Run unit tests                         |
-| `pnpm test:watch`   | Run unit tests in watch mode           |
-| `pnpm test:e2e`     | Run end-to-end tests                   |
-| `pnpm test:e2e:ui`  | Run end-to-end tests with UI           |
+| `pnpm build`       | Build the production-ready application |
+| `pnpm preview`     | Preview the production build locally   |
+| `pnpm astro`       | Run Astro CLI commands                 |
+| `pnpm lint`        | Check code for linting errors          |
+| `pnpm lint:fix`    | Automatically fix linting errors       |
+| `pnpm format`      | Format code using Prettier             |
+| `pnpm test`        | Run unit tests                         |
+| `pnpm test:watch`  | Run unit tests in watch mode           |
+| `pnpm test:e2e`    | Run end-to-end tests                   |
+| `pnpm test:e2e:ui` | Run end-to-end tests with UI           |
 
 ## Deployment
 
@@ -199,6 +199,7 @@ The project includes comprehensive testing setup:
 ### Database
 
 The project uses Supabase (PostgreSQL) with:
+
 - Row Level Security (RLS) enabled
 - Database migrations in `./supabase/migrations`
 - Type-safe database client generated from schema

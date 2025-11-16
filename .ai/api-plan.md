@@ -50,25 +50,30 @@ The API uses **Supabase Auth** for authentication. Authentication operations are
 **Authentication Endpoints**:
 
 - `POST /api/auth/register` - User registration
+
   - Request Body: `{ "email": "string", "password": "string" }`
   - Response (201): Returns user object
   - Errors: 400 (Bad Request), 422 (Validation Error)
 
 - `POST /api/auth/login` - User login
+
   - Request Body: `{ "email": "string", "password": "string" }`
   - Response (200): Returns user object
   - Errors: 401 (Invalid credentials), 422 (Validation Error)
 
 - `POST /api/auth/logout` - User logout
+
   - Response (200): Success response
   - Errors: 401 (Unauthorized)
 
 - `POST /api/auth/forgot-password` - Request password reset
+
   - Request Body: `{ "email": "string" }`
   - Response (200): Success response
   - Errors: 422 (Validation Error)
 
 - `POST /api/auth/reset-password` - Reset password with token
+
   - Request Body: `{ "password": "string", "token": "string" }`
   - Response (200): Success response
   - Errors: 400 (Invalid token), 422 (Validation Error)
@@ -979,7 +984,7 @@ Example:
 import { createServerClient } from "@supabase/auth-helpers-shared";
 
 // This is a simplified example; actual implementation depends on Astro middleware
-const supabase = createServerClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+const supabase = createServerClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!, {
   cookies: {
     get: (name) => request.headers.get("cookie"),
     // ... set/remove
@@ -1904,7 +1909,7 @@ Example:
 import { createServerClient } from "@supabase/auth-helpers-shared";
 
 // This is a simplified example; actual implementation depends on Astro middleware
-const supabase = createServerClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!, {
+const supabase = createServerClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!, {
   cookies: {
     get: (name) => request.headers.get("cookie"),
     // ... set/remove

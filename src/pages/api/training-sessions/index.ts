@@ -8,30 +8,6 @@ import type { APIRoute } from "astro";
 
 export const prerender = false;
 
-/**
- * POST /api/training-sessions
- *
- * Creates a new training session record only. Does NOT create the first round or generate questions.
- *
- * Request Body:
- * {
- *   "tense": "Present Simple" | "Past Simple" | "Present Perfect" | "Future Simple",
- *   "difficulty": "Basic" | "Advanced"
- * }
- *
- * Rate Limit: 10 requests per minute per user
- *
- * Success Response (201):
- * {
- *   "training_session": { id, user_id, tense, difficulty, status, started_at, created_at }
- * }
- *
- * Error Responses:
- * - 401: Authentication required
- * - 422: Validation failed
- * - 429: Rate limit exceeded
- * - 500: Internal server error
- */
 export const POST: APIRoute = async (context) => {
   try {
     const supabase = context.locals.supabase;
@@ -67,53 +43,6 @@ export const POST: APIRoute = async (context) => {
   }
 };
 
-/**
- * GET /api/training-sessions
- *
- * Retrieves a paginated list of training sessions for the authenticated user.
- * Supports filtering by status and customizable sorting.
- *
- * Query Parameters:
- * - status: "active" | "completed" (default: "completed")
- * - page: number (1-based, default: 1)
- * - limit: number (1-100, default: 20)
- * - sort: "started_at_desc" | "started_at_asc" (default: "started_at_desc")
- *
- * Success Response (200):
- * {
- *   "training-sessions": [
- *     {
- *       "id": "uuid",
- *       "tense": "Present Simple",
- *       "difficulty": "Basic",
- *       "status": "completed",
- *       "started_at": "2024-01-15T10:30:00Z",
- *       "completed_at": "2024-01-15T11:15:00Z",
- *       "rounds_summary": [
- *         {
- *           "id": "string",
- *           "round_number": number,
- *           "score": number | null,
- *           "completed_at": string | null
- *         }
- *       ]
- *     }
- *   ],
- *   "pagination": {
- *     "current_page": 1,
- *     "total_pages": 5,
- *     "total_items": 87,
- *     "items_per_page": 20,
- *     "has_next": true,
- *     "has_previous": false
- *   }
- * }
- *
- * Error Responses:
- * - 400: Invalid query parameters
- * - 401: Authentication required
- * - 500: Internal server error
- */
 export const GET: APIRoute = async (context) => {
   try {
     const supabase = context.locals.supabase;
