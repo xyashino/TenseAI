@@ -10,7 +10,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   output: "server",
   integrations: [react(), sitemap()],
-  server: { port: 3000 },
+  server: {
+    // eslint-disable-next-line no-undef
+    port: Number.parseInt(process.env.PORT || "3000"),
+  },
   vite: {
     plugins: [tailwindcss()],
   },

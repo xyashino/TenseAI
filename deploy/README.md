@@ -18,6 +18,8 @@ This guide covers both local Docker testing and automated VPS deployment.
    - `PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `OPENROUTER_API_KEY`
+   - `PORT=4321` (optional, defaults to 4321 in Docker)
+   - `HOST=0.0.0.0` (optional, defaults to 0.0.0.0 in Docker)
 
 2. **Run the test script** (recommended)
 
