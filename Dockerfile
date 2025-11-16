@@ -31,7 +31,7 @@ ARG PUBLIC_ENV_NAME=production
 ARG PUBLIC_SITE_URL=http://localhost:3000
 ENV PUBLIC_ENV_NAME=${PUBLIC_ENV_NAME}
 ENV PUBLIC_SITE_URL=${PUBLIC_SITE_URL}
-# Build the application using Astro.
+RUN rm -rf .astro || true
 RUN pnpm build
 
 # Stage 5: Runtime - Create the final production image

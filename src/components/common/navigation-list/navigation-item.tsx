@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface NavigationItemProps {
@@ -6,29 +5,21 @@ interface NavigationItemProps {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   isActive: boolean;
-  badge?: number;
-  onClick?: () => void;
 }
 
-export function NavigationItem({ href, label, icon: Icon, isActive, badge, onClick }: NavigationItemProps) {
+export function NavigationItem({ href, label, icon: Icon, isActive }: NavigationItemProps) {
   return (
     <a
       href={href}
-      onClick={onClick}
       className={cn(
         "relative flex flex-col items-center gap-1.5 rounded-md px-3 py-3 text-sm transition-colors",
         "text-white/70 hover:bg-white/10 hover:text-white",
-        isActive && "text-white font-medium"
+        isActive && "text-white"
       )}
       aria-current={isActive ? "page" : undefined}
     >
       <div className="relative">
         <Icon className={cn("h-6 w-6", isActive ? "text-white" : "text-white/70")} />
-        {badge !== undefined && badge > 0 && (
-          <Badge variant="secondary" className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px]">
-            {badge}
-          </Badge>
-        )}
       </div>
       <span className="text-xs">{label}</span>
     </a>

@@ -12,7 +12,7 @@ export const POST: APIRoute = async (context) => {
 
     const { password } = result;
     const supabase = createSupabaseServerClient({
-      headers: context.request.headers,
+      request: context.request,
       cookies: context.cookies,
     });
 
