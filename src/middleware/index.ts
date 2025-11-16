@@ -1,8 +1,8 @@
 import { createSupabaseServerClient } from "@/db/supabase.client";
 import { NavigationRoutes } from "@/lib/enums/navigation";
+import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 import { defineMiddleware } from "astro:middleware";
 import { ProfileRepository } from "../server/repositories/profile.repository";
-import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 
 const PUBLIC_PATHS = [NavigationRoutes.HOME, NavigationRoutes.AUTH_CONFIRM];
 const AUTH_PATHS = [
@@ -32,7 +32,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return response;
   }
 
-  const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
+  const supabase = createSupabaseServerClient({
+    request: context.request,
+    cookies: context.cookies,
+  });
 
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const isAuthenticated = !!userData.user && !userError;
@@ -52,10 +55,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   if (!isAuthenticated || !userData.user) {
+    if (isApiPath) {
+      context.locals.user = null;
+      context.locals.supabase = supabase;
+      context.locals.profile = null;
+      return next();
+    }
     return context.redirect("/login", 302);
   }
 
-  const { data: sessionData } = await supabase.auth.getSession();
   const profileRepository = new ProfileRepository(supabase);
   const profile = await profileRepository.getProfileById(userData.user.id);
 
@@ -68,10 +76,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
     }
   }
 
-  context.locals.session = sessionData.session;
   context.locals.user = userData.user;
   context.locals.supabase = supabase;
   context.locals.profile = profile;
 
-  return next();
+  const response = await next();
+
+  if (isApiPath) {
+    const corsHeaders = getCorsHeaders(requestOrigin);
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.headers.set(key, value);
+    });
+  }
+
+  return response;
 });

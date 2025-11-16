@@ -1,5 +1,5 @@
-import { requireEnv, getEnv } from "@/server/utils/env";
-import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
+import { getEnv, requireEnv } from "@/server/utils/env";
+import { createServerClient, parseCookieHeader } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import type { AstroCookies } from "astro";
 import type { Database } from "./database.types";
@@ -15,55 +15,38 @@ export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
 
 export type SupabaseClient = typeof supabaseClient;
 
-function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {
-  if (!cookieHeader) {
-    return [];
-  }
+export const createSupabaseServerClient = (context: { request: Request; cookies: AstroCookies }) => {
+  const cookieHeader = context.request.headers.get("Cookie") || "";
 
-  return cookieHeader.split(";").map((cookie) => {
-    const [name, ...rest] = cookie.trim().split("=");
-    return { name: name || "", value: rest.join("=") || "" };
-  });
-}
-
-function getCookieOptions(headers: Headers): CookieOptionsWithName {
-  const forwardedProto = headers.get("x-forwarded-proto");
+  const forwardedProto = context.request.headers.get("x-forwarded-proto");
   const isSecureFromHeader = forwardedProto === "https";
-
   const siteUrl = getEnv("PUBLIC_SITE_URL") || "";
   const isSecureFromUrl = siteUrl.startsWith("https://");
-
   const isSecure = isSecureFromHeader || isSecureFromUrl;
 
-  return {
-    path: "/",
-    secure: isSecure,
-    httpOnly: true,
-    sameSite: "lax" as const,
-  };
-}
-
-export const createSupabaseServerClient = (context: { headers: Headers; cookies: AstroCookies }) => {
-  const cookieOptions = getCookieOptions(context.headers);
-
-  const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
+  return createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookies: {
       getAll() {
-        const cookieHeader = context.headers.get("cookie") || "";
-        return parseCookieHeader(cookieHeader);
+        const cookies = parseCookieHeader(cookieHeader);
+        return cookies.map(({ name, value }) => ({
+          name,
+          value: value ?? "",
+        }));
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
-          const mergedOptions = {
-            ...cookieOptions,
+          const cookieOptions = {
             ...options,
+            path: "/",
+            secure: isSecure,
+            httpOnly: true,
+            sameSite: "lax" as const,
           };
-          context.cookies.set(name, value, mergedOptions);
+
+          context.cookies.set(name, value, cookieOptions);
         });
       },
     },
     cookieOptions,
   });
-
-  return supabase;
 };

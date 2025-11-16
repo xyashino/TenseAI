@@ -7,7 +7,7 @@ import type { APIRoute } from "astro";
 export const POST: APIRoute = async (context) => {
   try {
     const supabase = createSupabaseServerClient({
-      headers: context.request.headers,
+      request: context.request,
       cookies: context.cookies,
     });
 

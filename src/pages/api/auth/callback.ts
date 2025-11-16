@@ -12,7 +12,7 @@ export const GET: APIRoute = async (context) => {
     }
 
     const supabase = createSupabaseServerClient({
-      headers: context.request.headers,
+      request: context.request,
       cookies: context.cookies,
     });
 
