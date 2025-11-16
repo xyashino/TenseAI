@@ -1,3 +1,4 @@
+import { getEnv, requireEnv } from "@/server/utils/env";
 import { OpenRouter } from "@openrouter/sdk";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -36,10 +37,7 @@ export class OpenRouterService {
   private client: OpenRouter;
 
   constructor() {
-    const apiKey = import.meta.env.OPENROUTER_API_KEY;
-    if (!apiKey) {
-      throw new Error("OpenRouter API key is not configured in environment variables.");
-    }
+    const apiKey = requireEnv("OPENROUTER_API_KEY");
 
     this.client = new OpenRouter({
       apiKey,
@@ -66,12 +64,15 @@ export class OpenRouterService {
         };
         const completion = await this.client.chat.send(requestPayload, {
           headers: {
-            "HTTP-Referer": import.meta.env.SITE_URL,
-            "X-Title": import.meta.env.SITE_NAME,
+            "HTTP-Referer": getEnv("PUBLIC_SITE_URL") ?? "",
+            "X-Title": "Tensei",
           },
         });
         return completion.choices[0]?.message?.content;
-      } catch {
+      } catch (error) {
+        if (i === RETRY_CONFIG.attempts - 1) {
+          throw error;
+        }
         const delay = RETRY_CONFIG.initialDelayMs * Math.pow(2, i);
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
@@ -109,13 +110,21 @@ export class OpenRouterService {
 
   private async loadPrompt(promptName: string) {
     try {
-      const promptsDir = path.resolve(process.cwd(), "src/server/prompts");
+      const isDev = getEnv("NODE_ENV") !== "production";
+      const promptsDir = isDev
+        ? path.resolve(process.cwd(), "src/server/prompts")
+        : path.resolve(process.cwd(), "dist/server/prompts");
+
       const systemPath = path.join(promptsDir, promptName, "system.md");
       const userPath = path.join(promptsDir, promptName, "user.md");
+
       const [system, user] = await Promise.all([fs.readFile(systemPath, "utf-8"), fs.readFile(userPath, "utf-8")]);
+
       return { system, user };
     } catch {
-      throw new Error("Could not load prompt files. Make sure the directory and system.md/user.md files exist.");
+      throw new Error(
+        `Could not load prompt files for "${promptName}". Make sure the directory and system.md/user.md files exist.`
+      );
     }
   }
 

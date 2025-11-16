@@ -3,6 +3,7 @@ import { memo } from "react";
 import { FinalFeedbackElement } from "./chat-components/final-feedback-element";
 import { LoadingElement } from "./chat-components/loading-element";
 import { RoundSummaryElement } from "./chat-components/round-summary-element";
+import { RoundSummaryElementReadOnly } from "./chat-components/round-summary-element-read-only";
 import { SelectQuestionForm } from "./chat-components/select-question-list/select-question-list-form";
 import { SelectQuestionListReadOnly } from "./chat-components/select-question-list/select-question-list-read-only";
 
@@ -33,6 +34,18 @@ export const ChatComponentRenderer = memo(function ChatComponentRenderer({ compo
       );
 
     case "roundSummary":
+      if (component.data.isReadOnly) {
+        return (
+          <RoundSummaryElementReadOnly
+            roundNumber={component.data.roundNumber}
+            score={component.data.score}
+            totalQuestions={component.data.totalQuestions}
+            feedback={component.data.feedback}
+            questionsReview={component.data.questionsReview}
+          />
+        );
+      }
+
       return (
         <RoundSummaryElement
           roundNumber={component.data.roundNumber}
@@ -41,7 +54,7 @@ export const ChatComponentRenderer = memo(function ChatComponentRenderer({ compo
           feedback={component.data.feedback}
           questionsReview={component.data.questionsReview}
           isLoading={false}
-          isReadOnly={component.data.isReadOnly}
+          isReadOnly={false}
         />
       );
 

@@ -6,10 +6,6 @@ interface ChatLogWrapperProps extends PropsWithChildren {
   className?: string;
 }
 
-/**
- * Wrapper component for chat log content that provides consistent styling
- * and layout structure for all chat components.
- */
 export const ChatLogWrapper = memo(function ChatLogWrapper({ children, className }: ChatLogWrapperProps) {
   return <div className={cn("container max-w-3xl mx-auto space-y-6", className)}>{children}</div>;
 });

@@ -31,6 +31,7 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 
 - **GitHub Actions** - Automated CI/CD pipelines
 - **DigitalOcean** - Application hosting via Docker containers
+- **Automated Deployment** - Automatic Docker reset on VPS when changes are pushed to main branch
 
 ## Getting Started Locally
 
@@ -101,6 +102,10 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 | `pnpm lint`     | Check code for linting errors          |
 | `pnpm lint:fix` | Automatically fix linting errors       |
 | `pnpm format`   | Format code using Prettier             |
+
+## Deployment
+
+For detailed deployment instructions, including Docker setup and automated VPS deployment, see [deploy/README.md](deploy/README.md).
 
 ## Project Scope
 

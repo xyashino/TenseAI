@@ -171,12 +171,23 @@ export class TrainingSessionService {
         questions: round.questions
           .sort((a, b) => a.question_number - b.question_number)
           .map((q) => {
-            const userAnswer = q.user_answer;
+            let userAnswer = q.user_answer;
+            if (Array.isArray(userAnswer)) {
+              userAnswer = userAnswer.length > 0 ? userAnswer[0] : null;
+            }
+
+            let options: string[];
+            try {
+              options = Array.isArray(q.options) ? q.options : JSON.parse(q.options as string);
+            } catch {
+              options = [];
+            }
+
             return {
               id: q.id,
               question_number: q.question_number,
               question_text: q.question_text,
-              options: Array.isArray(q.options) ? q.options : JSON.parse(q.options as string),
+              options,
               correct_answer: q.correct_answer,
               user_answer: {
                 selected_answer: userAnswer?.selected_answer ?? "",

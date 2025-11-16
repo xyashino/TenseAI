@@ -12,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [["html"], ["list"], ...(process.env.CI ? [["github"] as const] : [])],
   use: {
-    baseURL: process.env.SITE_URL,
+    baseURL: process.env.PUBLIC_SITE_URL,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -42,7 +42,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "pnpm dev",
-    url: process.env.SITE_URL,
+    url: process.env.PUBLIC_SITE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
     stdout: "ignore",

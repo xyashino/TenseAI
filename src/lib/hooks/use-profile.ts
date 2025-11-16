@@ -2,40 +2,17 @@ import { apiGet, apiPatch } from "@/lib/api-client";
 import type { ProfileDTO, UpdateProfileDTO } from "@/types";
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
-/**
- * Custom hook for fetching the current user's profile.
- * Uses Suspense, so it must be wrapped in a Suspense boundary.
- *
- * @returns Query result with profile data (always defined when component renders)
- *
- * @example
- * <Suspense fallback={<Loading />}>
- *   <ComponentUsingProfile />
- * </Suspense>
- */
 export function useProfile() {
   return useSuspenseQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       return apiGet<ProfileDTO>("/api/profile");
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     retry: 1,
   });
 }
 
-/**
- * Custom hook for updating the user's profile.
- *
- * Automatically invalidates the profile query cache on success
- * to ensure the UI reflects the latest data.
- *
- * @returns Mutation result with mutate function, loading, and error states
- *
- * @example
- * const updateProfile = useUpdateProfile();
- * updateProfile.mutate({ name: "John Doe" });
- */
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
 
@@ -44,10 +21,7 @@ export function useUpdateProfile() {
       return apiPatch<ProfileDTO>("/api/profile", data);
     },
     onSuccess: () => {
-      // Invalidate profile query to refresh data
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-
-      // Optionally invalidate layout user data if name changed
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });

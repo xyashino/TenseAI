@@ -3,6 +3,7 @@ description:
 globs:
 alwaysApply: true
 ---
+
 # AI Rules for {app-name}
 
 {project-description}

@@ -1,0 +1,33 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to VPS and Reset Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        env:
+          ENV_PUBLIC_SUPABASE_URL: ${{ secrets.ENV_PUBLIC_SUPABASE_URL }}
+          ENV_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.ENV_PUBLIC_SUPABASE_ANON_KEY }}
+          ENV_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ENV_SUPABASE_SERVICE_ROLE_KEY }}
+          ENV_OPENROUTER_API_KEY: ${{ secrets.ENV_OPENROUTER_API_KEY }}
+          VPS_PROJECT_PATH: ${{ secrets.VPS_PROJECT_PATH }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            # Make deploy script executable and run it
+            chmod +x deploy/deploy.sh
+            bash deploy/deploy.sh

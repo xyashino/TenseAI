@@ -45,13 +45,6 @@ interface SessionWithDetailsRaw {
 export class TrainingSessionRepository {
   constructor(private supabase: SupabaseClient) {}
 
-  /**
-   * Get a single session by ID with authorization check
-   * @param userId - User ID for authorization check
-   * @param sessionId - Session ID to retrieve
-   * @returns Session data or null if not found
-   * @throws Error if database query fails
-   */
   async getSessionById(userId: string, sessionId: string): Promise<TrainingSession | null> {
     const { data, error } = await this.supabase
       .from("training_sessions")
@@ -70,12 +63,6 @@ export class TrainingSessionRepository {
     return data as TrainingSession;
   }
 
-  /**
-   * Get all rounds for a session
-   * @param sessionId - Session ID to get rounds for
-   * @returns Array of rounds sorted by round_number
-   * @throws Error if database query fails
-   */
   async getRoundsBySessionId(
     sessionId: string
   ): Promise<{ id: string; round_number: number; completed_at: string | null }[]> {
@@ -134,28 +121,13 @@ export class TrainingSessionRepository {
   }
 
   async deleteRound(roundId: string): Promise<void> {
-    const { error } = await this.supabase.from("rounds").delete().eq("id", roundId);
-
-    if (error) {
-      console.error("Failed to delete round during rollback:", error);
-    }
+    await this.supabase.from("rounds").delete().eq("id", roundId);
   }
 
   async deleteSession(sessionId: string): Promise<void> {
-    const { error } = await this.supabase.from("training_sessions").delete().eq("id", sessionId);
-
-    if (error) {
-      console.error("Failed to delete session during rollback:", error);
-    }
+    await this.supabase.from("training_sessions").delete().eq("id", sessionId);
   }
 
-  /**
-   * Delete a training session with authorization check
-   * @param userId - User ID for authorization check
-   * @param sessionId - Session ID to delete
-   * @returns True if session was deleted, false if not found or doesn't belong to user
-   * @throws Error if database query fails
-   */
   async deleteSessionWithAuth(userId: string, sessionId: string): Promise<boolean> {
     const { data, error } = await this.supabase
       .from("training_sessions")
@@ -229,13 +201,6 @@ export class TrainingSessionRepository {
     };
   }
 
-  /**
-   * Get a single training session with all its details including rounds, questions, and user answers
-   * @param userId - User ID for authorization check
-   * @param sessionId - Session ID to retrieve
-   * @returns Session with nested rounds, questions, and answers, or null if not found
-   * @throws Error if database query fails
-   */
   async getSessionWithDetails(userId: string, sessionId: string): Promise<SessionWithDetailsRaw | null> {
     const { data, error } = await this.supabase
       .from("training_sessions")
@@ -284,12 +249,6 @@ export class TrainingSessionRepository {
     return data as SessionWithDetailsRaw;
   }
 
-  /**
-   * Get round with its parent session for authorization check
-   * @param roundId - Round ID to fetch
-   * @returns Round with session data or null if not found
-   * @throws Error if database query fails
-   */
   async getRoundWithSession(roundId: string): Promise<{
     id: string;
     session_id: string;
@@ -344,12 +303,6 @@ export class TrainingSessionRepository {
     };
   }
 
-  /**
-   * Get all questions for a round including correct answers
-   * @param roundId - Round ID to fetch questions for
-   * @returns Array of questions with correct answers
-   * @throws Error if database query fails
-   */
   async getQuestionsWithAnswers(roundId: string) {
     const { data, error } = await this.supabase
       .from("questions")
@@ -370,11 +323,6 @@ export class TrainingSessionRepository {
     }));
   }
 
-  /**
-   * Insert multiple user answers in a single transaction
-   * @param answers - Array of user answers to insert
-   * @throws Error if database operation fails
-   */
   async createUserAnswers(answers: UserAnswerInsert[]): Promise<void> {
     const { error } = await this.supabase.from("user_answers").insert(answers);
 
@@ -383,14 +331,6 @@ export class TrainingSessionRepository {
     }
   }
 
-  /**
-   * Update round with score, feedback, and completion timestamp
-   * @param roundId - Round ID to update
-   * @param score - Calculated score (0-10)
-   * @param feedback - AI-generated feedback
-   * @returns Updated round data
-   * @throws Error if database operation fails
-   */
   async updateRoundCompletion(roundId: string, score: number, feedback: string): Promise<CompletedRoundDTO> {
     const now = new Date().toISOString();
 
@@ -413,13 +353,6 @@ export class TrainingSessionRepository {
     return data as CompletedRoundDTO;
   }
 
-  /**
-   * Update session with completion data
-   * @param sessionId - Session ID to update
-   * @param finalFeedback - AI-generated final feedback
-   * @returns Updated session data
-   * @throws Error if database operation fails or session is already completed
-   */
   async updateSessionCompletion(sessionId: string, finalFeedback: string): Promise<TrainingSession> {
     const now = new Date().toISOString();
 
@@ -432,7 +365,7 @@ export class TrainingSessionRepository {
         updated_at: now,
       })
       .eq("id", sessionId)
-      .eq("status", "active") // Only update if still active (prevents race conditions)
+      .eq("status", "active")
       .select("*")
       .single();
 

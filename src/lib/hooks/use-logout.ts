@@ -9,11 +9,9 @@ export function useLogout() {
       });
     },
     onSuccess: () => {
-      // Redirect after successful logout
       window.location.assign("/login");
     },
     onError: () => {
-      // Even on error, redirect to login as auth is likely cleared
       window.location.assign("/login");
     },
   });
