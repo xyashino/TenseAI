@@ -22,20 +22,9 @@ log_info "🔄 Pulling latest changes..."
 git fetch origin main
 git reset --hard origin/main
 
-# Create .env from secrets (if provided)
-if [ -n "${ENV_PUBLIC_SUPABASE_URL:-}" ] || [ -n "${ENV_PUBLIC_SUPABASE_ANON_KEY:-}" ] || \
-   [ -n "${ENV_SUPABASE_SERVICE_ROLE_KEY:-}" ] || [ -n "${ENV_OPENROUTER_API_KEY:-}" ]; then
-  log_info "📝 Creating .env from GitHub Secrets..."
-  {
-    [ -n "${ENV_PUBLIC_SUPABASE_URL:-}" ] && echo "PUBLIC_SUPABASE_URL=$ENV_PUBLIC_SUPABASE_URL"
-    [ -n "${ENV_PUBLIC_SUPABASE_ANON_KEY:-}" ] && echo "PUBLIC_SUPABASE_ANON_KEY=$ENV_PUBLIC_SUPABASE_ANON_KEY"
-    [ -n "${ENV_SUPABASE_SERVICE_ROLE_KEY:-}" ] && echo "SUPABASE_SERVICE_ROLE_KEY=$ENV_SUPABASE_SERVICE_ROLE_KEY"
-    [ -n "${ENV_OPENROUTER_API_KEY:-}" ] && echo "OPENROUTER_API_KEY=$ENV_OPENROUTER_API_KEY"
-  } > .env
-else
-  [ -f .env ] || { log_error ".env file not found and no secrets provided!"; exit 1; }
-  log_info "Using existing .env file"
-fi
+# Check if .env file exists
+[ -f .env ] || { log_error ".env file not found! Please create it manually on the VPS."; exit 1; }
+log_info "Using existing .env file"
 
 # Docker deployment
 log_info "🔨 Rebuilding Docker container..."

@@ -121,17 +121,6 @@ The project includes a GitHub Actions workflow that automatically resets and red
    - `VPS_PORT` - SSH port (optional, defaults to `22`)
    - `VPS_PROJECT_PATH` - Path to project directory on VPS (optional, defaults to `~/TenseAI`)
 
-   **Environment Variables (Optional - for automatic .env file creation):**
-
-   If you want the workflow to automatically create the `.env` file from GitHub Secrets instead of managing it manually on VPS, add these secrets:
-
-   - `ENV_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-   - `ENV_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
-   - `ENV_SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
-   - `ENV_OPENROUTER_API_KEY` - Your OpenRouter API key
-
-   **Note:** If you don't provide the `ENV_*` secrets, the workflow will use the existing `.env` file on your VPS. This gives you flexibility to manage environment variables either way.
-
 2. **Generate SSH Key (if needed)**
 
    ```bash
@@ -151,9 +140,8 @@ The project includes a GitHub Actions workflow that automatically resets and red
 
    - Git repository cloned and configured
    - Docker installed and running
-   - `.env` file in the project directory (only if you're NOT using GitHub Secrets for environment variables)
+   - `.env` file in the project directory with all required environment variables
    - Proper SSH access configured
-   - `pnpm` installed (or use `corepack enable` if you have Node.js 16+)
 
 4. **How It Works**
 
@@ -163,7 +151,7 @@ The project includes a GitHub Actions workflow that automatically resets and red
    2. Connects to your VPS via SSH
    3. Executes `deploy/deploy.sh` script which:
       - Pulls latest changes from `main` branch
-      - Creates `.env` file from GitHub Secrets (if `ENV_*` secrets are provided), otherwise uses existing `.env` on VPS
+      - Uses existing `.env` file on VPS
       - Rebuilds Docker container (stops old, builds new image, starts new container)
       - Cleans up old Docker images
 
@@ -185,17 +173,10 @@ bash deploy/deploy.sh
 The script will:
 
 - Pull latest changes from `main` branch
-- Create/update `.env` file (if environment variables are set)
+- Use existing `.env` file in the project directory
 - Rebuild and restart Docker container
 
-**Note:** Make sure to set required environment variables before running:
-
-```bash
-export ENV_PUBLIC_SUPABASE_URL="your_url"
-export ENV_PUBLIC_SUPABASE_ANON_KEY="your_key"
-export ENV_SUPABASE_SERVICE_ROLE_KEY="your_key"
-export ENV_OPENROUTER_API_KEY="your_key"
-```
+**Note:** Make sure the `.env` file exists in the project directory with all required environment variables before running the script.
 
 ## Nginx Reverse Proxy Configuration
 
