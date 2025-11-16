@@ -7,11 +7,7 @@ interface ApiError {
 }
 
 export class ApiClientError extends Error {
-  constructor(
-    public status: number,
-    public data: ApiError,
-    message?: string
-  ) {
+  constructor(public status: number, public data: ApiError, message?: string) {
     super(message || data.message || "An error occurred");
     this.name = "ApiClientError";
   }
@@ -43,7 +39,10 @@ export async function apiClient<T>(url: string, options: AxiosRequestConfig = {}
       throw new ApiClientError(status, data as ApiError, data.message);
     }
 
-    throw new ApiClientError(500, { message: "An unexpected error occurred" });
+    throw new ApiClientError(500, {
+      message: "An unexpected error occurred",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 }
 

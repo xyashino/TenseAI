@@ -77,7 +77,6 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
         const isCompleted = round.completed_at !== "";
 
         if (isCompleted) {
-          // Convert questions to QuestionReview format
           const questionsReview: QuestionReview[] = round.questions.map((q) => ({
             question_number: q.question_number,
             question_text: q.question_text,
@@ -115,12 +114,10 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
               totalQuestions: round.questions.length,
               feedback: round.round_feedback,
               questionsReview,
-              isReadOnly: true, // All restored rounds are read-only
+              isReadOnly: true,
             },
           });
         } else {
-          // This is the active (incomplete) round
-          // Convert questions from RoundDetailDTO to QuestionWithoutAnswer
           activeQuestions = round.questions.map((q) => ({
             id: q.id,
             question_number: q.question_number,
@@ -131,7 +128,6 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
           activeRoundId = round.id;
           activeRoundNumber = round.round_number;
 
-          // Add question list component for active round
           chatComponents.push({
             type: "selectQuestionList",
             id: `questions-${round.id}`,
@@ -144,7 +140,6 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
         }
       }
 
-      // If session is completed and we have summary and final feedback, add final feedback component
       if (state.status === "completed" && summary && finalFeedback) {
         const totalScore = `${summary.correct_answers}/${summary.total_questions}`;
         const perfectScore = summary.correct_answers === summary.total_questions;
@@ -167,13 +162,12 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
         currentRoundId: activeRoundId,
         currentRoundNumber: activeRoundNumber,
         currentQuestions: activeQuestions,
-        hasAutoStarted: activeRoundId !== null, // Mark as started if there's an active round
+        hasAutoStarted: activeRoundId !== null,
       };
     }),
 
   setQuestions: (questions, roundId, roundNumber) =>
     set((state) => {
-      // Mark all previous roundSummary components as read-only
       const updatedComponents = state.chatComponents
         .filter((c) => c.type !== "loading")
         .map((component) => {
@@ -241,10 +235,8 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
         return component;
       });
 
-      // Remove loading components
       const withoutLoading = updatedComponents.filter((c) => c.type !== "loading");
 
-      // Add round summary component
       const summaryComponent: ChatComponent = {
         type: "roundSummary",
         id: `summary-${round.id}`,
@@ -268,7 +260,6 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
     set((state) => {
       const { summary } = data;
 
-      // Mark all round summary components as read-only
       const updatedComponents = state.chatComponents
         .filter((c) => c.type !== "loading")
         .map((component) => {

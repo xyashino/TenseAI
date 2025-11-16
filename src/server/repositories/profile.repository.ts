@@ -13,7 +13,10 @@ export class ProfileRepository {
   async getProfileById(userId: string): Promise<Profile | null> {
     const { data, error } = await this.supabase.from("profiles").select("*").eq("user_id", userId).single();
     if (error) {
-      throw new Error("Failed to fetch profile");
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw new Error(`Failed to fetch profile: ${error.message}`);
     }
     return data;
   }

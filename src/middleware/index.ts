@@ -2,6 +2,7 @@ import { createSupabaseServerClient } from "@/db/supabase.client";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { defineMiddleware } from "astro:middleware";
 import { ProfileRepository } from "../server/repositories/profile.repository";
+import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 
 const PUBLIC_PATHS = [NavigationRoutes.HOME, NavigationRoutes.AUTH_CONFIRM];
 const AUTH_PATHS = [
@@ -13,11 +14,23 @@ const AUTH_PATHS = [
 const ONBOARDING_PATH = "/onboarding";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  if (context.url.pathname.startsWith("/api/auth/")) {
-    return next();
+  const isApiPath = context.url.pathname.startsWith("/api/");
+  const requestOrigin = context.request.headers.get("origin");
+
+  if (isApiPath && context.request.method === "OPTIONS") {
+    return createOptionsResponse(requestOrigin);
   }
 
-  const isApiPath = context.url.pathname.startsWith("/api/");
+  if (context.url.pathname.startsWith("/api/auth/")) {
+    const response = await next();
+    if (isApiPath) {
+      const corsHeaders = getCorsHeaders(requestOrigin);
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        response.headers.set(key, value);
+      });
+    }
+    return response;
+  }
 
   const supabase = createSupabaseServerClient({ headers: context.request.headers, cookies: context.cookies });
 

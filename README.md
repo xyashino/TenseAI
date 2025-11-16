@@ -102,6 +102,104 @@ A modern, opinionated starter template for building fast, accessible, and AI-fri
 | `pnpm lint:fix` | Automatically fix linting errors       |
 | `pnpm format`   | Format code using Prettier             |
 
+## Docker Deployment
+
+### Testing Docker Locally
+
+1. **Create environment file**
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Then edit `.env` with your actual values for:
+
+   - `PUBLIC_SUPABASE_URL`
+   - `PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `OPENROUTER_API_KEY`
+
+2. **Run the test script** (recommended)
+
+   ```bash
+   ./docker-test.sh
+   ```
+
+   This script will:
+
+   - Validate your `.env` file
+   - Build the Docker image
+   - Start the container
+   - Show initial logs
+
+3. **Or use pnpm scripts manually**
+
+   ```bash
+   # Build the image
+   pnpm docker:build
+
+   # Run the container (requires .env file)
+   pnpm docker:run
+
+   # View logs
+   pnpm docker:logs
+
+   # Follow logs in real-time
+   pnpm docker:logs:follow
+
+   # Stop the container
+   pnpm docker:stop
+
+   # Remove the container
+   pnpm docker:remove
+   ```
+
+### Important Docker Notes
+
+- **Port**: The application runs on port `4321` inside the container
+- **Environment Variables**: All environment variables must be provided via `.env` file using `--env-file` flag
+  - The container uses the same `start-server.mjs` as local development
+  - Variables from `--env-file .env` are automatically loaded into `process.env`
+- **Prompts**: AI prompt files are automatically copied from `src/server/prompts/` to `dist/server/prompts/` during build
+
+### How Docker Handles Environment Variables
+
+1. **Build time**: Only `PUBLIC_*` variables are embedded during build
+2. **Runtime**: All other variables (OPENROUTER*API_KEY, SUPABASE*\*) are loaded from:
+   - Docker: `--env-file .env` flag sets `process.env` directly
+   - Local: `start-server.mjs` loads `.env` file using dotenv
+
+The container startup will log which variables are loaded for debugging purposes.
+
+### Troubleshooting Docker
+
+If you get a 500 error when generating questions:
+
+1. **Check environment variables are set correctly**
+
+   ```bash
+   docker exec tense-ai-app printenv | grep -E "(OPENROUTER|SUPABASE)"
+   ```
+
+2. **Check application logs**
+
+   ```bash
+   docker logs tense-ai-app
+   ```
+
+3. **Verify prompt files exist**
+
+   ```bash
+   docker exec tense-ai-app ls -la dist/server/prompts/
+   ```
+
+4. **Test API connectivity**
+   ```bash
+   # Test if OpenRouter API key works
+   curl https://openrouter.ai/api/v1/auth/key \
+     -H "Authorization: Bearer $OPENROUTER_API_KEY"
+   ```
+
 ## Project Scope
 
 ### In Scope for MVP

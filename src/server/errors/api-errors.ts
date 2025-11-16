@@ -18,7 +18,9 @@ export abstract class ApiError extends Error {
   toResponse(): Response {
     return new Response(JSON.stringify(this.toJSON()), {
       status: this.statusCode,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
   }
 }
