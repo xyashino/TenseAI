@@ -169,19 +169,19 @@ export class TrainingSessionService {
         started_at: round.started_at,
         completed_at: round.completed_at ?? "",
         questions: round.questions
-        .sort((a, b) => a.question_number - b.question_number)
-        .map((q) => {
-          let userAnswer = q.user_answer;
-          if (Array.isArray(userAnswer)) {
-            userAnswer = userAnswer.length > 0 ? userAnswer[0] : null;
-          }
+          .sort((a, b) => a.question_number - b.question_number)
+          .map((q) => {
+            let userAnswer = q.user_answer;
+            if (Array.isArray(userAnswer)) {
+              userAnswer = userAnswer.length > 0 ? userAnswer[0] : null;
+            }
 
-          let options: string[];
-          try {
-            options = Array.isArray(q.options) ? q.options : JSON.parse(q.options as string);
-          } catch {
-            options = [];
-          }
+            let options: string[];
+            try {
+              options = Array.isArray(q.options) ? q.options : JSON.parse(q.options as string);
+            } catch {
+              options = [];
+            }
 
             return {
               id: q.id,

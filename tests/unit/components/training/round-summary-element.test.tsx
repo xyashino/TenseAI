@@ -1,7 +1,7 @@
-import { render, screen } from "../../test-utils";
-import userEvent from "@testing-library/user-event";
 import { RoundSummaryElement } from "@/components/training/chat-components/round-summary-element";
 import * as sessionActions from "@/lib/hooks/use-training-session-actions";
+import userEvent from "@testing-library/user-event";
+import { render, screen } from "../../test-utils";
 
 interface UseTrainingSessionActionsReturn {
   startRound: () => Promise<void>;

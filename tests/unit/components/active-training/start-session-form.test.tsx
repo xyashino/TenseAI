@@ -26,7 +26,9 @@ describe("StartSessionForm", () => {
       <Dialog open>
         <DialogContent>
           <DialogTitle className="sr-only">Start New Training</DialogTitle>
-          <DialogDescription className="sr-only">Select a tense and difficulty level to begin your training.</DialogDescription>
+          <DialogDescription className="sr-only">
+            Select a tense and difficulty level to begin your training.
+          </DialogDescription>
           {component}
         </DialogContent>
       </Dialog>

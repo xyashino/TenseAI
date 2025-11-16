@@ -121,7 +121,7 @@ export class OpenRouterService {
       const [system, user] = await Promise.all([fs.readFile(systemPath, "utf-8"), fs.readFile(userPath, "utf-8")]);
 
       return { system, user };
-    } catch (error) {
+    } catch {
       throw new Error(
         `Could not load prompt files for "${promptName}". Make sure the directory and system.md/user.md files exist.`
       );
