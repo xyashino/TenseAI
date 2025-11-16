@@ -23,41 +23,24 @@ export const cookieOptions: CookieOptionsWithName = {
 };
 
 function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {
-  if (!cookieHeader) {
-    return [];
-  }
-
-  const forwardedProto = context.request.headers.get("x-forwarded-proto");
-  const isSecureFromHeader = forwardedProto === "https";
-  const siteUrl = getEnv("PUBLIC_SITE_URL") || "";
-  const isSecureFromUrl = siteUrl.startsWith("https://");
-  const isSecure = isSecureFromHeader || isSecureFromUrl;
+  return cookieHeader.split(";").map((cookie) => {
+    const [name, ...rest] = cookie.trim().split("=");
+    return { name, value: rest.join("=") };
+  });
+}
 
 export const createSupabaseServerInstance = (context: { headers: Headers; cookies: AstroCookies }) => {
   const supabase = createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookieOptions,
     cookies: {
       getAll() {
-        const cookies = parseCookieHeader(cookieHeader);
-        return cookies.map(({ name, value }) => ({
-          name,
-          value: value ?? "",
-        }));
+        return parseCookieHeader(context.headers.get("Cookie") ?? "");
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          const cookieOptions = {
-            ...options,
-            path: "/",
-            secure: isSecure,
-            httpOnly: true,
-            sameSite: "lax" as const,
-          };
-
-          context.cookies.set(name, value, cookieOptions);
-        });
+        cookiesToSet.forEach(({ name, value, options }) => context.cookies.set(name, value, options));
       },
     },
-    cookieOptions,
   });
+
+  return supabase;
 };

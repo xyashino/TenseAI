@@ -24,7 +24,7 @@ const { title, className } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class={cn("w-screen h-svh", className)}>
+  <body class={cn("w-screen h-svh max-h-svh overflow-hidden", className)}>
     <ClientRouter />
     <slot />
     <Toaster client:load transition:persist />
