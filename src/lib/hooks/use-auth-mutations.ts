@@ -37,7 +37,7 @@ export function useLogin() {
       return apiPost<AuthResponse>("/api/auth/login", data);
     },
     onSuccess: () => {
-      navigate(NavigationRoutes.TRAINING);
+      navigate(NavigationRoutes.THEORY);
     },
     onError: (error: ApiClientError) => {
       toast.error(error.message);
