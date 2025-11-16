@@ -1,5 +1,7 @@
 import { apiClient } from "@/lib/api-client";
+import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { navigate } from "astro:transitions/client";
 
 export function useLogout() {
   return useMutation({
@@ -9,10 +11,10 @@ export function useLogout() {
       });
     },
     onSuccess: () => {
-      window.location.assign("/login");
+      navigate(NavigationRoutes.LOGIN);
     },
     onError: () => {
-      window.location.assign("/login");
+      navigate(NavigationRoutes.LOGIN);
     },
   });
 }

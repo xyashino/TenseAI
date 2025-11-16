@@ -14,7 +14,7 @@ export function useOnboarding() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate(NavigationRoutes.TRAINING);
+      navigate(NavigationRoutes.THEORY);
     },
   });
 }
