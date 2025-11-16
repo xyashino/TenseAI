@@ -24,6 +24,9 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
+            # Navigate to project directory
+            PROJECT_PATH="${VPS_PROJECT_PATH:-$HOME/TenseAI}"
+            cd "$PROJECT_PATH" || { echo "Failed to navigate to $PROJECT_PATH"; exit 1; }
             # Make deploy script executable and run it
             chmod +x deploy/deploy.sh
             bash deploy/deploy.sh
