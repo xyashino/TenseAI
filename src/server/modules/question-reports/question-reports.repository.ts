@@ -1,9 +1,10 @@
-import type { SupabaseClient } from "@/db/supabase.client";
+import type { Database } from "@/db/database.types";
 import { NotFoundError } from "@/server/errors/api-errors";
 import type { QuestionReport, QuestionReportInsert, QuestionReportWithPreview } from "@/types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 export class QuestionReportRepository {
-  constructor(private supabase: SupabaseClient) {}
+  constructor(private supabase: SupabaseClient<Database>) {}
 
   async verifyQuestionExists(questionId: string): Promise<void> {
     const { data, error } = await this.supabase.from("questions").select("id").eq("id", questionId).single();
@@ -23,15 +24,6 @@ export class QuestionReportRepository {
     return data;
   }
 
-  /**
-   * Get paginated question reports for a specific user with optional status filtering
-   * @param userId - The ID of the user whose reports to retrieve
-   * @param page - Page number (1-based)
-   * @param limit - Number of items per page
-   * @param status - Optional filter by report status
-   * @returns Object containing reports array and total count
-   * @throws Error if query fails
-   */
   async getUserReports(
     userId: string,
     page: number,

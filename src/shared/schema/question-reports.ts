@@ -12,7 +12,8 @@ export const createQuestionReportSchema = z.object({
     .optional(),
 });
 
-export type CreateQuestionReportValidated = z.infer<typeof createQuestionReportSchema>;
+export type CreateQuestionReportFormValues = z.infer<typeof createQuestionReportSchema>;
+export const createQuestionReportApiSchema = createQuestionReportSchema;
 
 export const getQuestionReportsQuerySchema = z.object({
   page: z
@@ -34,4 +35,5 @@ export const getQuestionReportsQuerySchema = z.object({
     .optional(),
 });
 
-export type GetQuestionReportsQueryValidated = z.infer<typeof getQuestionReportsQuerySchema>;
+export type GetQuestionReportsQueryFormValues = z.infer<typeof getQuestionReportsQuerySchema>;
+export const getQuestionReportsQueryApiSchema = getQuestionReportsQuerySchema;
