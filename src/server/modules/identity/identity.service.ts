@@ -2,7 +2,6 @@ import type { Database } from "@/db/database.types";
 import { AuthenticationError, BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { IdentityRepository } from "./identity.repository";
-import { IdentityRules } from "./identity.rules";
 import type { AuthUser, ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput } from "./identity.types";
 
 export class IdentityService {
@@ -60,7 +59,10 @@ export class IdentityService {
 
   async resetPassword(input: ResetPasswordInput): Promise<void> {
     const user = await this.repo.getCurrentUser();
-    IdentityRules.canResetPassword(user?.id);
+
+    if (!user) {
+      throw new UnauthorizedError("Authentication required");
+    }
 
     try {
       await this.repo.resetPassword(input);

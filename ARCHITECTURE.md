@@ -64,8 +64,8 @@ src/
 - **Hooks**: `hooks/useTrainingSession.ts` contains the logic.
 
 ### Backend Module (`src/server/modules/training`)
-- **Rules (`*.rules.ts`)**: Pure functions. logic only. `if (round > 3) throw Error`. **Unit Test This!**
-- **Service (`*.service.ts`)**: Coordinates. `repo.get()` -> `rules.validate()` -> `ai.generate()` -> `repo.save()`.
+- **Rules (`*.rules.ts`)**: Optional. Pure functions for complex business logic only. `if (round > 3) throw Error`. **Only create when you have non-trivial business rules to extract.** Simple null checks or schema validation don't need rules files.
+- **Service (`*.service.ts`)**: Coordinates. `repo.get()` -> `rules.validate()` (if needed) -> `ai.generate()` -> `repo.save()`. Handles simple validation directly.
 - **Repository (`*.repo.ts`)**: Raw SQL/Supabase queries.
 
 ### Shared Kernel (`src/shared`)

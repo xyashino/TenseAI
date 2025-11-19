@@ -25,28 +25,42 @@ src/server/modules/
 
 ## Component Roles
 
-### 1. Rules (`*.rules.ts`)
-**"The Brain"**
+### 1. Rules (`*.rules.ts`) - **Optional**
+**"The Brain"** - Only create when you have complex business logic to extract.
+
 - Contains **Pure Functions** only.
 - **NO** database dependencies, **NO** API calls, **NO** side effects.
-- Responsible for validating state transitions and calculations.
+- Responsible for **complex** business logic, state transitions, and calculations.
+- **When to create**: Only when you have non-trivial business rules (e.g., "can't create round if session completed", "max rounds reached").
+- **When NOT to create**:
+  - Simple null checks (do these in the service)
+  - Schema validation (use Zod at API route level)
+  - Simple conditionals (keep in service)
 - **Testing**: High coverage unit tests.
 
 ```typescript
-// training.rules.ts
+// training.rules.ts - GOOD: Complex business logic
 export const TrainingRules = {
   canCreateRound(session: Session, roundCount: number) {
     if (session.status === 'completed') throw new Error("Session ended");
     if (roundCount >= 3) throw new Error("Max rounds reached");
+    if (session.difficulty === 'expert' && roundCount >= 2) {
+      throw new Error("Expert mode limited to 2 rounds");
+    }
   }
 }
+
+// DON'T create rules.ts for simple checks like:
+// - if (!userId) throw Error - do this in service
+// - Schema validation - use Zod at API route
 ```
 
 ### 2. Service (`*.service.ts`)
 **"The Manager"**
 - Orchestrates the flow of data.
 - Calls the **Repository** to get data.
-- Calls **Rules** to validate decisions.
+- Calls **Rules** to validate complex business decisions (if rules exist).
+- Handles simple validation directly (null checks, basic conditions).
 - Calls external providers (e.g., AI Service).
 - **Testing**: Integration tests or mocked unit tests.
 
@@ -56,10 +70,17 @@ export class TrainingService {
   async createRound(sessionId: string) {
     const session = await this.repo.getSession(sessionId);
 
-    // Delegate decision to the Rules
-    TrainingRules.canCreateRound(session, session.rounds.length);
+    // Delegate complex business logic to Rules (if rules exist)
+    if (TrainingRules) {
+      TrainingRules.canCreateRound(session, session.rounds.length);
+    }
 
-    // Proceed if rules pass
+    // Simple checks can be done directly
+    if (!session) {
+      throw new NotFoundError("Session not found");
+    }
+
+    // Proceed if validation passes
     return this.repo.addRound(sessionId);
   }
 }
@@ -80,7 +101,7 @@ export class TrainingService {
 When refactoring or adding a new feature:
 
 1.  **Create the Module**: New folder in `src/server/modules/`.
-2.  **Write Rules First**: Define the business logic constraints in `rules.ts`.
-3.  **Implement Data Access**: Add necessary queries in `repository.ts`.
-4.  **Connect in Service**: Wire them together in `service.ts`.
-5.  **Expose**: Use the Service in your API routes (`src/pages/api/...`).
+2.  **Implement Data Access**: Add necessary queries in `repository.ts`.
+3.  **Connect in Service**: Wire them together in `service.ts`. Handle simple validation directly.
+4.  **Add Rules (if needed)**: Only create `rules.ts` if you have complex business logic to extract. Most modules won't need this.
+5.  **Expose**: Use the Service in your API routes (`src/pages/api/...`). Validate schemas at the API route level with Zod.
