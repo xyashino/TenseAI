@@ -1,12 +1,16 @@
-import { AccountForm } from "@/components/account/account-form";
-import * as profileHook from "@/lib/hooks/use-profile";
+import { AccountForm } from "@/features/account";
+import * as accountHook from "@/features/account";
 import type { ProfileDTO } from "@/types";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/lib/hooks/use-profile", () => ({
-  useUpdateProfile: vi.fn(),
-}));
+vi.mock("@/features/account", async () => {
+  const actual = await vi.importActual("@/features/account");
+  return {
+    ...actual,
+    useUpdateProfile: vi.fn(),
+  };
+});
 
 describe("AccountForm", () => {
   const mockMutate = vi.fn();
@@ -23,10 +27,10 @@ describe("AccountForm", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(profileHook.useUpdateProfile).mockReturnValue({
+    vi.mocked(accountHook.useUpdateProfile).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
-    } as ReturnType<typeof profileHook.useUpdateProfile>);
+    } as ReturnType<typeof accountHook.useUpdateProfile>);
   });
 
   it("should render account form with pre-filled data", () => {
@@ -93,10 +97,10 @@ describe("AccountForm", () => {
   });
 
   it("should disable form fields and button when loading", () => {
-    vi.mocked(profileHook.useUpdateProfile).mockReturnValue({
+    vi.mocked(accountHook.useUpdateProfile).mockReturnValue({
       mutate: mockMutate,
       isPending: true,
-    } as ReturnType<typeof profileHook.useUpdateProfile>);
+    } as ReturnType<typeof accountHook.useUpdateProfile>);
 
     render(<AccountForm initialProfile={mockProfile} />);
 

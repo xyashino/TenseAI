@@ -1,4 +1,4 @@
-import { useProfile } from "@/lib/hooks/use-profile";
+import { useProfile } from "@/features/account";
 import { useActiveTrainings } from "@/lib/hooks/use-trainings-sessions";
 import { Suspense } from "react";
 import { withQueryClient } from "../providers/with-query-client";

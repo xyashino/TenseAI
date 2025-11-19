@@ -1,3 +1,4 @@
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,7 +17,6 @@ import { resetPasswordSchema, type ResetPasswordFormValues } from "@/shared/sche
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { withQueryClient } from "../providers/with-query-client";
 
 function ResetPasswordDialog() {
   const [open, setOpen] = useState(false);

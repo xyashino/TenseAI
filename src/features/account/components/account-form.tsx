@@ -1,13 +1,13 @@
+import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useUpdateProfile } from "@/lib/hooks/use-profile";
 import { accountFormSchema, type AccountFormData } from "@/lib/validation";
 import type { ProfileDTO } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
-import { withQueryClient } from "../providers/with-query-client";
+import { useUpdateProfile } from "../hooks/use-account";
 
 interface AccountFormProps {
   initialProfile: ProfileDTO | null;
