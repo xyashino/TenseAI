@@ -1,7 +1,5 @@
 import { getEnv, requireEnv } from "@/server/utils/env";
 import { OpenRouter } from "@openrouter/sdk";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { z } from "zod";
 
 const RETRY_CONFIG = {
@@ -9,7 +7,7 @@ const RETRY_CONFIG = {
   initialDelayMs: 1000,
 };
 
-const chatCompletionParamsSchema = z.object({
+export const chatCompletionParamsSchema = z.object({
   model: z.string().min(1),
   messages: z
     .array(
@@ -25,13 +23,6 @@ const chatCompletionParamsSchema = z.object({
 });
 
 export type ChatCompletionParams = z.infer<typeof chatCompletionParamsSchema>;
-
-const chatCompletionFromPromptParamsSchema = chatCompletionParamsSchema.omit({ messages: true }).extend({
-  promptName: z.string().min(1),
-  variables: z.record(z.string(), z.string()).optional(),
-});
-
-export type ChatCompletionFromPromptParams = z.infer<typeof chatCompletionFromPromptParamsSchema>;
 
 export class OpenRouterService {
   private client: OpenRouter;
@@ -78,60 +69,6 @@ export class OpenRouterService {
       }
     }
     throw new Error("An unexpected error occurred during chat completion retries.");
-  }
-
-  public async getChatCompletionFromPrompt(params: ChatCompletionFromPromptParams) {
-    const validationResult = chatCompletionFromPromptParamsSchema.safeParse(params);
-    if (!validationResult.success) {
-      throw new Error(`Invalid parameters: ${validationResult.error.message}`);
-    }
-
-    const { promptName, variables, ...restOfParams } = validationResult.data;
-
-    const { system, user } = await this.loadPrompt(promptName);
-
-    const systemPrompt = this.substituteVariables(system, variables ?? {});
-    const userPrompt = this.substituteVariables(user, variables ?? {});
-
-    const messages = [
-      { role: "system" as const, content: systemPrompt },
-      { role: "user" as const, content: userPrompt },
-    ];
-
-    const completion = await this.getChatCompletion({
-      ...restOfParams,
-      messages,
-    });
-    if (!completion || typeof completion !== "string") {
-      throw new Error("No completion content from AI");
-    }
-    return completion;
-  }
-
-  private async loadPrompt(promptName: string) {
-    try {
-      const isDev = getEnv("NODE_ENV") !== "production";
-      const promptsDir = isDev
-        ? path.resolve(process.cwd(), "src/server/prompts")
-        : path.resolve(process.cwd(), "dist/server/prompts");
-
-      const systemPath = path.join(promptsDir, promptName, "system.md");
-      const userPath = path.join(promptsDir, promptName, "user.md");
-
-      const [system, user] = await Promise.all([fs.readFile(systemPath, "utf-8"), fs.readFile(userPath, "utf-8")]);
-
-      return { system, user };
-    } catch {
-      throw new Error(
-        `Could not load prompt files for "${promptName}". Make sure the directory and system.md/user.md files exist.`
-      );
-    }
-  }
-
-  private substituteVariables(template: string, variables: Record<string, string>): string {
-    return template.replace(/{{(\w+)}}/g, (placeholder, key) => {
-      return variables[key] || placeholder;
-    });
   }
 
   private createJsonSchemaResponseFormat(schema: z.ZodType | undefined) {

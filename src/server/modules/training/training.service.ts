@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
-import { aiGeneratorService } from "@/server/services/ai-generator.service";
+import { trainingAIService } from "./training.ai.service";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CompleteRoundResponseDTO,
@@ -79,7 +79,7 @@ export class TrainingService {
       const round = await this.repo.createRound(roundData);
       roundId = round.id;
 
-      const generatedQuestions = await aiGeneratorService.generateQuestions(
+      const generatedQuestions = await trainingAIService.generateQuestions(
         sessionData.tense,
         sessionData.difficulty,
         10
@@ -297,7 +297,7 @@ export class TrainingService {
           correct_answer: q.correct_answer,
         }));
 
-      feedback = await aiGeneratorService.generateRoundFeedback(
+      feedback = await trainingAIService.generateRoundFeedback(
         incorrectAnswers,
         roundWithSession.session.tense as TenseName,
         roundWithSession.session.difficulty as DifficultyLevel,
@@ -359,7 +359,7 @@ export class TrainingService {
 
     let finalFeedback = "";
     try {
-      finalFeedback = await aiGeneratorService.generateFinalFeedback(
+      finalFeedback = await trainingAIService.generateFinalFeedback(
         incorrectAnswers,
         sessionData.tense as TenseName,
         sessionData.difficulty as DifficultyLevel,

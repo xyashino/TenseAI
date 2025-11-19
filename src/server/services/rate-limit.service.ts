@@ -22,13 +22,6 @@ export class RateLimitService {
     setInterval(() => this.cleanup(), 60000);
   }
 
-  /**
-   * Check if a user's action is within rate limits
-   * @param userId - The user's unique identifier
-   * @param action - The action being rate limited (e.g., 'session_create')
-   * @param options - Rate limit configuration
-   * @returns Result indicating if request is allowed and retry information
-   */
   async checkLimit(userId: string, action: string, options: RateLimitOptions): Promise<RateLimitResult> {
     const key = `${action}:${userId}`;
     const now = Date.now();

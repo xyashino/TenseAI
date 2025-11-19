@@ -3,7 +3,7 @@ import { TrainingService } from "@/server/modules/training";
 import { rateLimitService } from "@/server/services/rate-limit.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { createSessionSchema, getTrainingSessionsQuerySchema } from "@/server/validation/session.validation";
+import { createSessionSchema, getTrainingSessionsQuerySchema } from "@/shared/schema/training.schema";
 import type { APIRoute } from "astro";
 
 export const prerender = false;

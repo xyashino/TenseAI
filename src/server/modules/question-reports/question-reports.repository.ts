@@ -1,5 +1,6 @@
 import type { Database } from "@/db/database.types";
 import { NotFoundError } from "@/server/errors/api-errors";
+import { getPaginationOffset } from "@/server/utils/pagination";
 import type { QuestionReport, QuestionReportInsert, QuestionReportWithPreview } from "@/types";
 import type { SupabaseClient } from "@/db/supabase.client";
 
@@ -33,7 +34,7 @@ export class QuestionReportRepository {
     reports: QuestionReportWithPreview[];
     total: number;
   }> {
-    const offset = (page - 1) * limit;
+    const offset = getPaginationOffset(page, limit);
 
     let countQuery = this.supabase
       .from("question_reports")

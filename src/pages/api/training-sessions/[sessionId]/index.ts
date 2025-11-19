@@ -1,7 +1,7 @@
 import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { deleteSessionParamsSchema, getSessionDetailParamsSchema } from "@/server/validation/session.validation";
+import { deleteSessionParamsSchema, getSessionDetailParamsSchema } from "@/shared/schema/training.schema";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
