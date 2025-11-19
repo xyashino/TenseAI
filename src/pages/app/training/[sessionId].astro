@@ -1,5 +1,5 @@
 ---
-import { TrainingSessionWrapperWithQueryClient } from "@/components/training/training-session-wrapper";
+import { TrainingSessionViewWithQueryClient } from "@/features/training";
 import BaseLayout from "@/layouts/base-layout.astro";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { ProfileRepository } from "@/server/modules/profile";
@@ -42,7 +42,7 @@ const userName = profile?.name ?? null;
 ---
 
 <BaseLayout title={`Training: ${sessionData.tense} - TenseAI`}>
-  <TrainingSessionWrapperWithQueryClient
+  <TrainingSessionViewWithQueryClient
     client:load
     sessionId={sessionId}
     tense={sessionData.tense}

@@ -1,4 +1,4 @@
-import { ReportQuestionDialog } from "@/components/training/dialogs/report-question-dialog";
+import { ReportQuestionDialog } from "@/features/training/components/dialogs/report-question-dialog";
 import { Badge } from "@/components/ui/badge";
 import { memo } from "react";
 import { ResultBadge } from "./result-badge";

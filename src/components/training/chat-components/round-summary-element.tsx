@@ -6,7 +6,7 @@ import { useTrainingSessionActions } from "@/lib/hooks/use-training-session-acti
 import type { QuestionReview } from "@/types";
 import { memo } from "react";
 import ReactMarkdown from "react-markdown";
-import { ChatLogWrapper } from "../chat-log-wrapper";
+import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";
 
 export interface RoundSummaryElementProps {
   roundNumber: number;

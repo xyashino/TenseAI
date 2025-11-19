@@ -1,5 +1,6 @@
 // Components
-export { HistoryView, HistoryViewWithQueryClient } from "./components";
+export { HistoryView, HistoryViewWithQueryClient, HistoryDetailView } from "./components";
+export type { HistoryDetailViewProps } from "./components";
 
 // Hooks
 export { useHistorySessions } from "./hooks/use-history-sessions";
