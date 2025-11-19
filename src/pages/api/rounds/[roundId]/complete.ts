@@ -1,4 +1,4 @@
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { completeRoundBodySchema, completeRoundParamsSchema } from "@/server/validation/session.validation";
@@ -18,8 +18,8 @@ export const POST: APIRoute = async (context) => {
     const body = await context.request.json();
     const { answers } = completeRoundBodySchema.parse(body);
 
-    const sessionService = new TrainingSessionService(supabase);
-    const result = await sessionService.completeRound(userId, roundId, answers);
+    const trainingService = new TrainingService(supabase);
+    const result = await trainingService.completeRound(userId, roundId, answers);
 
     return new Response(JSON.stringify(result), {
       status: 200,

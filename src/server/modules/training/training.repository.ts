@@ -42,7 +42,7 @@ interface SessionWithDetailsRaw {
   }[];
 }
 
-export class TrainingSessionRepository {
+export class TrainingRepository {
   constructor(private supabase: SupabaseClient) {}
 
   async getSessionById(userId: string, sessionId: string): Promise<TrainingSession | null> {

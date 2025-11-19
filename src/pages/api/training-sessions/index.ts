@@ -1,6 +1,6 @@
 import { RateLimitError } from "@/server/errors/api-errors";
+import { TrainingService } from "@/server/modules/training";
 import { rateLimitService } from "@/server/services/rate-limit.service";
-import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { createSessionSchema, getTrainingSessionsQuerySchema } from "@/server/validation/session.validation";
@@ -28,8 +28,8 @@ export const POST: APIRoute = async (context) => {
       );
     }
 
-    const sessionService = new TrainingSessionService(supabase);
-    const result = await sessionService.createSessionOnly(userId, validated);
+    const trainingService = new TrainingService(supabase);
+    const result = await trainingService.createSession(userId, validated);
 
     return new Response(JSON.stringify(result), {
       status: 201,
@@ -58,8 +58,8 @@ export const GET: APIRoute = async (context) => {
 
     const validated = getTrainingSessionsQuerySchema.parse(queryParams);
 
-    const sessionService = new TrainingSessionService(supabase);
-    const response = await sessionService.getSessionsList(
+    const trainingService = new TrainingService(supabase);
+    const response = await trainingService.getSessionsList(
       userId,
       validated.status,
       validated.page,

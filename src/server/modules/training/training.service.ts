@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@/db/supabase.client";
 import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
-import { TrainingSessionRepository } from "@/server/repositories/training-session.repository";
+import { aiGeneratorService } from "@/server/services/ai-generator.service";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import type {
   CompleteRoundResponseDTO,
@@ -22,16 +22,17 @@ import type {
   TrainingSessionsListResponseDTO,
   UserAnswerInsert,
 } from "@/types";
-import { aiGeneratorService } from "./ai-generator.service";
+import { TrainingRepository } from "./training.repository";
+import { TrainingRules } from "./training.rules";
 
-export class TrainingSessionService {
-  private repository: TrainingSessionRepository;
+export class TrainingService {
+  private repo: TrainingRepository;
 
   constructor(supabase: SupabaseClient) {
-    this.repository = new TrainingSessionRepository(supabase);
+    this.repo = new TrainingRepository(supabase);
   }
 
-  async createSessionOnly(userId: string, dto: CreateSessionDTO): Promise<{ training_session: TrainingSessionDTO }> {
+  async createSession(userId: string, dto: CreateSessionDTO): Promise<{ training_session: TrainingSessionDTO }> {
     const sessionData: TrainingSessionInsert = {
       user_id: userId,
       tense: dto.tense,
@@ -40,7 +41,7 @@ export class TrainingSessionService {
       started_at: new Date().toISOString(),
     };
 
-    const session = await this.repository.createSession(sessionData);
+    const session = await this.repo.createSession(sessionData);
 
     return {
       training_session: {
@@ -56,28 +57,14 @@ export class TrainingSessionService {
   }
 
   async createRound(userId: string, sessionId: string): Promise<RoundWithQuestionsDTO> {
-    const sessionData = await this.repository.getSessionById(userId, sessionId);
+    const sessionData = await this.repo.getSessionById(userId, sessionId);
+    const existingRounds = await this.repo.getRoundsBySessionId(sessionId);
+    const nextRoundNumber = existingRounds.length + 1;
+
+    TrainingRules.canCreateRound(sessionData, existingRounds, nextRoundNumber);
 
     if (!sessionData) {
       throw new NotFoundError("Session not found");
-    }
-
-    if (sessionData.status !== "active") {
-      throw new Error("Cannot create round for a completed session");
-    }
-
-    const existingRounds = await this.repository.getRoundsBySessionId(sessionId);
-    const nextRoundNumber = existingRounds.length + 1;
-
-    if (nextRoundNumber > 3) {
-      throw new Error("Cannot create more than 3 rounds per session");
-    }
-
-    if (nextRoundNumber > 1) {
-      const previousRound = existingRounds.find((r) => r.round_number === nextRoundNumber - 1);
-      if (!previousRound?.completed_at) {
-        throw new Error(`Cannot create round ${nextRoundNumber}. Previous round is not completed.`);
-      }
     }
 
     let roundId: string | null = null;
@@ -89,7 +76,7 @@ export class TrainingSessionService {
         started_at: new Date().toISOString(),
       };
 
-      const round = await this.repository.createRound(roundData);
+      const round = await this.repo.createRound(roundData);
       roundId = round.id;
 
       const generatedQuestions = await aiGeneratorService.generateQuestions(
@@ -106,7 +93,7 @@ export class TrainingSessionService {
         correct_answer: q.correct_answer,
       }));
 
-      const insertedQuestions = await this.repository.createQuestions(questionsToInsert);
+      const insertedQuestions = await this.repo.createQuestions(questionsToInsert);
       const questionsWithoutAnswer: QuestionWithoutAnswer[] = insertedQuestions.map((q) => ({
         id: q.id,
         question_number: q.question_number,
@@ -125,7 +112,7 @@ export class TrainingSessionService {
       };
     } catch (error) {
       if (roundId) {
-        await this.repository.deleteRound(roundId);
+        await this.repo.deleteRound(roundId);
       }
       throw error;
     }
@@ -138,7 +125,7 @@ export class TrainingSessionService {
     limit: number,
     sortOrder: "started_at_desc" | "started_at_asc"
   ): Promise<TrainingSessionsListResponseDTO> {
-    const { sessions, total } = await this.repository.getSessionsWithRounds(userId, status, page, limit, sortOrder);
+    const { sessions, total } = await this.repo.getSessionsWithRounds(userId, status, page, limit, sortOrder);
 
     const pagination: PaginationMeta = buildPaginationMeta({
       totalItems: total,
@@ -153,7 +140,7 @@ export class TrainingSessionService {
   }
 
   async getSessionDetail(userId: string, sessionId: string): Promise<SessionDetailResponseDTO> {
-    const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
+    const sessionData = await this.repo.getSessionWithDetails(userId, sessionId);
 
     if (!sessionData) {
       throw new NotFoundError("Session not found");
@@ -224,7 +211,7 @@ export class TrainingSessionService {
   }
 
   async deleteSession(userId: string, sessionId: string): Promise<void> {
-    const deleted = await this.repository.deleteSessionWithAuth(userId, sessionId);
+    const deleted = await this.repo.deleteSessionWithAuth(userId, sessionId);
     if (!deleted) {
       throw new NotFoundError("Session not found");
     }
@@ -235,7 +222,7 @@ export class TrainingSessionService {
     roundId: string,
     answers: { question_id: string; selected_answer: string }[]
   ): Promise<CompleteRoundResponseDTO> {
-    const roundWithSession = await this.repository.getRoundWithSession(roundId);
+    const roundWithSession = await this.repo.getRoundWithSession(roundId);
 
     if (!roundWithSession) {
       throw new NotFoundError("Round not found");
@@ -245,15 +232,9 @@ export class TrainingSessionService {
       throw new NotFoundError("Round not found");
     }
 
-    if (roundWithSession.completed_at !== null) {
-      throw new BadRequestError("Round is already completed");
-    }
+    const questions = await this.repo.getQuestionsWithAnswers(roundId);
 
-    const questions = await this.repository.getQuestionsWithAnswers(roundId);
-
-    if (questions.length !== 10) {
-      throw new Error("Data integrity error: round does not have exactly 10 questions");
-    }
+    TrainingRules.canCompleteRound(roundWithSession.completed_at, questions.length);
 
     const answersMap = new Map(answers.map((a) => [a.question_id, a.selected_answer]));
     const questionsMap = new Map(questions.map((q) => [q.id, q]));
@@ -278,7 +259,7 @@ export class TrainingSessionService {
     for (const question of questions) {
       const userAnswer = answersMap.get(question.id);
       if (!userAnswer) {
-        throw new Error(`Missing answer for question ${question.id}`);
+        throw new BadRequestError(`Missing answer for question ${question.id}`);
       }
 
       const isCorrect = userAnswer === question.correct_answer;
@@ -304,7 +285,7 @@ export class TrainingSessionService {
         answered_at: new Date().toISOString(),
       });
     }
-    await this.repository.createUserAnswers(userAnswersToInsert);
+    await this.repo.createUserAnswers(userAnswersToInsert);
 
     let feedback = "";
     try {
@@ -325,7 +306,7 @@ export class TrainingSessionService {
     } catch {
       feedback = `You scored ${correctCount}/10. Review your answers and try the next round!`;
     }
-    const completedRound = await this.repository.updateRoundCompletion(roundId, correctCount, feedback);
+    const completedRound = await this.repo.updateRoundCompletion(roundId, correctCount, feedback);
 
     return {
       round: completedRound,
@@ -334,33 +315,16 @@ export class TrainingSessionService {
   }
 
   async completeSession(userId: string, sessionId: string): Promise<CompleteSessionResponseDTO> {
-    const sessionData = await this.repository.getSessionWithDetails(userId, sessionId);
+    const sessionData = await this.repo.getSessionWithDetails(userId, sessionId);
 
     if (!sessionData) {
       throw new NotFoundError("Training session not found");
     }
 
-    if (sessionData.status !== "active") {
-      throw new BadRequestError("This session has already been completed", {
-        completed_at: sessionData.completed_at,
-      });
-    }
-
     const rounds = sessionData.rounds;
-    if (rounds.length !== 3) {
-      throw new BadRequestError("All 3 rounds must be completed first", {
-        completed_rounds: rounds.length,
-        required_rounds: 3,
-      });
-    }
-
     const completedRounds = rounds.filter((r) => r.completed_at !== null);
-    if (completedRounds.length !== 3) {
-      throw new BadRequestError("All 3 rounds must be completed first", {
-        completed_rounds: completedRounds.length,
-        required_rounds: 3,
-      });
-    }
+
+    TrainingRules.canCompleteSession(sessionData.status as SessionStatus, rounds.length, completedRounds.length);
 
     const roundsScores = rounds.sort((a, b) => a.round_number - b.round_number).map((r) => r.score ?? 0);
 
@@ -407,7 +371,7 @@ export class TrainingSessionService {
 
     let updatedSession;
     try {
-      updatedSession = await this.repository.updateSessionCompletion(sessionId, finalFeedback);
+      updatedSession = await this.repo.updateSessionCompletion(sessionId, finalFeedback);
     } catch (error) {
       if (error instanceof Error && error.message.includes("already completed")) {
         throw new BadRequestError("This session has already been completed", {

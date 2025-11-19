@@ -3,7 +3,7 @@ import { TrainingSessionWrapperWithQueryClient } from "@/components/training/tra
 import BaseLayout from "@/layouts/base-layout.astro";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { ProfileRepository } from "@/server/modules/profile";
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 export const prerender = false;
 
@@ -15,7 +15,7 @@ if (!sessionId) {
 const supabase = Astro.locals.supabase;
 const userId = await authenticateUser(supabase);
 
-const service = new TrainingSessionService(supabase);
+const service = new TrainingService(supabase);
 let sessionData;
 let roundsData;
 let sessionSummary;
