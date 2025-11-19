@@ -1,13 +1,13 @@
 import type { Database } from "@/db/database.types";
 import { AuthenticationError, BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@/db/supabase.client";
 import { IdentityRepository } from "./identity.repository";
 import type { AuthUser, ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput } from "./identity.types";
 
 export class IdentityService {
   private repo: IdentityRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: SupabaseClient) {
     this.repo = new IdentityRepository(supabase);
   }
 

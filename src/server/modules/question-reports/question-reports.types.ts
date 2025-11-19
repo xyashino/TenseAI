@@ -1,3 +1,5 @@
+import type { QuestionReportWithPreview } from "@/types";
+
 export interface CreateQuestionReportInput {
   question_id: string;
   report_comment?: string;
@@ -19,6 +21,6 @@ export interface QuestionReportOutput {
 }
 
 export interface GetQuestionReportsOutput {
-  reports: import("@/types").QuestionReportWithPreview[];
+  reports: QuestionReportWithPreview[];
   total: number;
 }

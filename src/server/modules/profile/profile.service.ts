@@ -1,13 +1,13 @@
 import type { Database } from "@/db/database.types";
 import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@/db/supabase.client";
 import { ProfileRepository } from "./profile.repository";
 import type { ProfileOutput, UpdateProfileInput } from "./profile.types";
 
 export class ProfileService {
   private repo: ProfileRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: SupabaseClient) {
     this.repo = new ProfileRepository(supabase);
   }
 

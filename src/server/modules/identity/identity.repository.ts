@@ -1,9 +1,9 @@
 import type { Database } from "@/db/database.types";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@/db/supabase.client";
 import type { AuthUser, LoginInput, RegisterInput, ResetPasswordInput } from "./identity.types";
 
 export class IdentityRepository {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  constructor(private supabase: SupabaseClient) {}
 
   async register(input: RegisterInput): Promise<AuthUser> {
     const { data, error } = await this.supabase.auth.signUp({

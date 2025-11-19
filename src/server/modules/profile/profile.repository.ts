@@ -1,10 +1,10 @@
 import type { Database } from "@/db/database.types";
 import type { Profile } from "@/types";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@/db/supabase.client";
 import type { UpdateProfileInput } from "./profile.types";
 
 export class ProfileRepository {
-  constructor(private supabase: SupabaseClient<Database>) {}
+  constructor(private supabase: SupabaseClient) {}
 
   async getProfileById(userId: string): Promise<Profile | null> {
     const { data, error } = await this.supabase.from("profiles").select("*").eq("user_id", userId).single();
