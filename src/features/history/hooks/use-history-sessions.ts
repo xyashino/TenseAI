@@ -1,13 +1,13 @@
-import { apiGet } from "@/lib/api-client";
-import type { TrainingSessionWithRounds, TrainingSessionsListResponseDTO } from "@/types";
+import type { TrainingSessionWithRounds } from "@/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { historyApi } from "../api/history.api";
 
 export function useHistorySessions() {
   const queryResult = useSuspenseQuery({
     queryKey: ["training-sessions", "completed"],
     queryFn: async () => {
-      return apiGet<TrainingSessionsListResponseDTO>(`/api/training-sessions?status=completed`);
+      return historyApi.getHistorySessions();
     },
     staleTime: 2 * 60 * 1000,
     retry: 1,

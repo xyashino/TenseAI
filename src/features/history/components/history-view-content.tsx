@@ -1,5 +1,5 @@
 import { NavigationRoutes } from "@/lib/enums/navigation";
-import { useHistorySessions } from "@/lib/hooks/use-history-sessions";
+import { useHistorySessions } from "../hooks/use-history-sessions";
 import { EmptyState } from "./empty-state";
 import { HistoryList } from "./history-list";
 
