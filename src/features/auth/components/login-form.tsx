@@ -1,36 +1,32 @@
-import { AuthCard, AuthFooterLink, LegalFooter } from "@/components/auth/common";
+import { AuthCard, AuthFooterLink, LegalFooter } from "./common";
 import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { NavigationRoutes } from "@/lib/enums/navigation";
-import { useRegister } from "@/lib/hooks/use-auth-mutations";
-import { registerSchema, type RegisterFormValues } from "@/lib/validation";
+import { useLogin } from "../hooks/use-auth-mutations";
+import { loginSchema, type LoginFormValues } from "@/shared/schema/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 
-function RegisterForm() {
-  const { mutateAsync: register, isPending } = useRegister();
+function LoginForm() {
+  const { mutateAsync: login, isPending } = useLogin();
 
-  const form = useForm<RegisterFormValues>({
-    resolver: standardSchemaResolver(registerSchema),
+  const form = useForm<LoginFormValues>({
+    resolver: standardSchemaResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
-    await register({
-      email: data.email,
-      password: data.password,
-    });
+  const onSubmit = async (data: LoginFormValues) => {
+    await login(data);
   };
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <AuthCard title="Create an account" description="Start mastering English grammar with AI">
+      <AuthCard title="Welcome back" description="Login to continue learning English grammar">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
             <div className="space-y-4">
@@ -59,33 +55,18 @@ function RegisterForm() {
                 name="password"
                 render={({ field }) => (
                   <>
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <div className="flex items-center">
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <a href="/forgot-password" className="ml-auto text-sm underline-offset-4 hover:underline">
+                        Forgot your password?
+                      </a>
+                    </div>
                     <FormControl>
                       <Input
                         id="password"
                         type="password"
-                        placeholder="Create a strong password"
-                        autoComplete="new-password"
-                        disabled={isPending}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <>
-                    <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="Confirm your password"
-                        autoComplete="new-password"
+                        placeholder="Enter your password"
+                        autoComplete="current-password"
                         disabled={isPending}
                         {...field}
                       />
@@ -96,9 +77,9 @@ function RegisterForm() {
               />
               <div>
                 <Button type="submit" className="w-full" disabled={isPending}>
-                  Create Account
+                  Login
                 </Button>
-                <AuthFooterLink text="Already have an account?" linkText="Log in" href={NavigationRoutes.LOGIN} />
+                <AuthFooterLink text="Don't have an account?" linkText="Sign up" href={NavigationRoutes.REGISTER} />
               </div>
             </div>
           </form>
@@ -109,5 +90,5 @@ function RegisterForm() {
   );
 }
 
-export { RegisterForm };
-export const RegisterFormWithQueryClient = withQueryClient(RegisterForm);
+export { LoginForm };
+export const LoginFormWithQueryClient = withQueryClient(LoginForm);

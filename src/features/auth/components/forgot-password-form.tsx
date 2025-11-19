@@ -1,13 +1,13 @@
-import { AuthCard, AuthFooterLink } from "@/components/auth/common";
 import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { NavigationRoutes } from "@/lib/enums/navigation";
-import { useForgotPassword } from "@/lib/hooks/use-auth-mutations";
-import { forgotPasswordSchema, type ForgotPasswordFormValues } from "@/lib/validation";
+import { forgotPasswordSchema, type ForgotPasswordFormValues } from "@/shared/schema/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
+import { useForgotPassword } from "../hooks/use-auth-mutations";
+import { AuthCard, AuthFooterLink } from "./common";
 
 export function ForgotPasswordForm() {
   const { mutateAsync: forgotPassword, isPending } = useForgotPassword();

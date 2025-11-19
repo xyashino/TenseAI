@@ -7,15 +7,17 @@ interface ApiError {
 }
 
 export class ApiClientError extends Error {
-  constructor(
-    public status: number,
-    public data: ApiError,
-    message?: string
-  ) {
+  constructor(public status: number, public data: ApiError, message?: string) {
     super(message || data.message || "An error occurred");
     this.name = "ApiClientError";
   }
 }
+
+/**
+ * API base path for versioning endpoints
+ * Change this to update the API version (e.g., '/api/v2')
+ */
+const API_BASE_PATH = "/api/v1";
 
 const axiosInstance = axios.create({
   headers: {

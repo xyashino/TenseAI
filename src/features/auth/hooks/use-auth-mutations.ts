@@ -3,33 +3,13 @@ import { NavigationRoutes } from "@/lib/enums/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { navigate } from "astro:transitions/client";
 import { toast } from "sonner";
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-interface ForgotPasswordRequest {
-  email: string;
-}
-
-interface ResetPasswordRequest {
-  token?: string;
-  password: string;
-}
-
-interface ResetEmailRequest {
-  email: string;
-}
-
-interface AuthResponse {
-  message?: string;
-}
+import type {
+  AuthResponse,
+  ForgotPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+} from "../api/auth.api";
 
 export function useLogin() {
   return useMutation({
@@ -77,17 +57,6 @@ export function useResetPassword() {
   return useMutation({
     mutationFn: async (data: ResetPasswordRequest) => {
       return apiPost<AuthResponse>("/api/auth/reset-password", { password: data.password });
-    },
-    onError: (error: ApiClientError) => {
-      toast.error(error.message);
-    },
-  });
-}
-
-export function useResetEmail() {
-  return useMutation({
-    mutationFn: async (data: ResetEmailRequest) => {
-      return apiPost<AuthResponse>("/api/auth/reset-email", data);
     },
     onError: (error: ApiClientError) => {
       toast.error(error.message);

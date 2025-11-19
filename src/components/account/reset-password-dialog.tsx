@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useResetPassword } from "@/lib/hooks/use-auth-mutations";
-import { resetPasswordSchema, type ResetPasswordFormValues } from "@/lib/validation";
+import { useResetPassword } from "@/features/auth";
+import { resetPasswordSchema, type ResetPasswordFormValues } from "@/shared/schema/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
