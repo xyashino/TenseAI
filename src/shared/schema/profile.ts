@@ -11,4 +11,5 @@ export const updateProfileSchema = z
     message: "At least one field must be provided for update",
   });
 
-export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type UpdateProfileFormValues = z.infer<typeof updateProfileSchema>;
+export const updateProfileApiSchema = updateProfileSchema;

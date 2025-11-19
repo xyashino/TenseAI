@@ -1,8 +1,8 @@
-import { ProfileRepository } from "@/server/repositories/profile.repository";
+import { ProfileService } from "@/server/modules/profile";
 import { successResponse } from "@/server/utils/api-response";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { updateProfileSchema } from "@/server/validation/profile.validation";
+import { updateProfileApiSchema } from "@/shared/schema/profile";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ locals }) => {
@@ -10,8 +10,8 @@ export const GET: APIRoute = async ({ locals }) => {
     const supabase = locals.supabase;
     const userId = await authenticateUser(supabase);
 
-    const profileRepository = new ProfileRepository(supabase);
-    const profile = await profileRepository.getProfileById(userId);
+    const profileService = new ProfileService(supabase);
+    const profile = await profileService.getProfile(userId);
 
     return successResponse(profile);
   } catch (error) {
@@ -24,10 +24,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     const supabase = locals.supabase;
     const userId = await authenticateUser(supabase);
 
-    const validatedData = updateProfileSchema.parse(await request.json());
+    const validatedData = updateProfileApiSchema.parse(await request.json());
 
-    const profileRepository = new ProfileRepository(supabase);
-    const updatedProfile = await profileRepository.updateProfile(userId, {
+    const profileService = new ProfileService(supabase);
+    const updatedProfile = await profileService.updateProfile(userId, {
       ...validatedData,
       onboarding_completed: true,
     });

@@ -2,7 +2,7 @@ import { createSupabaseServerInstance } from "@/db/supabase.client";
 import { NavigationRoutes } from "@/lib/enums/navigation";
 import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 import { defineMiddleware } from "astro:middleware";
-import { ProfileRepository } from "../server/repositories/profile.repository";
+import { ProfileRepository } from "../server/modules/profile";
 
 const PUBLIC_PATHS = [NavigationRoutes.HOME, NavigationRoutes.AUTH_CONFIRM];
 const AUTH_PATHS = [
