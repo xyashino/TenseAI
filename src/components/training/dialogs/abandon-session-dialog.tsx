@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { NavigationRoutes } from "@/lib/enums/navigation";
-import { useDeleteSession } from "@/lib/hooks/use-delete-session";
+import { useDeleteSession } from "@/features/training";
 import { navigate } from "astro/virtual-modules/transitions-router.js";
 import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
