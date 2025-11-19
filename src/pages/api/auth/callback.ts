@@ -1,26 +1,21 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { BadRequestError } from "@/server/errors/api-errors";
+import { IdentityService } from "@/server/modules/identity";
 import { handleApiError } from "@/server/utils/error-handler";
+import { callbackApiSchema } from "@/shared/schema/auth";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async (context) => {
   try {
     const code = context.url.searchParams.get("code");
-
-    if (!code) {
-      throw new BadRequestError("Authorization code is required");
-    }
+    const result = callbackApiSchema.parse({ code });
 
     const supabase = createSupabaseServerInstance({
       headers: context.request.headers,
       cookies: context.cookies,
     });
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      throw new BadRequestError("Invalid authorization code");
-    }
+    const identityService = new IdentityService(supabase);
+    await identityService.exchangeCodeForSession(result.code);
 
     return context.redirect("/dashboard");
   } catch (error) {
