@@ -1,6 +1,5 @@
-import type { Database } from "@/db/database.types";
-import type { Profile } from "@/types";
 import type { SupabaseClient } from "@/db/supabase.client";
+import type { Profile } from "@/types";
 import type { UpdateProfileInput } from "./profile.types";
 
 export class ProfileRepository {
@@ -10,6 +9,9 @@ export class ProfileRepository {
     const { data, error } = await this.supabase.from("profiles").select("*").eq("user_id", userId).single();
 
     if (error) {
+      if (error.code === "PGRST116") {
+        return null;
+      }
       throw new Error(`Failed to fetch profile: ${error.message}`);
     }
 

@@ -19,6 +19,9 @@ export const cookieOptions: CookieOptionsWithName = {
 };
 
 function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {
+  if (!cookieHeader) {
+    return [];
+  }
   return cookieHeader.split(";").map((cookie) => {
     const [name, ...rest] = cookie.trim().split("=");
     return { name, value: rest.join("=") };
