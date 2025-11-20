@@ -1,9 +1,9 @@
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
-import * as authMutations from "@/lib/hooks/use-auth-mutations";
+import * as authMutations from "@/features/auth/hooks/use-auth-mutations";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/lib/hooks/use-auth-mutations", () => ({
+vi.mock("@/features/auth/hooks/use-auth-mutations", () => ({
   useResetPassword: vi.fn(),
 }));
 

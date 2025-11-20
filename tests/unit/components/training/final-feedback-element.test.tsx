@@ -1,19 +1,19 @@
-import { FinalFeedbackElement } from "@/components/training/chat-components/final-feedback-element/final-feedback-element";
+import { FinalFeedbackElement } from "@/features/training/components/chat-components/final-feedback-element/final-feedback-element";
 import { render, screen } from "../../test-utils";
 
-vi.mock("@/components/training/chat-components/final-feedback-element/final-feedback-header", () => ({
+vi.mock("@/features/training/components/chat-components/final-feedback-element/final-feedback-header", () => ({
   FinalFeedbackHeader: ({ perfectScore }: { perfectScore: boolean }) => (
     <div data-test-id="feedback-header">Perfect Score: {perfectScore ? "Yes" : "No"}</div>
   ),
 }));
 
-vi.mock("@/components/training/chat-components/final-feedback-element/rounds-scores-display", () => ({
+vi.mock("@/features/training/components/chat-components/final-feedback-element/rounds-scores-display", () => ({
   RoundsScoresDisplay: ({ roundsScores }: { roundsScores: number[] }) => (
     <div data-test-id="rounds-scores">Scores: {roundsScores.join(", ")}</div>
   ),
 }));
 
-vi.mock("@/components/training/chat-components/final-feedback-element/stats-grid", () => ({
+vi.mock("@/features/training/components/chat-components/final-feedback-element/stats-grid", () => ({
   StatsGrid: ({ totalScore, accuracyPercentage }: { totalScore: string; accuracyPercentage: number }) => (
     <div data-test-id="stats-grid">
       Total: {totalScore}, Accuracy: {accuracyPercentage}%
@@ -21,13 +21,13 @@ vi.mock("@/components/training/chat-components/final-feedback-element/stats-grid
   ),
 }));
 
-vi.mock("@/components/training/chat-components/final-feedback-element/detailed-analysis", () => ({
+vi.mock("@/features/training/components/chat-components/final-feedback-element/detailed-analysis", () => ({
   DetailedAnalysis: ({ finalFeedback }: { finalFeedback: string }) => (
     <div data-test-id="detailed-analysis">{finalFeedback}</div>
   ),
 }));
 
-vi.mock("@/components/training/chat-components/final-feedback-element/final-feedback-actions", () => ({
+vi.mock("@/features/training/components/chat-components/final-feedback-element/final-feedback-actions", () => ({
   FinalFeedbackActions: () => <div data-test-id="feedback-actions">Actions</div>,
 }));
 
