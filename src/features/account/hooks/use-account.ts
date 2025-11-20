@@ -1,9 +1,9 @@
 import type { UpdateProfileDTO } from "@/types";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { accountApi } from "../api/account.api";
 
 export function useProfile() {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
       return accountApi.getProfile();

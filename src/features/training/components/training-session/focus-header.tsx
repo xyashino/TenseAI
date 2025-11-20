@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import type { TenseName } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import { memo } from "react";

@@ -1,4 +1,4 @@
-import { apiGet, apiPatch } from "@/lib/api-client";
+import { apiGet, apiPatch } from "@/shared/api/client";
 import type { ProfileDTO, UpdateProfileDTO } from "@/types";
 
 export interface GetProfileResponse {

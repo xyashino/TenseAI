@@ -1,4 +1,4 @@
-import { transformSessionDataToChatComponents } from "@/lib/utils";
+import { transformSessionDataToChatComponents } from "@/features/training/utils/transform-session";
 import type { DifficultyLevel, SessionDetailResponseDTO, TenseName } from "@/types";
 import { useMemo } from "react";
 import { HistoryChatLogArea } from "./history-chat-log-area";

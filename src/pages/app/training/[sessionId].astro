@@ -1,10 +1,10 @@
 ---
 import { TrainingSessionViewWithQueryClient } from "@/features/training";
 import BaseLayout from "@/layouts/base-layout.astro";
-import { NavigationRoutes } from "@/lib/enums/navigation";
 import { ProfileRepository } from "@/server/modules/profile";
 import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 export const prerender = false;
 
 const { sessionId } = Astro.params;

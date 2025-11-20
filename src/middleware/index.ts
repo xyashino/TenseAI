@@ -1,5 +1,5 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { createOptionsResponse, getCorsHeaders } from "@/server/utils/cors";
 import { defineMiddleware } from "astro:middleware";
 import { ProfileRepository } from "../server/modules/profile";

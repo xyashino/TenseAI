@@ -1,10 +1,10 @@
 import type { TrainingSessionWithRounds } from "@/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { historyApi } from "../api/history.api";
 
 export function useHistorySessions() {
-  const queryResult = useSuspenseQuery({
+  const queryResult = useQuery({
     queryKey: ["training-sessions", "completed"],
     queryFn: async () => {
       return historyApi.getHistorySessions();

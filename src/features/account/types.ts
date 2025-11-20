@@ -1,3 +1,3 @@
-import type { AccountFormData } from "@/lib/validation";
+import type { AccountFormData } from "@/shared/schema/profile";
 
 export type { AccountFormData };

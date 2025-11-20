@@ -1,9 +1,9 @@
-import { apiGet } from "@/lib/api-client";
+import { apiGet } from "@/shared/api/client";
 import type { TrainingSessionsListResponseDTO } from "@/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export function useActiveTrainings() {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: ["training-sessions", "active"],
     queryFn: async () => {
       return apiGet<TrainingSessionsListResponseDTO>("/api/training-sessions?status=active");

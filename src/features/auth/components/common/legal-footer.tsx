@@ -1,4 +1,4 @@
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 
 export function LegalFooter() {
   return (

@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api-client";
+import { apiClient } from "@/shared/api/client";
 import { useMutation } from "@tanstack/react-query";
 
 export function useLogout() {

@@ -2,7 +2,7 @@ import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { forgotPasswordSchema, type ForgotPasswordFormValues } from "@/shared/schema/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";

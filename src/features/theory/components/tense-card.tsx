@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import type { TenseName } from "@/types";
 import { ArrowRight, Award, History, Sparkles, Target } from "lucide-react";
 import type React from "react";

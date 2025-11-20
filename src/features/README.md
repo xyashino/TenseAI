@@ -4,7 +4,7 @@ For the frontend (React/Astro), we use a **Feature-Based Architecture**. This al
 
 ## Directory Structure
 
-We introduce a `src/features/` directory. Logic currently scattered across `src/components`, `src/lib/hooks`, and `src/lib/api-client.ts` should be consolidated here.
+We introduce a `src/features/` directory. Logic previously scattered across `src/components`, `src/lib/hooks`, and `src/lib/api-client.ts` has been consolidated here.
 
 ```text
 src/
@@ -31,7 +31,7 @@ src/
 ## The Rules
 
 ### 1. Colocation
-If a hook or component is **only** used by the Training feature, it belongs in `src/features/training/`. It should not be in `src/lib/hooks` or `src/components/common`.
+If a hook or component is **only** used by the Training feature, it belongs in `src/features/training/`. It should not be in shared directories or `src/components/common`.
 
 ### 2. "Smart" vs "Dumb" Components
 *   **Feature Components** (`src/features/*/components`): These are "Smart". They use custom hooks, manage state, and fetch data.
@@ -60,7 +60,7 @@ To refactor the existing `Training` domain:
 
 **`src/features/training/api/training.api.ts`**
 ```typescript
-import { apiClient } from "@/lib/api-client"; // Base fetcher
+import { apiClient } from "@/shared/api/client"; // Base fetcher
 
 export const TrainingApi = {
   getSession: (id: string) => apiClient.get(\`/training-sessions/\${id}\`),

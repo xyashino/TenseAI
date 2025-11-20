@@ -1,11 +1,11 @@
 import type { ChatComponent } from "@/types";
 import { memo } from "react";
-import { FinalFeedbackElement } from "@/components/training/chat-components/final-feedback-element";
-import { LoadingElement } from "@/components/training/chat-components/loading-element";
-import { RoundSummaryElement } from "@/components/training/chat-components/round-summary-element";
-import { RoundSummaryElementReadOnly } from "@/components/training/chat-components/round-summary-element-read-only";
-import { SelectQuestionForm } from "@/components/training/chat-components/select-question-list/select-question-list-form";
-import { SelectQuestionListReadOnly } from "@/components/training/chat-components/select-question-list/select-question-list-read-only";
+import { FinalFeedbackElement } from "../chat-components/final-feedback-element";
+import { LoadingElement } from "../chat-components/loading-element";
+import { RoundSummaryElement } from "../chat-components/round-summary-element";
+import { RoundSummaryElementReadOnly } from "../chat-components/round-summary-element-read-only";
+import { SelectQuestionForm } from "../chat-components/select-question-list/select-question-list-form";
+import { SelectQuestionListReadOnly } from "../chat-components/select-question-list/select-question-list-read-only";
 
 interface ChatComponentRendererProps {
   component: ChatComponent;

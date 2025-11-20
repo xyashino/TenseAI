@@ -1,4 +1,4 @@
-import { apiGet } from "@/lib/api-client";
+import { apiGet } from "@/shared/api/client";
 import type { SessionDetailResponseDTO, TrainingSessionsListResponseDTO } from "@/types";
 
 export interface GetHistorySessionsResponse {

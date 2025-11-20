@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
-import { startSessionSchema, type StartSessionFormData } from "@/lib/validation";
+import { startSessionSchema, type StartSessionFormData } from "@/shared/schema/training.schema";
 import type { DifficultyLevel } from "@/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";

@@ -6,10 +6,23 @@ import { ActiveSessionsList } from "./list/active-sessions-list";
 import { StartSessionCTA } from "./start-session/start-session-cta";
 
 export function ActiveTrainingViewContent() {
-  const { data: trainingsData } = useActiveTrainings();
-  const { data: profile } = useProfile();
+  const { data: trainingsData, isLoading, isError, error } = useActiveTrainings();
+  const { data: profile, isLoading: isLoadingProfile } = useProfile();
 
-  const sessions = trainingsData["training-sessions"] || [];
+  if (isLoading || isLoadingProfile) {
+    return <ActiveTrainingViewFallback />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center p-4">
+        <p className="text-muted-foreground mb-2">Error loading active trainings</p>
+        <p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : "An unexpected error occurred"}</p>
+      </div>
+    );
+  }
+
+  const sessions = trainingsData?.["training-sessions"] || [];
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="overflow-y-auto">
@@ -31,11 +44,7 @@ function ActiveTrainingViewFallback() {
 }
 
 function ActiveTrainingView() {
-  return (
-    <Suspense fallback={<ActiveTrainingViewFallback />}>
-      <ActiveTrainingViewContent />
-    </Suspense>
-  );
+  return <ActiveTrainingViewContent />;
 }
 
 export const ActiveTrainingViewWithQueryClient = withQueryClient(ActiveTrainingView);

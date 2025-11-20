@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { calculateSessionProgress } from "@/lib/utils/session-progress";
+import { calculateSessionProgress } from "@/features/training/utils/session-progress";
 import type { TrainingSessionWithRounds } from "@/types";
 import { Play } from "lucide-react";
 import { DeleteConfirmDialog } from "../delete-confirm-dialog";

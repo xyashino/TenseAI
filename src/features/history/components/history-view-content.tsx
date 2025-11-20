@@ -1,10 +1,26 @@
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { useHistorySessions } from "../hooks/use-history-sessions";
 import { EmptyState } from "./empty-state";
 import { HistoryList } from "./history-list";
+import { HistoryViewFallback } from "./history-view-fallback";
 
 export function HistoryViewContent() {
-  const { sessions } = useHistorySessions();
+  const { sessions, isLoading, isError, error } = useHistorySessions();
+
+  if (isLoading) {
+    return <HistoryViewFallback />;
+  }
+
+  if (isError) {
+    return (
+      <EmptyState
+        title="Error loading history"
+        description={error instanceof Error ? error.message : "We couldn't load your training history. Please try again later."}
+        ctaText="Go to Practice"
+        ctaLink={NavigationRoutes.TRAINING}
+      />
+    );
+  }
 
   if (sessions.length === 0) {
     return (

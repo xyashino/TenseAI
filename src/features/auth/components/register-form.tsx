@@ -3,7 +3,7 @@ import { withQueryClient } from "@/components/providers/with-query-client";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { useRegister } from "../hooks/use-auth-mutations";
 import { registerSchema, type RegisterFormValues } from "@/shared/schema/auth";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";

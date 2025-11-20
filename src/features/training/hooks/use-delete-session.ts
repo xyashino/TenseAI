@@ -1,4 +1,4 @@
-import { apiDelete } from "@/lib/api-client";
+import { apiDelete } from "@/shared/api/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useDeleteSession() {

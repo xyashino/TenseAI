@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useLogout } from "@/features/auth";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/cn";
 import { LogOutIcon } from "lucide-react";
 import type { ReactNode } from "react";
 

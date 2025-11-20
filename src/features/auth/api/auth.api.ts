@@ -1,4 +1,4 @@
-import { apiPost } from "@/lib/api-client";
+import { apiPost } from "@/shared/api/client";
 
 export interface LoginRequest {
   email: string;

@@ -1,5 +1,5 @@
-import { apiPost, type ApiClientError } from "@/lib/api-client";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { apiPost, type ApiClientError } from "@/shared/api/client";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { navigate } from "astro:transitions/client";
 import { toast } from "sonner";

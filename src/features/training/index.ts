@@ -6,3 +6,6 @@ export { TrainingSessionViewWithQueryClient } from "./components/training-sessio
 export { useActiveTrainings } from "./hooks/use-active-trainings";
 export { useCreateSession } from "./hooks/use-create-session";
 export { useDeleteSession } from "./hooks/use-delete-session";
+export { useTrainingSession } from "./hooks/use-training-session";
+export { useTrainingSessionActions } from "./hooks/use-training-session-actions";
+export { useReportQuestion } from "./hooks/use-report-question";
