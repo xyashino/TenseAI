@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+export const startSessionSchema = z.object({
+  tense: z.enum(["Present Simple", "Past Simple", "Present Perfect", "Future Simple"]),
+  difficulty: z.enum(["Basic", "Advanced"]),
+});
+
 export const createSessionSchema = z.object({
   tense: z.enum(["Present Simple", "Past Simple", "Present Perfect", "Future Simple"], {
     error: () => `Invalid tense. Must be one of: Present Simple, Past Simple, Present Perfect, Future Simple`,
@@ -9,6 +14,7 @@ export const createSessionSchema = z.object({
   }),
 });
 
+export type StartSessionFormData = z.infer<typeof startSessionSchema>;
 export type CreateSessionValidated = z.infer<typeof createSessionSchema>;
 
 export const getTrainingSessionsQuerySchema = z.object({

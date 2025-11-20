@@ -13,12 +13,6 @@ export class ApiClientError extends Error {
   }
 }
 
-/**
- * API base path for versioning endpoints
- * Change this to update the API version (e.g., '/api/v2')
- */
-const API_BASE_PATH = "/api/v1";
-
 const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
