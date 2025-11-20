@@ -34,9 +34,13 @@ src/
 ├── shared/               <-- SHARED KERNEL (Frontend & Backend)
 │   ├── api/              <-- Base API Client config (no specific calls)
 │   ├── schema/           <-- Zod Schemas (shared validation)
-│   ├── types/            <-- Global Types (User, Entity IDs)
+│   ├── enums/            <-- Shared Enums & Constants (Navigation routes, etc.)
 │   └── ui/               <-- Dumb UI Components (Buttons, Inputs)
 │
+├── layouts/              <-- Astro Layout Files (Framework Infrastructure)
+│   ├── app-layout.astro <-- App layout with navigation
+│   ├── auth-layout.astro <-- Auth pages layout
+│   └── base-layout.astro <-- Base HTML structure
 ├── pages/                <-- ROUTING (Astro)
 │   ├── api/              <-- API Routes (thin wrappers around Server Modules)
 │   └── app/              <-- App Pages (thin wrappers around Feature Components)

@@ -11,11 +11,13 @@ export default defineConfig({
   output: "server",
   integrations: [react(), sitemap()],
   server: {
-    // eslint-disable-next-line no-undef
-    port: Number.parseInt(process.env.PORT || "3000"),
+    port: Number.parseInt(import.meta.env.PORT || "3000"),
   },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      force: false,
+    },
   },
   adapter: node({
     mode: "standalone",

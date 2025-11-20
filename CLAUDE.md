@@ -80,7 +80,7 @@ TypeScript is configured with `@/*` alias pointing to `./src/*`:
 
 ```tsx
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 ```
 
 ## Coding Practices
