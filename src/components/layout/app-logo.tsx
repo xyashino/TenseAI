@@ -1,5 +1,5 @@
-import { NavigationRoutes } from "@/lib/enums/navigation";
-import { cn } from "@/shared/utils";
+import { NavigationRoutes } from "@/shared/enums/navigation";
+import { cn } from "@/shared/utils/cn";
 interface AppLogoProps {
   showText?: boolean;
   invert?: boolean;
