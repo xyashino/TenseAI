@@ -11,4 +11,4 @@ This directory contains **shared** components that are used across multiple feat
 ## Guidelines
 
 - **Feature-specific components** should NOT be here. They belong in `src/features/<feature-name>/components`.
-- **Domain logic** should NOT be here. Use `src/features/<feature-name>/hooks` or `src/lib`.
+- **Domain logic** should NOT be here. Use `src/features/<feature-name>/hooks` or `src/shared`.

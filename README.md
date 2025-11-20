@@ -120,7 +120,7 @@ The project follows a clear separation of concerns:
   - `./src/pages` - Astro pages and API endpoints
   - `./src/components` - React components (UI, training, theory, etc.)
   - `./src/components/ui` - Shadcn/ui components
-  - `./src/lib` - Services, hooks, and utilities
+  - `./src/shared` - Shared services, schemas, and utilities
   - `./src/server` - Backend-only code (services, validation, errors)
   - `./src/db` - Supabase clients and database types
   - `./src/types.ts` - Shared TypeScript types

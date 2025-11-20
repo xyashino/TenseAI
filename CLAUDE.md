@@ -63,11 +63,11 @@ This is an **SSR (server-side rendered) application** with Astro's Node adapter 
 │   ├── utils/        # Backend utilities (auth, error-handler, etc.)
 │   ├── validation/   # Zod schemas for request validation
 │   └── errors/       # Custom API error classes
-├── lib/              # Client-side utilities (safe for client use)
-│   ├── hooks/        # Custom React hooks
-│   ├── api-client.ts # API request utilities
-│   ├── query-client.ts # React Query configuration
-│   └── utils.ts      # UI utilities (e.g., cn function)
+├── shared/           # Shared utilities (client & server safe)
+│   ├── api/          # API request utilities
+│   ├── enums/        # Shared enums
+│   ├── schema/       # Shared Zod schemas
+│   └── utils/        # Shared utilities (e.g., cn function)
 ├── middleware/       # Astro middleware (index.ts)
 ├── db/               # Supabase clients and types
 ├── types.ts          # Shared types (Entities, DTOs)
@@ -120,13 +120,13 @@ function processData(data: Data) {
 - `src/server/utils/` - Backend utilities (`auth.ts`, `api-response.ts`, `error-handler.ts`, `pagination.ts`)
 - `src/server/validation/` - Zod schemas for API request validation
 - `src/server/errors/` - Custom error classes with `toResponse()` methods
-- `src/lib/` - Client-side utilities and hooks (React Query, API client, custom hooks)
+- `src/shared/` - Shared utilities, schemas, and API client (safe for client use)
 - **NEVER import from `src/server/` in client components** - this will cause bundling errors
 
 ### React Components
 
 - Functional components with hooks only
-- Extract reusable logic into custom hooks in `src/lib/hooks/`
+- Extract reusable logic into custom hooks in `src/features/<feature>/hooks/`
 - Use `React.memo()` for expensive components with stable props
 - Use `useCallback` for event handlers passed to children
 - Use `useMemo` for expensive calculations
