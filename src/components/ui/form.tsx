@@ -11,7 +11,7 @@ import {
 } from "react-hook-form";
 
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 
 interface FormItemContextValue {
   id: string;
@@ -101,14 +101,14 @@ const Form = FormProvider;
 
 type FormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   name: TName;
 } & Omit<ControllerProps<TFieldValues, TName>, "name">;
 
 function FormField<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({ ...props }: FormFieldProps<TFieldValues, TName>) {
   return (
     <Controller
