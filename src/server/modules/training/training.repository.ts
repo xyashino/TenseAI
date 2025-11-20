@@ -2,11 +2,13 @@ import type { SupabaseClient } from "@/db/supabase.client";
 import { getPaginationOffset } from "@/server/utils/pagination";
 import type {
   CompletedRoundDTO,
+  DifficultyLevel,
   Question,
   QuestionInsert,
   Round,
   RoundInsert,
   SessionStatus,
+  TenseName,
   TrainingSession,
   TrainingSessionInsert,
   TrainingSessionWithRounds,
@@ -59,6 +61,61 @@ interface RoundWithSessionData {
     difficulty: string;
     status: SessionStatus;
   };
+}
+
+// Types for Supabase nested query results
+interface SessionWithRoundsQueryResult {
+  id: string;
+  tense: TenseName;
+  difficulty: DifficultyLevel;
+  status: SessionStatus;
+  started_at: string;
+  completed_at: string | null;
+  rounds:
+    | {
+        id: string;
+        round_number: number;
+        score: number | null;
+        completed_at: string | null;
+      }[]
+    | null;
+}
+
+interface QuestionWithUserAnswerQueryResult {
+  id: string;
+  question_number: number;
+  question_text: string;
+  options: string | string[];
+  correct_answer: string;
+  user_answers:
+    | {
+        selected_answer: string;
+        is_correct: boolean;
+        answered_at: string;
+      }[]
+    | null;
+}
+
+interface RoundWithQuestionsQueryResult {
+  id: string;
+  round_number: number;
+  score: number | null;
+  round_feedback: string | null;
+  started_at: string;
+  completed_at: string | null;
+  questions: QuestionWithUserAnswerQueryResult[] | null;
+}
+
+interface SessionWithDetailsQueryResult {
+  id: string;
+  user_id: string;
+  tense: TenseName;
+  difficulty: DifficultyLevel;
+  status: SessionStatus;
+  final_feedback: string | null;
+  started_at: string;
+  completed_at: string | null;
+  rounds: RoundWithQuestionsQueryResult[] | null;
 }
 
 export class TrainingRepository {
@@ -183,20 +240,22 @@ export class TrainingRepository {
       throw new Error(`Failed to fetch sessions: ${dataResult.error?.message || "Unknown error"}`);
     }
 
-    const sessions: TrainingSessionWithRounds[] = dataResult.data.map((session: any) => ({
-      id: session.id,
-      tense: session.tense,
-      difficulty: session.difficulty,
-      status: session.status,
-      started_at: session.started_at,
-      completed_at: session.completed_at,
-      rounds: (session.rounds || []).map((round: Round) => ({
-        id: round.id,
-        round_number: round.round_number,
-        score: round.score,
-        completed_at: round.completed_at,
-      })),
-    }));
+    const sessions: TrainingSessionWithRounds[] = (dataResult.data as SessionWithRoundsQueryResult[]).map(
+      (session) => ({
+        id: session.id,
+        tense: session.tense,
+        difficulty: session.difficulty,
+        status: session.status,
+        started_at: session.started_at,
+        completed_at: session.completed_at,
+        rounds: (session.rounds || []).map((round) => ({
+          id: round.id,
+          round_number: round.round_number,
+          score: round.score,
+          completed_at: round.completed_at,
+        })),
+      })
+    );
 
     return {
       sessions,
@@ -254,23 +313,24 @@ export class TrainingRepository {
       return null;
     }
 
+    const queryData = data as SessionWithDetailsQueryResult;
     const transformedData: SessionWithDetailsData = {
-      id: data.id,
-      user_id: data.user_id,
-      tense: data.tense,
-      difficulty: data.difficulty,
-      status: data.status,
-      final_feedback: data.final_feedback,
-      started_at: data.started_at,
-      completed_at: data.completed_at,
-      rounds: (data.rounds || []).map((round: any) => ({
+      id: queryData.id,
+      user_id: queryData.user_id,
+      tense: queryData.tense,
+      difficulty: queryData.difficulty,
+      status: queryData.status,
+      final_feedback: queryData.final_feedback,
+      started_at: queryData.started_at,
+      completed_at: queryData.completed_at,
+      rounds: (queryData.rounds || []).map((round) => ({
         id: round.id,
         round_number: round.round_number,
         score: round.score,
         round_feedback: round.round_feedback,
         started_at: round.started_at,
         completed_at: round.completed_at,
-        questions: (round.questions || []).map((question: any) => {
+        questions: (round.questions || []).map((question) => {
           let options: string[];
           try {
             options = Array.isArray(question.options)
@@ -385,7 +445,7 @@ export class TrainingRepository {
       throw new Error(`Failed to fetch questions: ${error.message}`);
     }
 
-    return (data || []).map((question: any) => {
+    return (data || []).map((question) => {
       let options: string[];
       try {
         options = Array.isArray(question.options)

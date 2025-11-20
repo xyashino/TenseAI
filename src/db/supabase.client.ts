@@ -7,10 +7,6 @@ import type { Database } from "./database.types";
 const supabaseUrl = requireEnv("SUPABASE_URL");
 const supabaseKey = requireEnv("SUPABASE_KEY");
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing Supabase environment variables");
-}
-
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
 
 export type SupabaseClient = typeof supabaseClient;

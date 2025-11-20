@@ -23,6 +23,17 @@ export function handleApiError(error: unknown): Response {
     return validationError.toResponse();
   }
 
+  // Log unexpected errors for debugging (only in development or with proper logging service)
+  if (error instanceof Error) {
+    console.error("Unexpected error:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
+  } else {
+    console.error("Unexpected non-Error object:", error);
+  }
+
   const internalError = new InternalServerError();
   return internalError.toResponse();
 }

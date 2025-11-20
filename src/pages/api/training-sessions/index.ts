@@ -23,7 +23,7 @@ export const POST: APIRoute = async (context) => {
 
     if (!rateLimitCheck.allowed) {
       throw new RateLimitError(
-        "You can create up to 10 sessions per minute. Please try again later.",
+        "You can create up to 15 sessions per minute. Please try again later.",
         rateLimitCheck.retryAfter
       );
     }
