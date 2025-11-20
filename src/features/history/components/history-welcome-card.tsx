@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { DifficultyLevel, SessionSummary, TenseName } from "@/types";
+import type { SessionSummary } from "@/features/training/types";
+import type { DifficultyLevel, TenseName } from "@/types";
 import { memo } from "react";
 
 interface HistoryWelcomeCardProps {

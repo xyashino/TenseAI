@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTrainingSessionActions } from "@/features/training/hooks/use-training-session-actions";
 import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";
 import { getFormSchema } from "@/features/training/utils/question-schema";
-import type { QuestionWithoutAnswer } from "@/types";
+import type { QuestionWithoutAnswer } from "../../../../types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { memo } from "react";
 import { useForm } from "react-hook-form";

@@ -1,7 +1,10 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import { getPaginationOffset } from "@/server/utils/pagination";
 import type {
   CompletedRoundDTO,
+  TrainingSessionWithRounds,
+} from "@/features/training/types";
+import { getPaginationOffset } from "@/server/utils/pagination";
+import type {
   DifficultyLevel,
   Question,
   QuestionInsert,
@@ -11,7 +14,6 @@ import type {
   TenseName,
   TrainingSession,
   TrainingSessionInsert,
-  TrainingSessionWithRounds,
   UserAnswerInsert,
 } from "@/types";
 

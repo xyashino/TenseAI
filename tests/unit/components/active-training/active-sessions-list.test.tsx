@@ -1,5 +1,5 @@
 import { ActiveSessionsList } from "@/components/active-training/list/active-sessions-list";
-import type { TrainingSessionWithRounds } from "@/types";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 

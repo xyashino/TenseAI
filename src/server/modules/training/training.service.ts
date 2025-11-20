@@ -6,20 +6,22 @@ import type {
   CompleteRoundResponseDTO,
   CompleteSessionResponseDTO,
   CreateSessionDTO,
-  DifficultyLevel,
-  PaginationMeta,
-  QuestionInsert,
   QuestionReview,
   QuestionWithoutAnswer,
   RoundDetailDTO,
-  RoundInsert,
   RoundWithQuestionsDTO,
   SessionDetailResponseDTO,
+  TrainingSessionDTO,
+  TrainingSessionsListResponseDTO,
+} from "@/features/training/types";
+import type {
+  DifficultyLevel,
+  PaginationMeta,
+  QuestionInsert,
+  RoundInsert,
   SessionStatus,
   TenseName,
-  TrainingSessionDTO,
   TrainingSessionInsert,
-  TrainingSessionsListResponseDTO,
   UserAnswerInsert,
 } from "@/types";
 import { TrainingRepository } from "./training.repository";

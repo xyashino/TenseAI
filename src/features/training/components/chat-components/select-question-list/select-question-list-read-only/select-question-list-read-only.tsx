@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { QuestionReview, QuestionWithoutAnswer } from "@/types";
+import type { QuestionReview, QuestionWithoutAnswer } from "../../../../types";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { memo } from "react";
 import { ChatLogWrapper } from "../../../training-session/chat-log-wrapper";

@@ -1,8 +1,8 @@
 ---
 import { PageHeader } from "@/components/layout/page-header";
 import { TenseCard } from "@/features/theory";
+import type { TenseCardData } from "@/features/theory/types";
 import AppLayout from "@/layouts/app-layout.astro";
-import type { TenseCardData } from "@/types";
 import { getCollection } from "astro:content";
 
 const theoryEntries = await getCollection("theory");

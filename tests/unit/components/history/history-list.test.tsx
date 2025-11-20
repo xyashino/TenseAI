@@ -1,6 +1,6 @@
 import * as React from "react";
 import { HistoryList } from "@/features/history/components/history-list";
-import type { TrainingSessionWithRounds } from "@/types";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import { render, screen } from "../../test-utils";
 
 vi.mock("@/features/history/components/history-card", () => ({

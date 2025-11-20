@@ -1,4 +1,4 @@
-import type { QuestionReportWithPreview } from "@/types";
+import type { QuestionReportWithPreview } from "@/features/training/types";
 
 export interface CreateQuestionReportInput {
   question_id: string;

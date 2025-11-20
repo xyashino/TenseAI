@@ -1,4 +1,4 @@
-import type { TrainingSessionWithRounds } from "@/types";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import { HistoryCard } from "./history-card";
 
 interface HistoryListProps {

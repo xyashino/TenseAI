@@ -1,4 +1,5 @@
-import type { ChatComponent, DifficultyLevel, TenseName } from "@/types";
+import type { DifficultyLevel, TenseName } from "@/types";
+import type { ChatComponent } from "../../types";
 import { memo } from "react";
 import { ChatComponentRenderer } from "./chat-component-renderer";
 import { WelcomeCard } from "./welcome-card";

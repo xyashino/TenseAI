@@ -1,15 +1,17 @@
 import type {
+  DifficultyLevel,
+  SessionStatus,
+  TenseName,
+} from "@/types";
+import type {
   ChatComponent,
   CompleteRoundResponseDTO,
   CompleteSessionResponseDTO,
-  DifficultyLevel,
   QuestionReview,
   QuestionWithoutAnswer,
   RoundDetailDTO,
-  SessionStatus,
   SessionSummary,
-  TenseName,
-} from "@/types";
+} from "../types";
 import { create } from "zustand";
 
 interface TrainingSessionState {

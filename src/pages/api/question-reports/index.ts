@@ -7,7 +7,7 @@ import {
   createQuestionReportApiSchema,
   getQuestionReportsQueryApiSchema,
 } from "@/shared/schema/question-reports";
-import type { QuestionReportsListResponseDTO } from "@/types";
+import type { QuestionReportsListResponseDTO } from "@/features/training/types";
 import type { APIRoute } from "astro";
 
 export const prerender = false;

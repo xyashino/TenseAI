@@ -1,5 +1,5 @@
 import { apiPost } from "@/shared/api/client";
-import type { CreateQuestionReportDTO } from "@/types";
+import type { CreateQuestionReportDTO } from "../types";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 

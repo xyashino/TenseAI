@@ -1,4 +1,4 @@
-import type { TrainingSessionWithRounds } from "@/types";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { historyApi } from "../api/history.api";

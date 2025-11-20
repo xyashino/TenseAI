@@ -6,7 +6,7 @@ import type {
   CompleteSessionResponseDTO,
   CreateQuestionReportDTO,
   RoundWithQuestionsDTO,
-} from "@/types";
+} from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 

@@ -4,7 +4,7 @@ import type {
   QuestionWithoutAnswer,
   RoundDetailDTO,
   SessionDetailResponseDTO,
-} from "@/types";
+} from "../types";
 
 /**
  * Transforms SessionDetailResponseDTO into ChatComponent[] for rendering in read-only mode.

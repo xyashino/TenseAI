@@ -1,4 +1,4 @@
-import type { QuestionWithoutAnswer } from "@/types";
+import type { QuestionWithoutAnswer } from "../types";
 import { z } from "zod";
 
 /**

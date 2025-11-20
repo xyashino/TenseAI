@@ -1,3 +1,14 @@
-// Theory feature types are defined in the global types.ts file
-// This file exists for consistency with the feature structure
-export type { TenseCardData } from "@/types";
+import type { TenseName } from "@/types";
+
+export interface TenseCardData {
+  name: TenseName;
+  slug: string;
+  description: string;
+}
+
+export interface TheoryFrontmatter {
+  title: string;
+  tense: TenseName;
+  description: string;
+  order: number;
+}

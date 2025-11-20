@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useTrainingSessionActions } from "@/features/training/hooks/use-training-session-actions";
-import type { QuestionReview } from "@/types";
+import type { QuestionReview } from "../../types";
 import { memo } from "react";
 import ReactMarkdown from "react-markdown";
 import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";

@@ -1,8 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import { NavigationRoutes } from "@/shared/enums/navigation";
-import type { TenseName, TrainingSessionWithRounds } from "@/types";
+import type { TenseName } from "@/types";
 import { ArrowRight, Award, History, Sparkles, Target } from "lucide-react";
 import type React from "react";
 

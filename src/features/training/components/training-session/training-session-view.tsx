@@ -1,7 +1,8 @@
 import { withQueryClient } from "@/components/providers/with-query-client";
 import { useTrainingSession } from "@/features/training/hooks/use-training-session";
 import { useTrainingSessionStore } from "@/features/training/stores/training-session-store";
-import type { DifficultyLevel, RoundDetailDTO, SessionStatus, SessionSummary, TenseName } from "@/types";
+import type { DifficultyLevel, SessionStatus, TenseName } from "@/types";
+import type { RoundDetailDTO, SessionSummary } from "../../types";
 import { useEffect, useRef } from "react";
 import { ChatLogArea } from "./chat-log-area";
 import { FocusHeader } from "./focus-header";
