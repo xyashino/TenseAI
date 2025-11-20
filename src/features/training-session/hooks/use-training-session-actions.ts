@@ -1,12 +1,12 @@
 import { apiDelete, apiPost } from "@/shared/api/client";
-import { useTrainingSessionStore } from "@/features/training/stores/training-session-store";
+import { useTrainingSessionStore } from "@/features/training-session/stores/training-session-store";
 import type {
   AnswerSubmission,
   CompleteRoundResponseDTO,
   CompleteSessionResponseDTO,
   CreateQuestionReportDTO,
   RoundWithQuestionsDTO,
-} from "../types";
+} from "@/features/training/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 

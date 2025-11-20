@@ -1,5 +1,5 @@
 import type { DifficultyLevel } from "@/types";
-import type { TrainingSessionWithRounds } from "../../../types";
+import type { TrainingSessionWithRounds } from "@/features/training/types";
 import { ActiveSessionCard } from "../session-card/active-session-card";
 import { EmptyState } from "./empty-state";
 

@@ -1,4 +1,4 @@
-import { useTrainingSessionStore } from "@/features/training/stores/training-session-store";
+import { useTrainingSessionStore } from "@/features/training-session/stores/training-session-store";
 import { useEffect, useRef } from "react";
 import { useTrainingSessionActions } from "./use-training-session-actions";
 

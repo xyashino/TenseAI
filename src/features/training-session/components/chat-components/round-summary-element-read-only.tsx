@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { QuestionReview } from "../../types";
+import type { QuestionReview } from "@/features/training/types";
 import { memo } from "react";
 import ReactMarkdown from "react-markdown";
-import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 
 export interface RoundSummaryElementReadOnlyProps {
   roundNumber: number;

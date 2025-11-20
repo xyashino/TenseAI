@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { QuestionReview, QuestionWithoutAnswer } from "../../../../types";
+import type { QuestionReview, QuestionWithoutAnswer } from "@/features/training/types";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { memo } from "react";
-import { ChatLogWrapper } from "../../../training-session/chat-log-wrapper";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 
 interface SelectQuestionListReadOnlyProps {
   questions: QuestionWithoutAnswer[];

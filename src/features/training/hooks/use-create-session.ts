@@ -1,5 +1,5 @@
+import type { CreateSessionDTO, CreateSessionResponse } from "@/features/training/types";
 import { apiPost } from "@/shared/api/client";
-import type { CreateSessionDTO, CreateSessionResponse } from "../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { navigate } from "astro/virtual-modules/transitions-router.js";
 

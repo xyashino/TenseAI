@@ -12,7 +12,7 @@ import {
 import { Form, FormControl, FormField, FormLabel, FormMessage } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useReportQuestion } from "@/features/training/hooks/use-report-question";
+import { useReportQuestion } from "@/features/training-session/hooks/use-report-question";
 import { reportSchema, type ReportFormValues } from "@/shared/schema/question-reports";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { Flag } from "lucide-react";

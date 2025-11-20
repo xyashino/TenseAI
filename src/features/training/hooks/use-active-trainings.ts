@@ -1,5 +1,5 @@
+import type { TrainingSessionsListResponseDTO } from "@/features/training/types";
 import { apiGet } from "@/shared/api/client";
-import type { TrainingSessionsListResponseDTO } from "../types";
 import { useQuery } from "@tanstack/react-query";
 
 export function useActiveTrainings() {

@@ -1,4 +1,4 @@
-import type { SessionProgressViewModel } from "../types";
+import type { SessionProgressViewModel } from "@/features/training/types";
 
 export function calculateSessionProgress(
   rounds: { round_number: number; completed_at: string | null }[]

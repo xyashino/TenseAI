@@ -1,5 +1,5 @@
-import { ChatComponentRenderer } from "@/features/training/components/training-session/chat-component-renderer";
-import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";
+import { ChatComponentRenderer } from "@/features/training-session/components/training-session/chat-component-renderer";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 import type { ChatComponent, SessionSummary } from "@/features/training/types";
 import type { DifficultyLevel, TenseName } from "@/types";
 import { memo } from "react";

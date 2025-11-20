@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ChatLogWrapper } from "@/features/training/components/training-session/chat-log-wrapper";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 import { DetailedAnalysis } from "./detailed-analysis";
 import { FinalFeedbackActions } from "./final-feedback-actions";
 import { FinalFeedbackHeader } from "./final-feedback-header";

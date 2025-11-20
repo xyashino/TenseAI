@@ -1,4 +1,4 @@
-import type { ChatComponent } from "../../types";
+import type { ChatComponent } from "@/features/training/types";
 import { memo } from "react";
 import { FinalFeedbackElement } from "../chat-components/final-feedback-element";
 import { LoadingElement } from "../chat-components/loading-element";

@@ -11,7 +11,7 @@ import type {
   QuestionWithoutAnswer,
   RoundDetailDTO,
   SessionSummary,
-} from "../types";
+} from "@/features/training/types";
 import { create } from "zustand";
 
 interface TrainingSessionState {
