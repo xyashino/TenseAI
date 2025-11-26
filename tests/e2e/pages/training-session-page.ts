@@ -20,9 +20,7 @@ export class TrainingSessionPage {
     }
 
     const testId = `round-${roundNumber}-question-1`;
-    const firstQuestionLocator = this.page
-      .locator(`form [data-test-id="${testId}"], [data-test-id="${testId}"]`)
-      .last();
+    const firstQuestionLocator = this.page.getByTestId(testId);
 
     if (roundNumber > 1) {
       await this.page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
@@ -49,7 +47,7 @@ export class TrainingSessionPage {
 
   getQuestionCard(roundNumber: number, questionNumber: number): QuestionCard {
     const testId = `round-${roundNumber}-question-${questionNumber}`;
-    const locator = this.page.locator(`form [data-test-id="${testId}"], [data-test-id="${testId}"]`).last();
+    const locator = this.page.getByTestId(testId);
     return new QuestionCard(locator, roundNumber, questionNumber);
   }
 
@@ -102,6 +100,21 @@ export class TrainingSessionPage {
     await expect(submitButton).toBeVisible({ timeout: 10000 });
     await expect(submitButton).toBeEnabled();
     await submitButton.click();
+
+    try {
+      const loadingElement = this.page.getByTestId("loading-element");
+      await loadingElement.waitFor({ state: "visible", timeout: 5000 });
+    } catch {
+      // Loading element might not appear or disappear quickly
+    }
+
+    // Wait for loading element to disappear before looking for round summary
+    try {
+      const loadingElement = this.page.getByTestId("loading-element");
+      await loadingElement.waitFor({ state: "hidden", timeout: 30000 });
+    } catch {
+      // Loading element might disappear quickly or not be present
+    }
   }
 
   async completeRound(roundNumber: number): Promise<void> {
@@ -112,6 +125,7 @@ export class TrainingSessionPage {
     await this.answerAllQuestions(roundNumber);
     await this.submitRound(roundNumber);
 
+    // Wait for round summary to appear after loading completes
     const roundSummary = this.getRoundSummary(roundNumber);
     await roundSummary.waitForVisible();
     await roundSummary.verifyScore();

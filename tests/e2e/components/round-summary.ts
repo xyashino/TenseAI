@@ -1,21 +1,20 @@
 import { expect, type Locator } from "@playwright/test";
 
 export class RoundSummary {
-  constructor(
-    private readonly locator: Locator,
-    private readonly roundNumber: number
-  ) {}
+  constructor(private readonly locator: Locator, private readonly roundNumber: number) {}
 
   getLocator(): Locator {
     return this.locator;
   }
 
   async waitForVisible(): Promise<void> {
-    await expect(this.locator).toBeVisible({ timeout: 15000 });
+    await this.locator.waitFor({ state: "attached", timeout: 30000 });
+    await this.locator.scrollIntoViewIfNeeded({ timeout: 10000 });
+    await expect(this.locator).toBeVisible({ timeout: 30000 });
   }
 
   getTitle(): Locator {
-    return this.locator.getByText(new RegExp(`round ${this.roundNumber}.*complete`, "i"));
+    return this.locator.getByTestId("round-summary-title");
   }
 
   async verifyVisible(): Promise<void> {

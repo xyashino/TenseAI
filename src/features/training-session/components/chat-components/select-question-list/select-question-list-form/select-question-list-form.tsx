@@ -29,13 +29,10 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
 
   const form = useForm<FormSchema>({
     resolver: standardSchemaResolver(formSchema),
-    defaultValues: questions.reduce(
-      (acc, question) => {
-        acc[question.id] = "";
-        return acc;
-      },
-      {} as Record<string, string>
-    ),
+    defaultValues: questions.reduce((acc, question) => {
+      acc[question.id] = "";
+      return acc;
+    }, {} as Record<string, string>),
   });
 
   const onSubmit = (data: FormSchema) => {
@@ -61,11 +58,13 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
                   control={form.control}
                   name={question.id}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem data-test-id={`round-${roundNumber}-question-${index + 1}`}>
                       <FormLabel className="text-base font-medium">
                         Question {question.question_number || index + 1}
                       </FormLabel>
-                      <p className="text-sm text-muted-foreground mb-4">{question.question_text}</p>
+                      <p className="text-sm text-muted-foreground mb-4" data-test-id="question-text">
+                        {question.question_text}
+                      </p>
                       <FormControl>
                         <RadioGroup
                           value={field.value}
@@ -75,10 +74,15 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
                         >
                           {question.options.map((option, optionIndex) => (
                             <div key={optionIndex} className="flex items-center space-x-2">
-                              <RadioGroupItem value={option} id={`${question.id}-${optionIndex}`} />
+                              <RadioGroupItem
+                                value={option}
+                                id={`${question.id}-${optionIndex}`}
+                                data-test-id={`answer-option-${optionIndex}`}
+                              />
                               <label
                                 htmlFor={`${question.id}-${optionIndex}`}
                                 className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                                data-test-id={`answer-label-${optionIndex}`}
                               >
                                 {option}
                               </label>
@@ -92,7 +96,7 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
                 />
               ))}
               <div className="flex justify-end pt-4">
-                <Button type="submit" disabled={isCompletingRound}>
+                <Button type="submit" disabled={isCompletingRound} data-test-id={`submit-round-${roundNumber}-button`}>
                   {isCompletingRound ? "Submitting..." : "Submit Answers"}
                 </Button>
               </div>

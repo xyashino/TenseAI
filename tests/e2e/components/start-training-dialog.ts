@@ -10,7 +10,7 @@ export class StartTrainingDialog {
 
   async verifyTitle(): Promise<void> {
     await this.waitForDialog();
-    await expect(this.page.getByRole("heading", { name: "Start New Training" })).toBeVisible({ timeout: 10000 });
+    await expect(this.page.getByTestId("start-training-dialog-title")).toBeVisible({ timeout: 10000 });
   }
 
   getTenseSelect(): Locator {

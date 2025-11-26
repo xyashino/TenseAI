@@ -2,11 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 import { useTrainingSessionActions } from "@/features/training-session/hooks/use-training-session-actions";
 import type { QuestionReview } from "@/features/training/types";
 import { memo } from "react";
 import ReactMarkdown from "react-markdown";
-import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 
 export interface RoundSummaryElementProps {
   roundNumber: number;
@@ -47,7 +47,9 @@ export const RoundSummaryElement = memo(function RoundSummaryElement({
       <Card id={`round-summary-${roundNumber}`} data-test-id={`round-summary-${roundNumber}`}>
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <CardTitle className="text-lg sm:text-xl">Round {roundNumber} Complete!</CardTitle>
+            <CardTitle className="text-lg sm:text-xl" data-test-id="round-summary-title">
+              Round {roundNumber} Complete!
+            </CardTitle>
             <Badge
               variant={percentage >= 70 ? "default" : "secondary"}
               className="text-base sm:text-lg px-3 sm:px-4 py-1 shrink-0"

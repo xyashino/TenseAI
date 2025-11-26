@@ -13,7 +13,7 @@ export class QuestionCard {
   }
 
   getQuestionText(): Locator {
-    return this.locator.locator("h3").or(this.locator.getByText(/\?/));
+    return this.locator.getByTestId("question-text");
   }
 
   async verifyQuestionText(): Promise<void> {
@@ -25,11 +25,11 @@ export class QuestionCard {
   }
 
   getAnswerOptions(): Locator {
-    return this.locator.locator('[role="radio"]').or(this.locator.locator('input[type="radio"]'));
+    return this.locator.getByTestId(/answer-option-\d+/).or(this.locator.locator('[role="radio"]'));
   }
 
   getAnswerLabels(): Locator {
-    return this.locator.locator("label");
+    return this.locator.getByTestId(/answer-label-\d+/).or(this.locator.locator("label"));
   }
 
   async getAnswerOptionCount(): Promise<number> {
@@ -42,23 +42,17 @@ export class QuestionCard {
   }
 
   async selectFirstAnswer(): Promise<void> {
-    const labels = this.getAnswerLabels();
-    const labelCount = await labels.count();
-    if (labelCount > 0) {
-      await labels.first().click();
-    } else {
-      await this.getAnswerOptions().first().click();
-    }
+    const firstOption = this.getAnswerOptions().first();
+    await firstOption.waitFor({ state: "visible" });
+    await firstOption.click();
+    await this.verifyAnswerSelected(0);
   }
 
   async selectAnswerByIndex(index: number): Promise<void> {
-    const labels = this.getAnswerLabels();
-    const labelCount = await labels.count();
-    if (labelCount > index) {
-      await labels.nth(index).click();
-    } else {
-      await this.getAnswerOptions().nth(index).click();
-    }
+    const option = this.getAnswerOptions().nth(index);
+    await option.waitFor({ state: "visible" });
+    await option.click();
+    await this.verifyAnswerSelected(index);
   }
 
   async verifyAnswerSelected(index = 0): Promise<void> {
