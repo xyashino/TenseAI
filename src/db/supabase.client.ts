@@ -1,5 +1,5 @@
 import { requireEnv } from "@/server/utils/env";
-import { createServerClient, type CookieOptionsWithName } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { createClient } from "@supabase/supabase-js";
 import type { AstroCookies } from "astro";
 import type { Database } from "./database.types";
@@ -11,9 +11,9 @@ export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
 
 export type SupabaseClient = typeof supabaseClient;
 
-export const cookieOptions: CookieOptionsWithName = {
+export const cookieOptions: CookieOptions = {
   path: "/",
-  secure: true,
+  secure: false,
   httpOnly: true,
   sameSite: "lax",
 };
