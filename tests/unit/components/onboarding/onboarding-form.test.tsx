@@ -1,4 +1,4 @@
-import { OnboardingForm } from "@/components/onboarding/onboarding-form";
+import { OnboardingForm } from "@/features/onboarding/components/onboarding-form";
 import * as onboardingHook from "@/features/onboarding/hooks/use-onboarding";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";

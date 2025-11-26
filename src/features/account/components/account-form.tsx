@@ -53,7 +53,7 @@ function AccountForm({ initialProfile }: AccountFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="difficulty">Default Difficulty</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={updateProfile.isPending}>
+              <Select onValueChange={field.onChange} value={field.value} disabled={updateProfile.isPending}>
                 <FormControl>
                   <SelectTrigger id="difficulty" className="w-full">
                     <SelectValue placeholder="Select difficulty" />

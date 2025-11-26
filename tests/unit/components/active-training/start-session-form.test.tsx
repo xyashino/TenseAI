@@ -1,4 +1,4 @@
-import { StartSessionForm } from "@/components/active-training/start-session/start-session-form";
+import { StartSessionForm } from "@/features/training/components/active-training/start-session/start-session-form";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import * as sessionHook from "@/features/training/hooks/use-create-session";
 import userEvent from "@testing-library/user-event";

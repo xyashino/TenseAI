@@ -1,6 +1,6 @@
+import { accountApi } from "@/features/account/api/account.api";
 import type { UpdateProfileDTO } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { accountApi } from "../api/account.api";
 
 export function useProfile() {
   return useQuery({

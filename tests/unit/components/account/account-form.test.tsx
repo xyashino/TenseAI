@@ -1,16 +1,13 @@
 import { AccountForm } from "@/features/account";
-import * as accountHook from "@/features/account";
+import * as accountHook from "@/features/account/hooks/use-account";
 import type { ProfileDTO } from "@/types";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/features/account", async () => {
-  const actual = await vi.importActual("@/features/account");
-  return {
-    ...actual,
-    useUpdateProfile: vi.fn(),
-  };
-});
+vi.mock("@/features/account/hooks/use-account", () => ({
+  useUpdateProfile: vi.fn(),
+  useProfile: vi.fn(),
+}));
 
 describe("AccountForm", () => {
   const mockMutate = vi.fn();
@@ -29,7 +26,14 @@ describe("AccountForm", () => {
     vi.clearAllMocks();
     vi.mocked(accountHook.useUpdateProfile).mockReturnValue({
       mutate: mockMutate,
+      mutateAsync: vi.fn().mockResolvedValue({}),
       isPending: false,
+      isError: false,
+      isSuccess: false,
+      data: undefined,
+      error: null,
+      reset: vi.fn(),
+      status: "idle",
     } as ReturnType<typeof accountHook.useUpdateProfile>);
   });
 
@@ -56,37 +60,62 @@ describe("AccountForm", () => {
     render(<AccountForm initialProfile={mockProfile} />);
 
     const nameInput = screen.getByLabelText(/name/i);
-    const submitButton = screen.getByRole("button", { name: /save changes/i });
 
     await user.clear(nameInput);
     await user.type(nameInput, "Jane Doe");
+    await user.tab();
+
+    const submitButton = await waitFor(() => {
+      const button = screen.getByRole("button", { name: /save changes/i });
+      expect(button).not.toBeDisabled();
+      return button;
+    });
+
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockMutate).toHaveBeenCalledWith({
-        name: "Jane Doe",
-        default_difficulty: "Basic",
-      });
-    });
+    await waitFor(
+      () => {
+        expect(mockMutate).toHaveBeenCalledWith({
+          name: "Jane Doe",
+          default_difficulty: "Basic",
+        });
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("should allow changing difficulty level", async () => {
     render(<AccountForm initialProfile={mockProfile} />);
 
     const difficultySelect = screen.getByLabelText(/default difficulty/i);
-    const submitButton = screen.getByRole("button", { name: /save changes/i });
 
     await user.click(difficultySelect);
-    const advancedOption = screen.getByRole("option", { name: /advanced \(b2\)/i });
+    const advancedOption = await screen.findByRole("option", { name: /advanced \(b2\)/i });
     await user.click(advancedOption);
+
+    // Wait for select to close and form to be dirty
+    await waitFor(() => {
+      expect(screen.queryByRole("option", { name: /advanced \(b2\)/i })).not.toBeInTheDocument();
+    });
+
+    // Wait for form to be dirty and get fresh button reference
+    const submitButton = await waitFor(() => {
+      const button = screen.getByRole("button", { name: /save changes/i });
+      expect(button).not.toBeDisabled();
+      return button;
+    });
+
     await user.click(submitButton);
 
-    await waitFor(() => {
-      expect(mockMutate).toHaveBeenCalledWith({
-        name: "John Doe",
-        default_difficulty: "Advanced",
-      });
-    });
+    await waitFor(
+      () => {
+        expect(mockMutate).toHaveBeenCalledWith({
+          name: "John Doe",
+          default_difficulty: "Advanced",
+        });
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("should disable submit button when form is not dirty", () => {
@@ -99,7 +128,14 @@ describe("AccountForm", () => {
   it("should disable form fields and button when loading", () => {
     vi.mocked(accountHook.useUpdateProfile).mockReturnValue({
       mutate: mockMutate,
+      mutateAsync: vi.fn().mockResolvedValue({}),
       isPending: true,
+      isError: false,
+      isSuccess: false,
+      data: undefined,
+      error: null,
+      reset: vi.fn(),
+      status: "pending",
     } as ReturnType<typeof accountHook.useUpdateProfile>);
 
     render(<AccountForm initialProfile={mockProfile} />);
@@ -107,7 +143,9 @@ describe("AccountForm", () => {
     const nameInput = screen.getByLabelText(/name/i);
     const submitButton = screen.getByRole("button", { name: /save changes/i });
 
+    // Input should be disabled when isPending is true
     expect(nameInput).toBeDisabled();
+    // Button should be disabled when isPending is true (even if form is dirty)
     expect(submitButton).toBeDisabled();
   });
 

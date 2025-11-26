@@ -1,9 +1,9 @@
-import { ActiveSessionsList } from "@/components/active-training/list/active-sessions-list";
+import { ActiveSessionsList } from "@/features/training/components/active-training/list/active-sessions-list";
 import type { TrainingSessionWithRounds } from "@/features/training/types";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 
-vi.mock("@/components/active-training/session-card/active-session-card", () => ({
+vi.mock("@/features/training/components/active-training/session-card/active-session-card", () => ({
   ActiveSessionCard: ({ session }: { session: TrainingSessionWithRounds }) => (
     <div data-test-id="active-session-card">
       <div>
@@ -15,7 +15,7 @@ vi.mock("@/components/active-training/session-card/active-session-card", () => (
   ),
 }));
 
-vi.mock("@/components/active-training/list/empty-state", () => ({
+vi.mock("@/features/training/components/active-training/list/empty-state", () => ({
   EmptyState: ({ defaultDifficulty }: { defaultDifficulty?: string }) => (
     <div data-test-id="empty-state">No active sessions. Default: {defaultDifficulty || "None"}</div>
   ),
