@@ -40,7 +40,7 @@ FROM base AS runtime
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/src/server/prompts ./dist/server/prompts
+COPY --from=build /app/src/server/modules/training/prompts ./dist/server/modules/training/prompts
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown -R appuser:appgroup /app
 USER appuser
