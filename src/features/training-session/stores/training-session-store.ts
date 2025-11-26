@@ -1,8 +1,4 @@
-import type {
-  DifficultyLevel,
-  SessionStatus,
-  TenseName,
-} from "@/types";
+import type { DifficultyLevel, SessionStatus, TenseName } from "@/types";
 import type {
   ChatComponent,
   CompleteRoundResponseDTO,

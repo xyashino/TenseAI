@@ -1,8 +1,5 @@
 import type { SupabaseClient } from "@/db/supabase.client";
-import type {
-  CompletedRoundDTO,
-  TrainingSessionWithRounds,
-} from "@/features/training/types";
+import type { CompletedRoundDTO, TrainingSessionWithRounds } from "@/features/training/types";
 import { getPaginationOffset } from "@/server/utils/pagination";
 import type {
   DifficultyLevel,
@@ -338,8 +335,8 @@ export class TrainingRepository {
             options = Array.isArray(question.options)
               ? question.options
               : typeof question.options === "string"
-              ? JSON.parse(question.options)
-              : [];
+                ? JSON.parse(question.options)
+                : [];
           } catch {
             options = [];
           }
@@ -453,8 +450,8 @@ export class TrainingRepository {
         options = Array.isArray(question.options)
           ? question.options
           : typeof question.options === "string"
-          ? JSON.parse(question.options)
-          : [];
+            ? JSON.parse(question.options)
+            : [];
       } catch {
         options = [];
       }

@@ -1,6 +1,5 @@
-import type { Database } from "@/db/database.types";
-import { AuthenticationError, BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
 import type { SupabaseClient } from "@/db/supabase.client";
+import { AuthenticationError, BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
 import { IdentityRepository } from "./identity.repository";
 import type { AuthUser, ForgotPasswordInput, LoginInput, RegisterInput, ResetPasswordInput } from "./identity.types";
 

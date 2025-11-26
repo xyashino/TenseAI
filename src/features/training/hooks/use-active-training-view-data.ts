@@ -29,5 +29,3 @@ export function useActiveTrainingViewData() {
     defaultDifficulty: profile?.default_difficulty,
   };
 }
-
-

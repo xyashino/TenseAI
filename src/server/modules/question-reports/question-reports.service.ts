@@ -1,7 +1,6 @@
-import type { Database } from "@/db/database.types";
+import type { SupabaseClient } from "@/db/supabase.client";
 import { BadRequestError, RateLimitError } from "@/server/errors/api-errors";
 import { rateLimitService } from "@/server/services/rate-limit.service";
-import type { SupabaseClient } from "@/db/supabase.client";
 import { QuestionReportRepository } from "./question-reports.repository";
 import type {
   CreateQuestionReportInput,

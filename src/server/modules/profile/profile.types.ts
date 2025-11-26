@@ -1,4 +1,4 @@
-import type { Profile, ProfileUpdate } from "@/types";
+import type { Profile } from "@/types";
 
 export interface UpdateProfileInput {
   name?: string;

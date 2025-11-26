@@ -15,7 +15,9 @@ export function HistoryViewContent() {
     return (
       <EmptyState
         title="Error loading history"
-        description={error instanceof Error ? error.message : "We couldn't load your training history. Please try again later."}
+        description={
+          error instanceof Error ? error.message : "We couldn't load your training history. Please try again later."
+        }
         ctaText="Go to Practice"
         ctaLink={NavigationRoutes.TRAINING}
       />

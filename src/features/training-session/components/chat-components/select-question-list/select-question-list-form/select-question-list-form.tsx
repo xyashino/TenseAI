@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useTrainingSessionActions } from "@/features/training-session/hooks/use-training-session-actions";
 import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
+import { useTrainingSessionActions } from "@/features/training-session/hooks/use-training-session-actions";
 import { getFormSchema } from "@/features/training-session/utils/question-schema";
 import type { QuestionWithoutAnswer } from "@/features/training/types";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
@@ -17,8 +17,6 @@ interface SelectQuestionFormProps {
   totalQuestions: number;
 }
 
-type FormValues = Record<string, string>;
-
 export const SelectQuestionForm = memo(function SelectQuestionForm({
   questions,
   roundNumber,
@@ -31,13 +29,10 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
 
   const form = useForm<FormSchema>({
     resolver: standardSchemaResolver(formSchema),
-    defaultValues: questions.reduce(
-      (acc, question) => {
-        acc[question.id] = "";
-        return acc;
-      },
-      {} as Record<string, string>
-    ),
+    defaultValues: questions.reduce((acc, question) => {
+      acc[question.id] = "";
+      return acc;
+    }, {} as Record<string, string>),
   });
 
   const onSubmit = (data: FormSchema) => {

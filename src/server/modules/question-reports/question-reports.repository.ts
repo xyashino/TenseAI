@@ -1,9 +1,8 @@
-import type { Database } from "@/db/database.types";
+import type { SupabaseClient } from "@/db/supabase.client";
 import type { QuestionReportWithPreview } from "@/features/training/types";
 import { NotFoundError } from "@/server/errors/api-errors";
 import { getPaginationOffset } from "@/server/utils/pagination";
 import type { QuestionReport, QuestionReportInsert } from "@/types";
-import type { SupabaseClient } from "@/db/supabase.client";
 
 export class QuestionReportRepository {
   constructor(private supabase: SupabaseClient) {}

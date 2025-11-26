@@ -3,10 +3,7 @@ import { HttpStatus, successResponse } from "@/server/utils/api-response";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { buildPaginationMeta } from "@/server/utils/pagination";
-import {
-  createQuestionReportApiSchema,
-  getQuestionReportsQueryApiSchema,
-} from "@/shared/schema/question-reports";
+import { createQuestionReportApiSchema, getQuestionReportsQueryApiSchema } from "@/shared/schema/question-reports";
 import type { QuestionReportsListResponseDTO } from "@/features/training/types";
 import type { APIRoute } from "astro";
 

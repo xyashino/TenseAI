@@ -1,6 +1,5 @@
-import type { Database } from "@/db/database.types";
-import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
 import type { SupabaseClient } from "@/db/supabase.client";
+import { BadRequestError, NotFoundError } from "@/server/errors/api-errors";
 import { ProfileRepository } from "./profile.repository";
 import type { ProfileOutput, UpdateProfileInput } from "./profile.types";
 

@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 import type { QuestionReview, QuestionWithoutAnswer } from "@/features/training/types";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { memo } from "react";
-import { ChatLogWrapper } from "@/features/training-session/components/training-session/chat-log-wrapper";
 
 interface SelectQuestionListReadOnlyProps {
   questions: QuestionWithoutAnswer[];
@@ -15,6 +15,7 @@ interface SelectQuestionListReadOnlyProps {
 export const SelectQuestionListReadOnly = memo(function SelectQuestionListReadOnly({
   questions,
   roundNumber,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   totalQuestions,
   questionsReview,
 }: SelectQuestionListReadOnlyProps) {
@@ -60,7 +61,6 @@ export const SelectQuestionListReadOnly = memo(function SelectQuestionListReadOn
                   {question.options.map((option, index) => {
                     const isUserAnswer = review && option === review.user_answer;
                     const isCorrectAnswer = review && option === review.correct_answer;
-                    const isSelected = isUserAnswer || isCorrectAnswer;
 
                     return (
                       <div

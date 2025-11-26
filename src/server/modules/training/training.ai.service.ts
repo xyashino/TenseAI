@@ -72,11 +72,11 @@ export class TrainingAIService {
 
       return completion;
     } catch (error) {
-       if (error instanceof InternalServerError) {
-         throw error;
-       }
-       // Wrap unknown errors
-       throw new InternalServerError(`AI Service Error: ${error instanceof Error ? error.message : "Unknown error"}`);
+      if (error instanceof InternalServerError) {
+        throw error;
+      }
+      // Wrap unknown errors
+      throw new InternalServerError(`AI Service Error: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -103,7 +103,9 @@ export class TrainingAIService {
       return parsed.questions;
     } catch (error) {
       if (error instanceof InternalServerError) throw error;
-      throw new InternalServerError(`Failed to generate questions: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new InternalServerError(
+        `Failed to generate questions: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 
@@ -138,7 +140,9 @@ export class TrainingAIService {
       return feedback.trim();
     } catch (error) {
       if (error instanceof InternalServerError) throw error;
-      throw new InternalServerError(`Failed to generate round feedback: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new InternalServerError(
+        `Failed to generate round feedback: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 
@@ -180,7 +184,9 @@ export class TrainingAIService {
       return completion.trim();
     } catch (error) {
       if (error instanceof InternalServerError) throw error;
-      throw new InternalServerError(`Failed to generate final feedback: ${error instanceof Error ? error.message : "Unknown error"}`);
+      throw new InternalServerError(
+        `Failed to generate final feedback: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 }

@@ -284,4 +284,3 @@ export interface QuestionCardBaseProps {
   roundNumber: number;
   totalQuestions: number;
 }
-
