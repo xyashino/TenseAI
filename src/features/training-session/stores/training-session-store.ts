@@ -1,4 +1,3 @@
-import type { DifficultyLevel, SessionStatus, TenseName } from "@/types";
 import type {
   ChatComponent,
   CompleteRoundResponseDTO,
@@ -8,6 +7,7 @@ import type {
   RoundDetailDTO,
   SessionSummary,
 } from "@/features/training/types";
+import type { DifficultyLevel, SessionStatus, TenseName } from "@/types";
 import { create } from "zustand";
 
 interface TrainingSessionState {
@@ -138,6 +138,22 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
         }
       }
 
+      if (!activeRoundId && state.status !== "completed") {
+        for (let i = chatComponents.length - 1; i >= 0; i--) {
+          const component = chatComponents[i];
+          if (component.type === "roundSummary" && component.data.roundNumber < 3) {
+            chatComponents[i] = {
+              ...component,
+              data: {
+                ...component.data,
+                isReadOnly: false,
+              },
+            };
+            break;
+          }
+        }
+      }
+
       if (state.status === "completed" && summary && finalFeedback) {
         const totalScore = `${summary.correct_answers}/${summary.total_questions}`;
         const perfectScore = summary.correct_answers === summary.total_questions;
@@ -220,11 +236,24 @@ export const useTrainingSessionStore = create<TrainingSessionState>((set, get) =
           !component.data.isReadOnly &&
           component.data.roundNumber === round.round_number
         ) {
+          const existingQuestions = component.data.questions;
+          const questionsForReadOnly: QuestionWithoutAnswer[] = questions_review.map((review) => {
+            const existingQuestion = existingQuestions.find((q) => q.question_number === review.question_number);
+            return {
+              id: existingQuestion?.id ?? "",
+              question_number: review.question_number,
+              question_text: review.question_text,
+              options: review.options,
+            };
+          });
+
           return {
             ...component,
             id: `questions-readonly-${round.id}`,
             data: {
-              ...component.data,
+              questions: questionsForReadOnly,
+              roundNumber: round.round_number,
+              totalQuestions: questions_review.length,
               isReadOnly: true,
               questionsReview: questions_review,
             },
