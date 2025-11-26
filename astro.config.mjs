@@ -19,6 +19,9 @@ export default defineConfig({
       force: false,
     },
   },
+  security: {
+    checkOrigin: false,
+  },
   adapter: node({
     mode: "standalone",
   }),
