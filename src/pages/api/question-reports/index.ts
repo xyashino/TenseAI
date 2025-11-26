@@ -1,4 +1,4 @@
-import { QuestionReportService } from "@/server/modules/question-reports";
+import { QuestionReportService } from "@/server/modules/training/question-reports";
 import { HttpStatus, successResponse } from "@/server/utils/api-response";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
