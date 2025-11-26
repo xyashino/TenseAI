@@ -29,10 +29,13 @@ export const SelectQuestionForm = memo(function SelectQuestionForm({
 
   const form = useForm<FormSchema>({
     resolver: standardSchemaResolver(formSchema),
-    defaultValues: questions.reduce((acc, question) => {
-      acc[question.id] = "";
-      return acc;
-    }, {} as Record<string, string>),
+    defaultValues: questions.reduce(
+      (acc, question) => {
+        acc[question.id] = "";
+        return acc;
+      },
+      {} as Record<string, string>
+    ),
   });
 
   const onSubmit = (data: FormSchema) => {

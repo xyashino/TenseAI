@@ -15,8 +15,6 @@ interface SelectQuestionListReadOnlyProps {
 export const SelectQuestionListReadOnly = memo(function SelectQuestionListReadOnly({
   questions,
   roundNumber,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  totalQuestions,
   questionsReview,
 }: SelectQuestionListReadOnlyProps) {
   const getReviewForQuestion = (questionId: string): QuestionReview | undefined => {
@@ -69,8 +67,8 @@ export const SelectQuestionListReadOnly = memo(function SelectQuestionListReadOn
                           isCorrectAnswer
                             ? "bg-green-50 dark:bg-green-950 border-green-500"
                             : isUserAnswer && !isCorrect
-                            ? "bg-red-50 dark:bg-red-950 border-red-500"
-                            : "bg-muted border-transparent"
+                              ? "bg-red-50 dark:bg-red-950 border-red-500"
+                              : "bg-muted border-transparent"
                         }`}
                       >
                         <div className="flex items-center justify-between">
