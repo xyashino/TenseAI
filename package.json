@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && pnpm postbuild",
-    "postbuild": "mkdir -p dist/server/prompts && cp -r src/server/prompts/* dist/server/prompts/",
+    "postbuild": "mkdir -p dist/server/modules/training/prompts && cp -r src/server/modules/training/prompts/* dist/server/modules/training/prompts/",
     "preview": "dotenv -e .env -- astro preview",
     "astro": "astro",
     "lint": "eslint .",

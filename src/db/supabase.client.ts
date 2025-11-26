@@ -7,10 +7,6 @@ import type { Database } from "./database.types";
 const supabaseUrl = requireEnv("SUPABASE_URL");
 const supabaseKey = requireEnv("SUPABASE_KEY");
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing Supabase environment variables");
-}
-
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseKey);
 
 export type SupabaseClient = typeof supabaseClient;
@@ -23,6 +19,9 @@ export const cookieOptions: CookieOptionsWithName = {
 };
 
 function parseCookieHeader(cookieHeader: string): { name: string; value: string }[] {
+  if (!cookieHeader) {
+    return [];
+  }
   return cookieHeader.split(";").map((cookie) => {
     const [name, ...rest] = cookie.trim().split("=");
     return { name, value: rest.join("=") };

@@ -1,9 +1,9 @@
-import { OnboardingForm } from "@/components/onboarding/onboarding-form";
-import * as onboardingHook from "@/lib/hooks/use-onboarding";
+import { OnboardingForm } from "@/features/onboarding/components/onboarding-form";
+import * as onboardingHook from "@/features/onboarding/hooks/use-onboarding";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/lib/hooks/use-onboarding", () => ({
+vi.mock("@/features/onboarding/hooks/use-onboarding", () => ({
   useOnboarding: vi.fn(),
 }));
 

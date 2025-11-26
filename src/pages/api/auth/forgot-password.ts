@@ -1,28 +1,22 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { InternalServerError } from "@/server/errors/api-errors";
+import { IdentityService } from "@/server/modules/identity";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
-import { forgotPasswordSchema } from "@/server/validation/auth.validation";
+import { forgotPasswordApiSchema } from "@/shared/schema/auth";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async (context) => {
   try {
     const body = await context.request.json();
-    const result = forgotPasswordSchema.parse(body);
+    const result = forgotPasswordApiSchema.parse(body);
 
-    const { email } = result;
     const supabase = createSupabaseServerInstance({
       headers: context.request.headers,
       cookies: context.cookies,
     });
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${context.url.origin}/auth/reset-password`,
-    });
-
-    if (error) {
-      throw new InternalServerError("Failed to send password reset email");
-    }
+    const identityService = new IdentityService(supabase);
+    await identityService.forgotPassword(result, context.url.origin);
 
     return successResponse({ message: "Password reset email sent" });
   } catch (error) {

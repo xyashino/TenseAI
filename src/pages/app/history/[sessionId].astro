@@ -1,9 +1,9 @@
 ---
-import { HistoryDetailWrapper } from "@/components/history-detail/history-detail-wrapper";
-import AppLayout from "@/layouts/app-layout.astro";
-import { NavigationRoutes } from "@/lib/enums/navigation";
-import { ProfileRepository } from "@/server/repositories/profile.repository";
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { HistoryDetailView } from "@/features/history";
+import BaseLayout from "@/layouts/base-layout.astro";
+import { NavigationRoutes } from "@/shared/enums/navigation";
+import { ProfileRepository } from "@/server/modules/profile";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 
 export const prerender = false;
@@ -21,7 +21,7 @@ try {
   return Astro.redirect(NavigationRoutes.LOGIN, 302);
 }
 
-const service = new TrainingSessionService(supabase);
+const service = new TrainingService(supabase);
 let sessionDetail;
 try {
   sessionDetail = await service.getSessionDetail(userId, sessionId);
@@ -36,9 +36,6 @@ const profile = await new ProfileRepository(supabase).getProfileById(userId);
 const userName = profile?.name ?? null;
 ---
 
-<AppLayout
-  title={`History: ${sessionDetail.training_session.tense} - TenseAI`}
-  mainClassName="p-0 lg:p-0 lg:px-8 lg:pb-8"
->
-  <HistoryDetailWrapper sessionData={sessionDetail} userName={userName} />
-</AppLayout>
+<BaseLayout title={`History: ${sessionDetail.training_session.tense} - TenseAI`}>
+  <HistoryDetailView client:load sessionData={sessionDetail} userName={userName} />
+</BaseLayout>

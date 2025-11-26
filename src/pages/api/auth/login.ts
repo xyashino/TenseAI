@@ -1,31 +1,24 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { AuthenticationError } from "@/server/errors/api-errors";
+import { IdentityService } from "@/server/modules/identity";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
-import { loginSchema } from "@/server/validation/auth.validation";
+import { loginApiSchema } from "@/shared/schema/auth";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async (context) => {
   try {
     const body = await context.request.json();
-    const result = loginSchema.parse(body);
+    const result = loginApiSchema.parse(body);
 
-    const { email, password } = result;
     const supabase = createSupabaseServerInstance({
       headers: context.request.headers,
       cookies: context.cookies,
     });
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const identityService = new IdentityService(supabase);
+    const user = await identityService.login(result);
 
-    if (error) {
-      throw new AuthenticationError("Invalid credentials");
-    }
-
-    return successResponse(data.user);
+    return successResponse(user);
   } catch (error) {
     return handleApiError(error);
   }

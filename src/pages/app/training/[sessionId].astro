@@ -1,10 +1,10 @@
 ---
-import { TrainingSessionWrapperWithQueryClient } from "@/components/training/training-session-wrapper";
+import { TrainingSessionViewWithQueryClient } from "@/features/training-session";
 import BaseLayout from "@/layouts/base-layout.astro";
-import { NavigationRoutes } from "@/lib/enums/navigation";
-import { ProfileRepository } from "@/server/repositories/profile.repository";
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { ProfileRepository } from "@/server/modules/profile";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 export const prerender = false;
 
 const { sessionId } = Astro.params;
@@ -15,7 +15,7 @@ if (!sessionId) {
 const supabase = Astro.locals.supabase;
 const userId = await authenticateUser(supabase);
 
-const service = new TrainingSessionService(supabase);
+const service = new TrainingService(supabase);
 let sessionData;
 let roundsData;
 let sessionSummary;
@@ -42,7 +42,7 @@ const userName = profile?.name ?? null;
 ---
 
 <BaseLayout title={`Training: ${sessionData.tense} - TenseAI`}>
-  <TrainingSessionWrapperWithQueryClient
+  <TrainingSessionViewWithQueryClient
     client:load
     sessionId={sessionId}
     tense={sessionData.tense}

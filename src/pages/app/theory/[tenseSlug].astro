@@ -1,8 +1,7 @@
 ---
-import TheoryContent from "@/components/theory/theory-content.astro";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/layouts/app-layout.astro";
-import { NavigationRoutes } from "@/lib/enums/navigation";
+import { NavigationRoutes } from "@/shared/enums/navigation";
 import { getCollection } from "astro:content";
 import { ArrowLeft } from "lucide-react";
 const { tenseSlug } = Astro.params;
@@ -25,9 +24,11 @@ const { title, description } = entry.data;
     <p class="text-lg text-muted-foreground">{description}</p>
   </header>
 
-  <TheoryContent>
+  <div
+    class="prose lg:prose-lg dark:prose-invert max-w-none prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-code:text-foreground prose-pre:bg-card prose-pre:text-foreground prose-blockquote:text-muted-foreground prose-blockquote:border-border"
+  >
     <Content />
-  </TheoryContent>
+  </div>
 
   <footer class="mt-12 pt-6 border-t">
     <a href={NavigationRoutes.THEORY}>

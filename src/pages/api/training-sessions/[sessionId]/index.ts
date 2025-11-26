@@ -1,7 +1,7 @@
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { deleteSessionParamsSchema, getSessionDetailParamsSchema } from "@/server/validation/session.validation";
+import { deleteSessionParamsSchema, getSessionDetailParamsSchema } from "@/shared/schema/training.schema";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
@@ -15,8 +15,8 @@ export const GET: APIRoute = async (context) => {
       sessionId: context.params.sessionId,
     });
 
-    const service = new TrainingSessionService(supabase);
-    const sessionDetail = await service.getSessionDetail(userId, sessionId);
+    const trainingService = new TrainingService(supabase);
+    const sessionDetail = await trainingService.getSessionDetail(userId, sessionId);
 
     return new Response(JSON.stringify(sessionDetail), {
       status: 200,
@@ -38,8 +38,8 @@ export const DELETE: APIRoute = async (context) => {
       sessionId: context.params.sessionId,
     });
 
-    const service = new TrainingSessionService(supabase);
-    await service.deleteSession(userId, sessionId);
+    const trainingService = new TrainingService(supabase);
+    await trainingService.deleteSession(userId, sessionId);
 
     return new Response(null, {
       status: 204,

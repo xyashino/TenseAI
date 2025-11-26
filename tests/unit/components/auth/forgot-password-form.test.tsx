@@ -1,9 +1,9 @@
-import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
-import * as authMutations from "@/lib/hooks/use-auth-mutations";
+import { ForgotPasswordForm } from "@/features/auth";
+import * as authMutations from "@/features/auth/hooks/use-auth-mutations";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/lib/hooks/use-auth-mutations", () => ({
+vi.mock("@/features/auth/hooks/use-auth-mutations", () => ({
   useForgotPassword: vi.fn(),
 }));
 

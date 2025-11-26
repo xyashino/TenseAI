@@ -1,10 +1,12 @@
 export abstract class ApiError extends Error {
   abstract readonly statusCode: number;
   abstract readonly errorType: string;
+  readonly details?: unknown;
 
-  constructor(message: string) {
+  constructor(message: string, details?: unknown) {
     super(message);
     this.name = this.constructor.name;
+    this.details = details;
     Error.captureStackTrace(this, this.constructor);
   }
 
@@ -12,6 +14,7 @@ export abstract class ApiError extends Error {
     return {
       error: this.errorType,
       message: this.message,
+      ...(this.details ? { details: this.details } : {}),
     };
   }
 
@@ -28,31 +31,9 @@ export abstract class ApiError extends Error {
 export class BadRequestError extends ApiError {
   readonly statusCode = 400;
   readonly errorType = "Bad Request";
-  readonly details?: Record<string, unknown>;
 
   constructor(message = "Bad request", details?: Record<string, unknown>) {
-    super(message);
-    this.details = details;
-  }
-
-  toJSON() {
-    if (this.details) {
-      return {
-        error: this.errorType,
-        message: this.message,
-        details: this.details,
-      };
-    }
-    return super.toJSON();
-  }
-}
-
-export class ConfigurationError extends ApiError {
-  readonly statusCode = 500;
-  readonly errorType = "Configuration Error";
-
-  constructor(message = "Service configuration is invalid") {
-    super(message);
+    super(message, details);
   }
 }
 
@@ -74,15 +55,6 @@ export class UnauthorizedError extends ApiError {
   }
 }
 
-export class ForbiddenError extends ApiError {
-  readonly statusCode = 403;
-  readonly errorType = "Forbidden";
-
-  constructor(message = "Access forbidden") {
-    super(message);
-  }
-}
-
 export class NotFoundError extends ApiError {
   readonly statusCode = 404;
   readonly errorType = "Not Found";
@@ -92,31 +64,12 @@ export class NotFoundError extends ApiError {
   }
 }
 
-export class ConflictError extends ApiError {
-  readonly statusCode = 409;
-  readonly errorType = "Conflict";
-
-  constructor(message = "Resource conflict") {
-    super(message);
-  }
-}
-
 export class ValidationError extends ApiError {
   readonly statusCode = 422;
   readonly errorType = "Validation Error";
-  readonly details: Record<string, string>;
 
   constructor(message = "Validation failed", details: Record<string, string> = {}) {
-    super(message);
-    this.details = details;
-  }
-
-  toJSON() {
-    return {
-      error: this.errorType,
-      message: this.message,
-      details: this.details,
-    };
+    super(message, details);
   }
 }
 
@@ -132,8 +85,7 @@ export class RateLimitError extends ApiError {
 
   toJSON() {
     return {
-      error: this.errorType,
-      message: this.message,
+      ...super.toJSON(),
       retry_after: this.retryAfter,
     };
   }
@@ -145,33 +97,5 @@ export class InternalServerError extends ApiError {
 
   constructor(message = "An unexpected error occurred") {
     super(message);
-  }
-}
-
-export class ServiceUnavailableError extends ApiError {
-  readonly statusCode = 503;
-  readonly errorType = "Service Unavailable";
-
-  constructor(message = "Service temporarily unavailable") {
-    super(message);
-  }
-}
-
-export class MalformedResponseError extends ApiError {
-  readonly statusCode = 502;
-  readonly errorType = "Malformed Response";
-  readonly details?: unknown;
-
-  constructor(message = "Malformed response received from upstream service", details?: unknown) {
-    super(message);
-    this.details = details;
-  }
-
-  toJSON() {
-    return {
-      error: this.errorType,
-      message: this.message,
-      details: this.details,
-    };
   }
 }
