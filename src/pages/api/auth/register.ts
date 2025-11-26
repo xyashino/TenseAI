@@ -15,8 +15,11 @@ export const POST: APIRoute = async (context) => {
       cookies: context.cookies,
     });
 
+    const origin = context.url.origin;
+    const redirectTo = `${origin}/api/auth/callback`;
+
     const identityService = new IdentityService(supabase);
-    const user = await identityService.register(result);
+    const user = await identityService.register(result, redirectTo);
 
     return successResponse(user, HttpStatus.CREATED);
   } catch (error) {

@@ -4,11 +4,19 @@ import type { AuthUser, LoginInput, RegisterInput, ResetPasswordInput } from "./
 export class IdentityRepository {
   constructor(private supabase: SupabaseClient) {}
 
-  async register(input: RegisterInput): Promise<AuthUser> {
-    const { data, error } = await this.supabase.auth.signUp({
+  async register(input: RegisterInput, redirectTo?: string): Promise<AuthUser> {
+    const signUpOptions: { email: string; password: string; options?: { emailRedirectTo?: string } } = {
       email: input.email,
       password: input.password,
-    });
+    };
+
+    if (redirectTo) {
+      signUpOptions.options = {
+        emailRedirectTo: redirectTo,
+      };
+    }
+
+    const { data, error } = await this.supabase.auth.signUp(signUpOptions);
 
     if (error) {
       throw error;

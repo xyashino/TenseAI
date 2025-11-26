@@ -10,9 +10,9 @@ export class IdentityService {
     this.repo = new IdentityRepository(supabase);
   }
 
-  async register(input: RegisterInput): Promise<AuthUser> {
+  async register(input: RegisterInput, redirectTo?: string): Promise<AuthUser> {
     try {
-      return await this.repo.register(input);
+      return await this.repo.register(input, redirectTo);
     } catch (error) {
       if (error instanceof Error) {
         throw new BadRequestError(error.message);

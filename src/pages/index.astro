@@ -4,6 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import BaseLayout from "@/layouts/base-layout.astro";
 import { BookOpen, Brain, CheckCircle2, Eye, MessageCircle, Pencil, TrendingUp } from "lucide-react";
+
+// Handle Supabase email confirmation code redirect
+const code = Astro.url.searchParams.get("code");
+if (code) {
+  return Astro.redirect(`/api/auth/callback?code=${code}`, 302);
+}
 ---
 
 <BaseLayout title="TenseAI - Master English Tenses with AI" className="overflow-auto">
