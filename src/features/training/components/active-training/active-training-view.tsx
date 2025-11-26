@@ -1,50 +1,54 @@
 import { withQueryClient } from "@/components/providers/with-query-client";
-import { useProfile } from "@/features/account";
 import { Suspense } from "react";
-import { useActiveTrainings } from "../../hooks/use-active-trainings";
+import { ErrorBoundary } from "react-error-boundary";
+import { useActiveTrainingViewData } from "../../hooks/use-active-training-view-data";
 import { ActiveSessionsList } from "./list/active-sessions-list";
 import { StartSessionCTA } from "./start-session/start-session-cta";
 
-export function ActiveTrainingViewContent() {
-  const { data: trainingsData, isLoading, isError, error } = useActiveTrainings();
-  const { data: profile, isLoading: isLoadingProfile } = useProfile();
+function ActiveTrainingViewContent() {
+  const { sessions, defaultDifficulty } = useActiveTrainingViewData();
 
-  if (isLoading || isLoadingProfile) {
-    return <ActiveTrainingViewFallback />;
-  }
-
-  if (isError) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center p-4">
-        <p className="text-muted-foreground mb-2">Error loading active trainings</p>
-        <p className="text-sm text-muted-foreground">{error instanceof Error ? error.message : "An unexpected error occurred"}</p>
-      </div>
-    );
-  }
-
-  const sessions = trainingsData?.["training-sessions"] || [];
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="overflow-y-auto">
-        <ActiveSessionsList sessions={sessions} defaultDifficulty={profile?.default_difficulty} />
+        <ActiveSessionsList sessions={sessions} defaultDifficulty={defaultDifficulty} />
       </div>
-      {sessions.length > 0 && <StartSessionCTA defaultDifficulty={profile?.default_difficulty} />}
+      {sessions.length > 0 && <StartSessionCTA defaultDifficulty={defaultDifficulty} />}
+    </div>
+  );
+}
+
+function ErrorFallback({ error }: { error: Error }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center p-4">
+      <p className="text-muted-foreground mb-2">Error loading active trainings</p>
+      <p className="text-sm text-muted-foreground">{error.message}</p>
     </div>
   );
 }
 
 function ActiveTrainingViewFallback() {
   return (
-    <div className="flex flex-col gap-y-4">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
-      ))}
+    <div className="flex flex-col justify-between h-full">
+      <div className="overflow-y-auto">
+        <div className="flex flex-col gap-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
 function ActiveTrainingView() {
-  return <ActiveTrainingViewContent />;
+  return (
+    <ErrorBoundary fallbackRender={({ error }) => <ErrorFallback error={error} />}>
+      <Suspense fallback={<ActiveTrainingViewFallback />}>
+        <ActiveTrainingViewContent />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }
 
 export const ActiveTrainingViewWithQueryClient = withQueryClient(ActiveTrainingView);
