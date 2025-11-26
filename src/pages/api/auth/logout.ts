@@ -1,5 +1,5 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { InternalServerError } from "@/server/errors/api-errors";
+import { IdentityService } from "@/server/modules/identity";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
 import type { APIRoute } from "astro";
@@ -11,11 +11,8 @@ export const POST: APIRoute = async (context) => {
       cookies: context.cookies,
     });
 
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      throw new InternalServerError("Failed to sign out");
-    }
+    const identityService = new IdentityService(supabase);
+    await identityService.logout();
 
     return successResponse({ message: "Logged out successfully" });
   } catch (error) {

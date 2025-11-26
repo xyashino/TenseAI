@@ -1,11 +1,11 @@
 import { StartSessionForm } from "@/components/active-training/start-session/start-session-form";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import * as sessionHook from "@/lib/hooks/use-create-session";
+import * as sessionHook from "@/features/training/hooks/use-create-session";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { render, screen, waitFor } from "../../test-utils";
 
-vi.mock("@/lib/hooks/use-create-session", () => ({
+vi.mock("@/features/training/hooks/use-create-session", () => ({
   useCreateSession: vi.fn(),
 }));
 

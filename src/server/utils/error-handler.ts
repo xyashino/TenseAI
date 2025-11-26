@@ -1,4 +1,4 @@
-import { ApiError, InternalServerError, NotFoundError, ValidationError } from "@/server/errors/api-errors";
+import { ApiError, InternalServerError, ValidationError } from "@/server/errors/api-errors";
 import { ZodError } from "zod";
 
 function handleZodError(error: ZodError): ValidationError {
@@ -13,32 +13,6 @@ function handleZodError(error: ZodError): ValidationError {
   return new ValidationError("Invalid request data", details);
 }
 
-function handleServiceError(error: Error): ApiError {
-  if (error.message === "Profile not found") {
-    return new NotFoundError("Profile not found");
-  }
-  if (error.message === "Session not found") {
-    return new NotFoundError("Session not found");
-  }
-  if (error.message === "Round not found") {
-    return new NotFoundError("Round not found");
-  }
-  if (error.message === "Question not found") {
-    return new NotFoundError("Question not found");
-  }
-
-  if (
-    error.message.includes("AI service") ||
-    error.message.includes("Failed to generate") ||
-    error.message.includes("No mock questions available") ||
-    error.message.includes("Not enough mock questions")
-  ) {
-    return new InternalServerError("Question generation failed. Please try again later.");
-  }
-
-  return new InternalServerError();
-}
-
 export function handleApiError(error: unknown): Response {
   if (error instanceof ApiError) {
     return error.toResponse();
@@ -49,9 +23,15 @@ export function handleApiError(error: unknown): Response {
     return validationError.toResponse();
   }
 
+  // Log unexpected errors for debugging (only in development or with proper logging service)
   if (error instanceof Error) {
-    const apiError = handleServiceError(error);
-    return apiError.toResponse();
+    console.error("Unexpected error:", {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
+  } else {
+    console.error("Unexpected non-Error object:", error);
   }
 
   const internalError = new InternalServerError();

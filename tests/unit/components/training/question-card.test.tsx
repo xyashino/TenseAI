@@ -1,5 +1,5 @@
 import { QuestionCard } from "@/components/training/chat-components/select-question-list/common/question-card";
-import type { QuestionWithoutAnswer } from "@/types";
+import type { QuestionWithoutAnswer } from "@/features/training/types";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 

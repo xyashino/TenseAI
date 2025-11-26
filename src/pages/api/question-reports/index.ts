@@ -1,14 +1,13 @@
-import { RateLimitError } from "@/server/errors/api-errors";
-import { QuestionReportRepository } from "@/server/repositories/question-report.repository";
-import { rateLimitService } from "@/server/services/rate-limit.service";
+import { QuestionReportService } from "@/server/modules/question-reports";
+import { HttpStatus, successResponse } from "@/server/utils/api-response";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
 import { buildPaginationMeta } from "@/server/utils/pagination";
 import {
-  createQuestionReportSchema,
-  getQuestionReportsQuerySchema,
-} from "@/server/validation/question-report.validation";
-import type { PaginationMeta, QuestionReportInsert, QuestionReportsListResponseDTO } from "@/types";
+  createQuestionReportApiSchema,
+  getQuestionReportsQueryApiSchema,
+} from "@/shared/schema/question-reports";
+import type { QuestionReportsListResponseDTO } from "@/features/training/types";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
@@ -25,17 +24,16 @@ export const GET: APIRoute = async (context) => {
       status: url.searchParams.get("status"),
     };
 
-    const validated = getQuestionReportsQuerySchema.parse(queryParams);
-    const repository = new QuestionReportRepository(supabase);
+    const validated = getQuestionReportsQueryApiSchema.parse(queryParams);
+    const service = new QuestionReportService(supabase);
 
-    const { reports, total } = await repository.getUserReports(
-      userId,
-      validated.page,
-      validated.limit,
-      validated.status
-    );
+    const { reports, total } = await service.getUserReports(userId, {
+      page: validated.page,
+      limit: validated.limit,
+      status: validated.status,
+    });
 
-    const pagination: PaginationMeta = buildPaginationMeta({
+    const pagination = buildPaginationMeta({
       totalItems: total,
       page: validated.page,
       limit: validated.limit,
@@ -46,12 +44,7 @@ export const GET: APIRoute = async (context) => {
       pagination,
     };
 
-    return new Response(JSON.stringify(response), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return successResponse(response);
   } catch (error) {
     return handleApiError(error);
   }
@@ -63,50 +56,20 @@ export const POST: APIRoute = async (context) => {
     const userId = await authenticateUser(supabase);
 
     const body = await context.request.json();
-    const validated = createQuestionReportSchema.parse(body);
+    const validated = createQuestionReportApiSchema.parse(body);
 
-    const rateLimitCheck = await rateLimitService.checkLimit(userId, "report_create", {
-      limit: 10,
-      windowSeconds: 60,
+    const service = new QuestionReportService(supabase);
+    const report = await service.createReport(userId, {
+      question_id: validated.question_id,
+      report_comment: validated.report_comment,
     });
 
-    if (!rateLimitCheck.allowed) {
-      throw new RateLimitError(
-        "You can submit up to 10 reports per minute. Please try again later.",
-        rateLimitCheck.retryAfter
-      );
-    }
-
-    const repository = new QuestionReportRepository(supabase);
-    await repository.verifyQuestionExists(validated.question_id);
-
-    const reportData: QuestionReportInsert = {
-      question_id: validated.question_id,
-      user_id: userId,
-      report_comment: validated.report_comment || null,
-      status: "pending",
-    };
-
-    const report = await repository.createReport(reportData);
-
-    return new Response(
-      JSON.stringify({
-        report: {
-          id: report.id,
-          question_id: report.question_id,
-          user_id: report.user_id,
-          report_comment: report.report_comment,
-          status: report.status,
-          created_at: report.created_at,
-        },
-        message: "Thank you for your feedback! We will review this question.",
-      }),
+    return successResponse(
       {
-        status: 201,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+        report,
+        message: "Thank you for your feedback! We will review this question.",
+      },
+      HttpStatus.CREATED
     );
   } catch (error) {
     return handleApiError(error);

@@ -1,36 +1,22 @@
 import { createSupabaseServerInstance } from "@/db/supabase.client";
-import { BadRequestError, UnauthorizedError } from "@/server/errors/api-errors";
 import { successResponse } from "@/server/utils/api-response";
 import { handleApiError } from "@/server/utils/error-handler";
-import { resetPasswordSchema } from "@/server/validation/auth.validation";
+import { IdentityService } from "@/server/modules/identity";
+import { resetPasswordApiSchema } from "@/shared/schema/auth";
 import type { APIRoute } from "astro";
 
 export const POST: APIRoute = async (context) => {
   try {
     const body = await context.request.json();
-    const result = resetPasswordSchema.parse(body);
+    const result = resetPasswordApiSchema.parse(body);
 
-    const { password } = result;
     const supabase = createSupabaseServerInstance({
       headers: context.request.headers,
       cookies: context.cookies,
     });
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      throw new UnauthorizedError("No active session");
-    }
-
-    const { error } = await supabase.auth.updateUser({
-      password,
-    });
-
-    if (error) {
-      throw new BadRequestError("Failed to reset password");
-    }
+    const identityService = new IdentityService(supabase);
+    await identityService.resetPassword(result);
 
     return successResponse({ message: "Password reset successfully" });
   } catch (error) {

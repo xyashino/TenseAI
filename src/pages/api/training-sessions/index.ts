@@ -1,9 +1,9 @@
 import { RateLimitError } from "@/server/errors/api-errors";
+import { TrainingService } from "@/server/modules/training";
 import { rateLimitService } from "@/server/services/rate-limit.service";
-import { TrainingSessionService } from "@/server/services/training-session.service";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { createSessionSchema, getTrainingSessionsQuerySchema } from "@/server/validation/session.validation";
+import { createSessionSchema, getTrainingSessionsQuerySchema } from "@/shared/schema/training.schema";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
@@ -23,13 +23,13 @@ export const POST: APIRoute = async (context) => {
 
     if (!rateLimitCheck.allowed) {
       throw new RateLimitError(
-        "You can create up to 10 sessions per minute. Please try again later.",
+        "You can create up to 15 sessions per minute. Please try again later.",
         rateLimitCheck.retryAfter
       );
     }
 
-    const sessionService = new TrainingSessionService(supabase);
-    const result = await sessionService.createSessionOnly(userId, validated);
+    const trainingService = new TrainingService(supabase);
+    const result = await trainingService.createSession(userId, validated);
 
     return new Response(JSON.stringify(result), {
       status: 201,
@@ -58,8 +58,8 @@ export const GET: APIRoute = async (context) => {
 
     const validated = getTrainingSessionsQuerySchema.parse(queryParams);
 
-    const sessionService = new TrainingSessionService(supabase);
-    const response = await sessionService.getSessionsList(
+    const trainingService = new TrainingService(supabase);
+    const response = await trainingService.getSessionsList(
       userId,
       validated.status,
       validated.page,

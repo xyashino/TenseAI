@@ -1,5 +1,5 @@
 import { RoundSummaryElement } from "@/components/training/chat-components/round-summary-element";
-import * as sessionActions from "@/lib/hooks/use-training-session-actions";
+import * as sessionActions from "@/features/training/hooks/use-training-session-actions";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "../../test-utils";
 
@@ -15,7 +15,7 @@ interface UseTrainingSessionActionsReturn {
   isAbandoning: boolean;
 }
 
-vi.mock("@/lib/hooks/use-training-session-actions", () => ({
+vi.mock("@/features/training/hooks/use-training-session-actions", () => ({
   useTrainingSessionActions: vi.fn(),
 }));
 

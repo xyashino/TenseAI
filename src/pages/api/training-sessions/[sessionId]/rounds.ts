@@ -1,7 +1,7 @@
-import { TrainingSessionService } from "@/server/services/training-session.service";
+import { TrainingService } from "@/server/modules/training";
 import { authenticateUser } from "@/server/utils/auth";
 import { handleApiError } from "@/server/utils/error-handler";
-import { createRoundParamsSchema } from "@/server/validation/session.validation";
+import { createRoundParamsSchema } from "@/shared/schema/training.schema";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
@@ -15,8 +15,8 @@ export const POST: APIRoute = async (context) => {
       sessionId: context.params.sessionId,
     });
 
-    const sessionService = new TrainingSessionService(supabase);
-    const result = await sessionService.createRound(userId, sessionId);
+    const trainingService = new TrainingService(supabase);
+    const result = await trainingService.createRound(userId, sessionId);
 
     return new Response(JSON.stringify(result), {
       status: 201,
